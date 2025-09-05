@@ -1,19 +1,21 @@
 ﻿using DirectoryService.Domain.ValueObjects;
 
-namespace DirectoryService.Domain.Department;
+namespace DirectoryService.Domain.Departments;
 
 public class Department
 {
     private Department(
         DepartmentName departmentName,
         DepartmentIdentifier departmentIdentifier,
-        Guid? parentId)
+        Guid? parentId,
+        List<DepartmentLocation> departmentLocations)
     {
         Id = Guid.NewGuid();
         DepartmentName = departmentName;
         DepartmentIdentifier = departmentIdentifier;
         ParentId = parentId;
         UpdatedAt = DateTime.UtcNow;
+        _locations = departmentLocations;
 
         if (CreatedAt == default)
         {
@@ -21,7 +23,7 @@ public class Department
         }
     }
     
-    private readonly List<DepartmentLocation> _locations = [];
+    private readonly List<DepartmentLocation> _locations;
     private readonly List<DepartmentPosition> _positions = [];
     
     public Guid Id { get; private set; }
