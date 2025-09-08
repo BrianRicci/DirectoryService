@@ -29,8 +29,13 @@ public class Department
         }
     }
     
-    private readonly List<DepartmentLocation> _locations = [];
-    private readonly List<DepartmentPosition> _positions = [];
+    private List<DepartmentLocation> _locations;
+    
+    public IReadOnlyList<DepartmentLocation> DepartmentLocations => _locations = [];
+    
+    private List<DepartmentPosition> _positions = [];
+
+    public IReadOnlyList<DepartmentPosition> DepartmentPositions => _positions = [];
     
     public DepartmentId Id { get; private set; }
     
