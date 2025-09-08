@@ -32,12 +32,22 @@ public class DepartmentConfiguration : IEntityTypeConfiguration<Department>
             .HasColumnName("identifier")
             .HasMaxLength(LengthConstants.LENGTH150)
             .IsRequired();
-        
+
         builder
             .Property(d => d.Path)
             .HasConversion(d => d.Value, path => new DepartmentPath(path))
             .HasColumnName("path")
             .HasMaxLength(LengthConstants.LENGTH256)
             .IsRequired();
+        
+        builder
+            .HasMany(d => d.DepartmentLocations)
+            .WithOne()
+            .HasForeignKey(dl => dl.DepartmentId);
+        
+        builder
+            .HasMany(d => d.DepartmentPositions)
+            .WithOne()
+            .HasForeignKey(dp => dp.DepartmentId);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using DirectoryService.Domain;
+using DirectoryService.Domain.Departments;
 using DirectoryService.Domain.Positions;
 using DirectoryService.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
@@ -31,5 +32,10 @@ public class PositionConfiguration : IEntityTypeConfiguration<Position>
             .HasConversion(p => p.Value, description => new PositionDescription(description))
             .HasColumnName("description")
             .HasMaxLength(LengthConstants.LENGTH1000);
+        
+        builder
+            .HasMany(p => p.DepartmentPositions)
+            .WithOne()
+            .HasForeignKey(dp => dp.PositionId);
     }
 }

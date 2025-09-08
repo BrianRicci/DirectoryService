@@ -6,7 +6,7 @@ public record LocationTimezone
     {
         try
         {
-            Value = TimeZoneInfo.FindSystemTimeZoneById(value);
+            Value = TimeZoneInfo.FindSystemTimeZoneById(value).ToSerializedString();
         }
         catch (TimeZoneNotFoundException)
         {
@@ -18,5 +18,5 @@ public record LocationTimezone
         }
     }
     
-    public TimeZoneInfo Value { get; }
+    public string Value { get; }
 }

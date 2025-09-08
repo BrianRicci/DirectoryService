@@ -11,7 +11,7 @@ public class DepartmentPosition
     
     public DepartmentPositionId Id { get; init; }
 
-    public Guid DepartmentId { get; init; } 
+    public DepartmentId DepartmentId { get; init; } 
 
-    public Guid PositionId { get; init; }
+    public PositionId PositionId { get; init; }
 }

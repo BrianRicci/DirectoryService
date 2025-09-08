@@ -26,7 +26,9 @@ public class Position
         }
     }
     
-    private readonly List<DepartmentLocation> _departments = [];
+    private List<DepartmentPosition> _departments;
+    
+    public IReadOnlyList<DepartmentPosition> DepartmentPositions => _departments = [];
     
     public PositionId Id { get; private set; }
 

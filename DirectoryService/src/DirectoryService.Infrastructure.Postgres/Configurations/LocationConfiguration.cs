@@ -1,4 +1,5 @@
 ﻿using DirectoryService.Domain;
+using DirectoryService.Domain.Departments;
 using DirectoryService.Domain.Locations;
 using DirectoryService.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
@@ -61,7 +62,12 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
         
         builder
             .Property(l => l.Timezone)
-            .HasConversion(l => l.Value, timezone => new LocationTimezone(timezone.ToString()))
+            .HasConversion(l => l.Value, timezone => new LocationTimezone(timezone))
             .HasColumnName("department_id");
+        
+        builder
+            .HasMany(l => l.DepartmentLocations)
+            .WithOne()
+            .HasForeignKey(dl => dl.LocationId);
     }
 }
