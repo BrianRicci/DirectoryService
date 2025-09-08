@@ -5,11 +5,6 @@ namespace DirectoryService.Domain.Locations;
 
 public class Location
 {
-    // EF Core
-    private Location()
-    {
-    }
-    
     public Location(
         LocationId id,
         LocationName name,
@@ -28,9 +23,10 @@ public class Location
         }
     }
     
-    private List<DepartmentLocation> _departments;
-    
-    public IReadOnlyList<DepartmentLocation> DepartmentLocations => _departments = [];
+    // EF Core
+    private Location()
+    {
+    }
     
     public LocationId Id { get; private set; }
 
@@ -45,4 +41,8 @@ public class Location
     public DateTime CreatedAt { get; private set; }
     
     public DateTime UpdatedAt { get; private set; } 
+    
+    public IReadOnlyList<DepartmentLocation> DepartmentLocations => _departments = [];
+    
+    private List<DepartmentLocation> _departments;
 }

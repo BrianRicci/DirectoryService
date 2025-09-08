@@ -29,14 +29,6 @@ public class Department
         }
     }
     
-    private List<DepartmentLocation> _locations;
-    
-    public IReadOnlyList<DepartmentLocation> DepartmentLocations => _locations = [];
-    
-    private List<DepartmentPosition> _positions = [];
-
-    public IReadOnlyList<DepartmentPosition> DepartmentPositions => _positions = [];
-    
     public DepartmentId Id { get; private set; }
     
     public DepartmentName Name { get; private set; }
@@ -54,4 +46,12 @@ public class Department
     public DateTime CreatedAt { get; private set; }
     
     public DateTime UpdatedAt { get; private set; }
+    
+    public IReadOnlyList<DepartmentLocation> DepartmentLocations => _locations = [];
+
+    public IReadOnlyList<DepartmentPosition> DepartmentPositions => _positions = [];
+    
+    private List<DepartmentLocation> _locations;
+    
+    private List<DepartmentPosition> _positions;
 }
