@@ -4,15 +4,21 @@ namespace DirectoryService.Domain.Departments;
 
 public class Department
 {
+    // EF Core
+    private Department()
+    {
+    }
+    
     private Department(
-        DepartmentName departmentName,
-        DepartmentIdentifier departmentIdentifier,
+        DepartmentId id,
+        DepartmentName name,
+        DepartmentIdentifier identifier,
         Guid? parentId,
         List<DepartmentLocation> departmentLocations)
     {
-        Id = Guid.NewGuid();
-        DepartmentName = departmentName;
-        DepartmentIdentifier = departmentIdentifier;
+        Id = id;
+        Name = name;
+        Identifier = identifier;
         ParentId = parentId;
         UpdatedAt = DateTime.UtcNow;
         _locations = departmentLocations;
@@ -23,18 +29,18 @@ public class Department
         }
     }
     
-    private readonly List<DepartmentLocation> _locations;
+    private readonly List<DepartmentLocation> _locations = [];
     private readonly List<DepartmentPosition> _positions = [];
     
-    public Guid Id { get; private set; }
+    public DepartmentId Id { get; private set; }
     
-    public DepartmentName DepartmentName { get; private set; }
+    public DepartmentName Name { get; private set; }
     
-    public DepartmentIdentifier DepartmentIdentifier { get; private set; }
+    public DepartmentIdentifier Identifier { get; private set; }
     
     public Guid? ParentId { get; private set; }
     
-    public DepartmentPath DepartmentPath { get; private set; } 
+    public DepartmentPath Path { get; private set; } 
     
     public short Depth { get; private set; }
     

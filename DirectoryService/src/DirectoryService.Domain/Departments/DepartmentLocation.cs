@@ -1,8 +1,15 @@
-﻿namespace DirectoryService.Domain.Departments;
+﻿using DirectoryService.Domain.ValueObjects;
+
+namespace DirectoryService.Domain.Departments;
 
 public class DepartmentLocation
 {
-    public Guid Id { get; init; }
+    // EF Core
+    private DepartmentLocation()
+    {
+    }
+    
+    public DepartmentLocationId Id { get; init; }
     
     public Guid DepartmentId { get; init; } 
     

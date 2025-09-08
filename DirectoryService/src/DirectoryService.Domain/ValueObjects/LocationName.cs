@@ -9,7 +9,7 @@ public record LocationName
     {
         if (string.IsNullOrWhiteSpace(value) ||
             value.Length < MIN_LENGTH ||
-            value.Length > MAX_LENGTH) // Нужно будет добавить проверку на уникальность, от подсказок не откажусь
+            value.Length > MAX_LENGTH)
         {
             throw new ArgumentException("Invalid name");
         }

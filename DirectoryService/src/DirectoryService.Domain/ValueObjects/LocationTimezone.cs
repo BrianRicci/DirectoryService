@@ -1,6 +1,6 @@
 ﻿namespace DirectoryService.Domain.ValueObjects;
 
-public class LocationTimezone
+public record LocationTimezone
 {
     public LocationTimezone(string value)
     {
