@@ -2,8 +2,8 @@
 
 public record DepartmentName
 {
-    private const int MIN_LENGTH = 3;
-    private const int MAX_LENGTH = 150;
+    private const int MIN_LENGTH = LengthConstants.LENGTH3;
+    private const int MAX_LENGTH = LengthConstants.LENGTH150;
     
     public DepartmentName(string value)
     {

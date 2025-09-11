@@ -63,7 +63,7 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
         builder
             .Property(l => l.Timezone)
             .HasConversion(l => l.Value, timezone => new LocationTimezone(timezone))
-            .HasColumnName("department_id");
+            .HasColumnName("timezone");
         
         builder
             .HasMany(l => l.DepartmentLocations)

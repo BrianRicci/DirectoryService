@@ -1,4 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DirectoryService.Domain.Departments;
+using DirectoryService.Domain.Locations;
+using DirectoryService.Domain.Positions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace DirectoryService.Infrastructure.Postgres;
@@ -22,4 +25,10 @@ public class DirectoryServiceDbContext : DbContext
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(DirectoryServiceDbContext).Assembly);
     }
+    
+    public DbSet<Department> Departments => Set<Department>();
+    
+    public DbSet<Location> Locations => Set<Location>();
+    
+    public DbSet<Position> Positions => Set<Position>();
 }
