@@ -10,7 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectoryService.Web", "src\DirectoryService.Web\DirectoryService.Web.csproj", "{1C797922-0387-4216-89F7-6AF016AF8EF2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectoryService", "src\DirectoryService\DirectoryService.csproj", "{1C797922-0387-4216-89F7-6AF016AF8EF2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectoryService.Application", "src\DirectoryService.Application\DirectoryService.Application.csproj", "{DBD603D0-1C58-4363-9EA9-857DF5470D0B}"
 EndProject
@@ -19,6 +19,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectoryService.Contracts", "src\DirectoryService.Contracts\DirectoryService.Contracts.csproj", "{70505051-361E-409F-8224-B80757EDC039}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectoryService.Presentation", "src\DirectoryService.Presentation\DirectoryService.Presentation.csproj", "{F754739F-70A2-4F56-BBAD-49B49256DC30}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectoryService.Infrastructure.Postgres", "src\DirectoryService.Infrastructure.Postgres\DirectoryService.Infrastructure.Postgres.csproj", "{0221F8A8-211D-4A8F-BB26-04EFFAC270D6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -50,6 +52,10 @@ Global
 		{F754739F-70A2-4F56-BBAD-49B49256DC30}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F754739F-70A2-4F56-BBAD-49B49256DC30}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F754739F-70A2-4F56-BBAD-49B49256DC30}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0221F8A8-211D-4A8F-BB26-04EFFAC270D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0221F8A8-211D-4A8F-BB26-04EFFAC270D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0221F8A8-211D-4A8F-BB26-04EFFAC270D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0221F8A8-211D-4A8F-BB26-04EFFAC270D6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{04403227-79BE-49AF-BEAF-538233A79FD3} = {D645A472-47D4-4232-9377-AB5622AB129F}
@@ -58,5 +64,6 @@ Global
 		{AE299AD2-6B30-41AE-9455-E5B0025A0975} = {D645A472-47D4-4232-9377-AB5622AB129F}
 		{70505051-361E-409F-8224-B80757EDC039} = {D645A472-47D4-4232-9377-AB5622AB129F}
 		{F754739F-70A2-4F56-BBAD-49B49256DC30} = {D645A472-47D4-4232-9377-AB5622AB129F}
+		{0221F8A8-211D-4A8F-BB26-04EFFAC270D6} = {D645A472-47D4-4232-9377-AB5622AB129F}
 	EndGlobalSection
 EndGlobal

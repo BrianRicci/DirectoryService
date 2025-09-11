@@ -5,9 +5,13 @@ namespace DirectoryService.Domain.Locations;
 
 public class Location
 {
-    public Location(LocationName name, LocationAddress address, LocationTimezone timezone)
+    public Location(
+        LocationId id,
+        LocationName name,
+        LocationAddress address,
+        LocationTimezone timezone)
     {
-        Id = Guid.NewGuid();
+        Id = id;
         Name = name;
         Address = address;
         Timezone = timezone;
@@ -19,9 +23,12 @@ public class Location
         }
     }
     
-    private readonly List<DepartmentLocation> _departments = [];
+    // EF Core
+    private Location()
+    {
+    }
     
-    public Guid Id { get; private set; }
+    public LocationId Id { get; private set; }
 
     public LocationName Name { get; private set; }
     
@@ -34,4 +41,8 @@ public class Location
     public DateTime CreatedAt { get; private set; }
     
     public DateTime UpdatedAt { get; private set; } 
+    
+    public IReadOnlyList<DepartmentLocation> DepartmentLocations => _departments = [];
+    
+    private List<DepartmentLocation> _departments;
 }

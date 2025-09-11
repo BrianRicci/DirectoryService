@@ -5,9 +5,12 @@ namespace DirectoryService.Domain.Positions;
 
 public class Position
 {
-    private Position(PositionName name, PositionDescription? description)
+    private Position(
+        PositionId id,
+        PositionName name,
+        PositionDescription? description)
     {
-        Id = Guid.NewGuid();
+        Id = id;
         Name = name;
         Description = description;
         UpdatedAt = DateTime.UtcNow;
@@ -18,9 +21,12 @@ public class Position
         }
     }
     
-    private readonly List<DepartmentLocation> _departments = [];
+    // EF Core
+    private Position()
+    {
+    }
     
-    public Guid Id { get; private set; }
+    public PositionId Id { get; private set; }
 
     public PositionName Name { get; private set; }
     
@@ -30,5 +36,9 @@ public class Position
     
     public DateTime CreatedAt { get; private set; }
     
-    public DateTime UpdatedAt { get; private set; } 
+    public DateTime UpdatedAt { get; private set; }
+    
+    public IReadOnlyList<DepartmentPosition> DepartmentPositions => _departments = [];
+    
+    private List<DepartmentPosition> _departments;
 }
