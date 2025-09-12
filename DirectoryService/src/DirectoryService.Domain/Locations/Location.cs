@@ -44,5 +44,5 @@ public class Location
     
     public IReadOnlyList<DepartmentLocation> DepartmentLocations => _departments = [];
     
-    private List<DepartmentLocation>? _departments;
+    private List<DepartmentLocation> _departments;
 }
