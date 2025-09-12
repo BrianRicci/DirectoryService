@@ -2,8 +2,8 @@
 
 public record PositionName
 {
-    private const int MIN_LENGTH = 3;
-    private const int MAX_LENGTH = 100;
+    private const int MIN_LENGTH = LengthConstants.LENGTH3;
+    private const int MAX_LENGTH = LengthConstants.LENGTH100;
     
     public PositionName(string value)
     {

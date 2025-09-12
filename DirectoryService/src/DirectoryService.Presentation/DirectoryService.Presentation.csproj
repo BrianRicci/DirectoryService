@@ -4,12 +4,37 @@
         <TargetFramework>net9.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <OutputType>Exe</OutputType>
     </PropertyGroup>
-  
+
     <ItemGroup>
       <ProjectReference Include="..\DirectoryService.Application\DirectoryService.Application.csproj" />
       <ProjectReference Include="..\DirectoryService.Contracts\DirectoryService.Contracts.csproj" />
       <ProjectReference Include="..\DirectoryService.Domain\DirectoryService.Domain.csproj" />
+      <ProjectReference Include="..\DirectoryService.Infrastructure.Postgres\DirectoryService.Infrastructure.Postgres.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Update="appsettings.json">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </Content>
+      <Content Update="appsettings.Development.json">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.3.0" />
+      <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.9" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.9">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+      <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="9.0.4" />
     </ItemGroup>
 
 </Project>

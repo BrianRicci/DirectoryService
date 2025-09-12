@@ -2,7 +2,7 @@
 
 public record PositionDescription
 {
-    private const int MAX_LENGTH = 1000;
+    private const int MAX_LENGTH = LengthConstants.LENGTH1000;
     
     public PositionDescription(string value)
     {
