@@ -37,22 +37,22 @@ public record LocationAddress
         
         if (string.IsNullOrWhiteSpace(region))
         {
-            throw new ArgumentException("Region can't be empty or null");
+            return Result.Failure<LocationAddress>("Region can't be empty or null");
         }
         
         if (string.IsNullOrWhiteSpace(city))
         {
-            throw new ArgumentException("City can't be empty or null");
+            return Result.Failure<LocationAddress>("City can't be empty or null");
         }
         
         if (string.IsNullOrWhiteSpace(street))
         {
-            throw new ArgumentException("Street can't be empty or null");
+            return Result.Failure<LocationAddress>("Street can't be empty or null");
         }
         
         if (string.IsNullOrWhiteSpace(house))
         {
-            throw new ArgumentException("House can't be empty or null");
+            return Result.Failure<LocationAddress>("House can't be empty or null");
         }
         
         country = country.Trim();

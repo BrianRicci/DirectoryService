@@ -33,7 +33,7 @@ public class CreateLocationHandler : ICommandHandler<Guid, CreateLocationCommand
         
         if (!validationResult.IsValid)
         {
-            throw new LocationValidationException(validationResult.ToErrors());
+            return validationResult.ToErrors();
         }
         
         // создание сущности локации

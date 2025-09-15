@@ -32,6 +32,8 @@ public record Error
     
     public static Error Conflict(string? code, string message)
         => new(code ?? "value.is.conflict", message, ErrorType.CONFLICT);
+    
+    public Failure ToFailure() => this;
 }
 
 public enum ErrorType

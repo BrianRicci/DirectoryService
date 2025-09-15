@@ -1,8 +1,10 @@
 using DirectoryService.Application.Locations;
+using DirectoryService.Application.Locations.CreateLocation;
 using DirectoryService.Contracts;
 using DirectoryService.Infrastructure.Postgres;
 using DirectoryService.Infrastructure.Postgres.Repositories;
 using DirectoryService.Presentation;
+using DirectoryService.Presentation.Middlewares;
 using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
@@ -20,9 +22,11 @@ builder.Services.AddScoped<ILocationsRepository, EfCoreLocationsRepository>();
 
 builder.Services.AddScoped<IValidator<CreateLocationDto>, CreateLocationValidator>();
 
-builder.Services.AddScoped<LocationsService>();
+builder.Services.AddScoped<CreateLocationHandler>();
 
 var app = builder.Build();
+
+app.UseExceptionMiddleware();
 
 if (app.Environment.IsDevelopment())
 {
