@@ -1,4 +1,4 @@
-﻿using DirectoryService.Domain.ValueObjects;
+﻿using DirectoryService.Domain.Positions;
 
 namespace DirectoryService.Domain.Departments;
 

@@ -1,4 +1,5 @@
-﻿using DirectoryService.Domain.Locations;
+﻿using CSharpFunctionalExtensions;
+using DirectoryService.Domain.Locations;
 
 namespace DirectoryService.Application.Locations;
 
