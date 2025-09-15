@@ -10,16 +10,16 @@ using Shared;
 
 namespace DirectoryService.Application.Locations.CreateLocation;
 
-public class CreateLocationsHandler : ICommandHandler<Guid, CreateLocationCommand>
+public class CreateLocationHandler : ICommandHandler<Guid, CreateLocationCommand>
 {
     private readonly ILocationsRepository _locationsRepository;
     private readonly IValidator<CreateLocationDto> _validator;
-    private readonly ILogger<CreateLocationsHandler> _logger;
+    private readonly ILogger<CreateLocationHandler> _logger;
     
-    public CreateLocationsHandler(
+    public CreateLocationHandler(
         ILocationsRepository locationsRepository,
         IValidator<CreateLocationDto> validator,
-        ILogger<CreateLocationsHandler> logger)
+        ILogger<CreateLocationHandler> logger)
     {
         _locationsRepository = locationsRepository;
         _validator = validator;
