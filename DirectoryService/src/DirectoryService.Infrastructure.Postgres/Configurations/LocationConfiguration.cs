@@ -1,7 +1,6 @@
 ﻿using DirectoryService.Domain;
 using DirectoryService.Domain.Departments;
 using DirectoryService.Domain.Locations;
-using DirectoryService.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -22,7 +21,7 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
         
         builder
             .Property(l => l.Name)
-            .HasConversion(l => l.Value, name => new LocationName(name))
+            .HasConversion(l => l.Value, name => LocationName.Create(name).Value)
             .HasColumnName("name")
             .HasMaxLength(LengthConstants.LENGTH120)
             .IsRequired();
@@ -62,7 +61,7 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
         
         builder
             .Property(l => l.Timezone)
-            .HasConversion(l => l.Value, timezone => new LocationTimezone(timezone))
+            .HasConversion(l => l.Value, timezone => LocationTimezone.Create(timezone).Value)
             .HasColumnName("timezone");
         
         builder

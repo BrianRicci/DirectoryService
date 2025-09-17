@@ -1,34 +1,9 @@
-﻿using DirectoryService.Domain.ValueObjects;
+﻿using CSharpFunctionalExtensions;
 
 namespace DirectoryService.Domain.Departments;
 
 public class Department
 {
-    // EF Core
-    private Department()
-    {
-    }
-    
-    private Department(
-        DepartmentId id,
-        DepartmentName name,
-        DepartmentIdentifier identifier,
-        Guid? parentId,
-        List<DepartmentLocation> departmentLocations)
-    {
-        Id = id;
-        Name = name;
-        Identifier = identifier;
-        ParentId = parentId;
-        UpdatedAt = DateTime.UtcNow;
-        _locations = departmentLocations;
-
-        if (CreatedAt == default)
-        {
-            CreatedAt = DateTime.UtcNow;
-        }
-    }
-    
     public DepartmentId Id { get; private set; }
     
     public DepartmentName Name { get; private set; }
@@ -54,4 +29,48 @@ public class Department
     private List<DepartmentLocation> _locations;
     
     private List<DepartmentPosition> _positions;
+    
+    // EF Core
+    private Department()
+    {
+    }
+    
+    private Department(
+        DepartmentId id,
+        DepartmentName name,
+        DepartmentIdentifier identifier,
+        Guid? parentId,
+        List<DepartmentLocation> departmentLocations)
+    {
+        Id = id;
+        Name = name;
+        Identifier = identifier;
+        ParentId = parentId;
+        UpdatedAt = DateTime.UtcNow;
+        _locations = departmentLocations;
+
+        if (CreatedAt == default)
+        {
+            CreatedAt = DateTime.UtcNow;
+        }
+    }
+
+    public static Result<Department> Create(
+        DepartmentName name,
+        DepartmentIdentifier identifier,
+        Guid? parentId,
+        List<DepartmentLocation> departmentLocations)
+    {
+        var id = new DepartmentId(Guid.NewGuid());
+        
+        return new Department(id, name, identifier, parentId, departmentLocations);
+    }
+    
+    public Result Rename(DepartmentName name)
+    {
+        Name = name;
+        UpdatedAt = DateTime.UtcNow;
+        
+        return Result.Success(this);
+    }
 }
