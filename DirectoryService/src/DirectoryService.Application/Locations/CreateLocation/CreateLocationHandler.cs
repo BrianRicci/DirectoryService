@@ -37,14 +37,14 @@ public class CreateLocationHandler : ICommandHandler<Guid, CreateLocationCommand
         }
         
         // создание сущности локации
-        LocationName locationName = LocationName.Create(command.CreateLocationDto.name).Value;
+        LocationName locationName = LocationName.Create(command.CreateLocationDto.Name).Value;
         LocationAddress locationAddress = LocationAddress.Create(
-            command.CreateLocationDto.address.Country,
-            command.CreateLocationDto.address.Region,
-            command.CreateLocationDto.address.City,
-            command.CreateLocationDto.address.Street,
-            command.CreateLocationDto.address.House).Value;
-        LocationTimezone locationTimezone = LocationTimezone.Create(command.CreateLocationDto.timezone).Value;
+            command.CreateLocationDto.Address.Country,
+            command.CreateLocationDto.Address.Region,
+            command.CreateLocationDto.Address.City,
+            command.CreateLocationDto.Address.Street,
+            command.CreateLocationDto.Address.House).Value;
+        LocationTimezone locationTimezone = LocationTimezone.Create(command.CreateLocationDto.Timezone).Value;
         
         Result<Location> locationResult = Location.Create(locationName, locationAddress, locationTimezone);
 

@@ -12,7 +12,7 @@ public class Position
     public PositionDescription? Description { get; private set; }
 
     public bool IsActive { get; private set; }
-    
+
     public DateTime CreatedAt { get; private set; }
     
     public DateTime UpdatedAt { get; private set; }
@@ -22,10 +22,11 @@ public class Position
     private List<DepartmentPosition> _departments;
     
     // EF Core
+
     private Position()
     {
     }
-    
+
     private Position(
         PositionId id,
         PositionName name,
@@ -41,7 +42,7 @@ public class Position
             CreatedAt = DateTime.UtcNow;
         }
     }
-    
+
     public static Result<Position> Create(
         PositionName name,
         PositionDescription? description)
@@ -50,7 +51,7 @@ public class Position
         
         return new Position(id, name, description);
     }
-    
+
     public Result Rename(PositionName name)
     {
         Name = name;

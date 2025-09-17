@@ -8,15 +8,15 @@ public class CreateLocationValidator : AbstractValidator<CreateLocationDto>
 {
     public CreateLocationValidator()
     {
-        RuleFor(x => x.name)
+        RuleFor(x => x.Name)
             .NotEmpty().WithMessage("Название локации не может быть пустым")
             .MinimumLength(LengthConstants.LENGTH3).WithMessage("Название локации слишком короткое")
             .MaximumLength(LengthConstants.LENGTH120).WithMessage("Название локации слишком длинное");
         
-        RuleFor(x => x.address)
+        RuleFor(x => x.Address)
             .NotEmpty().WithMessage("Адрес локации не может быть пустым");
         
-        RuleFor(x => x.timezone)
+        RuleFor(x => x.Timezone)
             .NotEmpty().WithMessage("Часовой пояс локации не может быть пустым");
     }
 }
