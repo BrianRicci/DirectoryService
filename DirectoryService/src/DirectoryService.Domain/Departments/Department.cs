@@ -56,31 +56,19 @@ public class Department
     }
 
     public static Result<Department> Create(
-        string name,
-        string identifier,
+        DepartmentName name,
+        DepartmentIdentifier identifier,
         Guid? parentId,
         List<DepartmentLocation> departmentLocations)
     {
-        Result<DepartmentName> nameResult = DepartmentName.Create(name);
-        if (nameResult.IsFailure)
-            return Result.Failure<Department>(nameResult.Error);
-
-        Result<DepartmentIdentifier> identifierResult = DepartmentIdentifier.Create(identifier);
-        if (identifierResult.IsFailure)
-            return Result.Failure<Department>(identifierResult.Error);
-        
         var id = new DepartmentId(Guid.NewGuid());
         
-        return new Department(id, nameResult.Value, identifierResult.Value, parentId, departmentLocations);
+        return new Department(id, name, identifier, parentId, departmentLocations);
     }
     
-    public Result Rename(string name)
+    public Result Rename(DepartmentName name)
     {
-        Result<DepartmentName> nameResult = DepartmentName.Create(name);
-        if (nameResult.IsFailure)
-            return Result.Failure<Department>(nameResult.Error);
-        
-        Name = nameResult.Value;
+        Name = name;
         UpdatedAt = DateTime.UtcNow;
         
         return Result.Success(this);

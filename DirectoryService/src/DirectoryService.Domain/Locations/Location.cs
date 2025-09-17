@@ -47,38 +47,18 @@ public class Location
     }
     
     public static Result<Location> Create(
-        string name,
-        string country,
-        string region,
-        string city,
-        string street,
-        string house,
-        string timezone)
+        LocationName name,
+        LocationAddress address,
+        LocationTimezone timezone)
     {
-        Result<LocationName> nameResult = LocationName.Create(name);
-        if (nameResult.IsFailure)
-            return Result.Failure<Location>(nameResult.Error);
-
-        Result<LocationAddress> addressResult = LocationAddress.Create(country, region, city, street, house);
-        if (addressResult.IsFailure)
-            return Result.Failure<Location>(addressResult.Error);
-        
-        Result<LocationTimezone> timezoneResult = LocationTimezone.Create(timezone);
-        if (timezoneResult.IsFailure)
-            return Result.Failure<Location>(timezoneResult.Error);
-        
         var id = new LocationId(Guid.NewGuid());
         
-        return new Location(id, nameResult.Value, addressResult.Value, timezoneResult.Value);
+        return new Location(id, name, address, timezone);
     }
 
-    public Result Rename(string name)
+    public Result Rename(LocationName name)
     {
-        Result<LocationName> nameResult = LocationName.Create(name);
-        if (nameResult.IsFailure)
-            return Result.Failure<Location>(nameResult.Error);
-        
-        Name = nameResult.Value;
+        Name = name;
         UpdatedAt = DateTime.UtcNow;
         
         return Result.Success(this);

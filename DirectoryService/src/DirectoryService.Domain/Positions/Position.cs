@@ -43,29 +43,17 @@ public class Position
     }
     
     public static Result<Position> Create(
-        string name,
-        string? description)
+        PositionName name,
+        PositionDescription? description)
     {
-        Result<PositionName> nameResult = PositionName.Create(name);
-        if (nameResult.IsFailure)
-            return Result.Failure<Position>(nameResult.Error);
-        
-        Result<PositionDescription> descriptionResult = PositionDescription.Create(description);
-        if (descriptionResult.IsFailure)
-            return Result.Failure<Position>(descriptionResult.Error);
-        
         var id = new PositionId(Guid.NewGuid());
         
-        return new Position(id, nameResult.Value, descriptionResult.Value);
+        return new Position(id, name, description);
     }
     
-    public Result Rename(string name)
+    public Result Rename(PositionName name)
     {
-        Result<PositionName> nameResult = PositionName.Create(name);
-        if (nameResult.IsFailure)
-            return Result.Failure<Position>(nameResult.Error);
-        
-        Name = nameResult.Value;
+        Name = name;
         UpdatedAt = DateTime.UtcNow;
         
         return Result.Success(this);
