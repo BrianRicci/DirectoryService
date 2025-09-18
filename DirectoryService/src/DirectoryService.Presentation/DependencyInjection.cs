@@ -2,6 +2,7 @@
 using DirectoryService.Application.Locations.Fails;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
+using Serilog;
 using Shared;
 using Errors = Shared.Errors;
 
@@ -40,6 +41,8 @@ public static class DependencyInjection
                 return Task.CompletedTask;
             });
         });
+        
+        services.AddSerilog();
 
         return services;
     }

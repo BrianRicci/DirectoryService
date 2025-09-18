@@ -10,8 +10,15 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .WriteTo.Seq(builder.Configuration.GetConnectionString("Seq") 
+             ?? throw new ArgumentNullException("Seq"))
+    .CreateLogger();
 
 builder.Services.AddProgramDependencies();
 
@@ -20,13 +27,15 @@ builder.Services.AddScoped<DirectoryServiceDbContext>(_ =>
 
 builder.Services.AddScoped<ILocationsRepository, EfCoreLocationsRepository>();
 
-builder.Services.AddScoped<IValidator<CreateLocationDto>, CreateLocationValidator>();
+builder.Services.AddScoped<IValidator<CreateLocationCommand>, CreateLocationValidator>();
 
 builder.Services.AddScoped<CreateLocationHandler>();
 
 var app = builder.Build();
 
 app.UseExceptionMiddleware();
+
+app.UseSerilogRequestLogging();
 
 if (app.Environment.IsDevelopment())
 {
