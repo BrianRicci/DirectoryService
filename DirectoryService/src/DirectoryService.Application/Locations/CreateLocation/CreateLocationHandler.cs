@@ -13,12 +13,12 @@ namespace DirectoryService.Application.Locations.CreateLocation;
 public class CreateLocationHandler : ICommandHandler<Guid, CreateLocationCommand>
 {
     private readonly ILocationsRepository _locationsRepository;
-    private readonly IValidator<CreateLocationDto> _validator;
+    private readonly IValidator<CreateLocationCommand> _validator;
     private readonly ILogger<CreateLocationHandler> _logger;
     
     public CreateLocationHandler(
         ILocationsRepository locationsRepository,
-        IValidator<CreateLocationDto> validator,
+        IValidator<CreateLocationCommand> validator,
         ILogger<CreateLocationHandler> logger)
     {
         _locationsRepository = locationsRepository;
@@ -29,7 +29,7 @@ public class CreateLocationHandler : ICommandHandler<Guid, CreateLocationCommand
     public async Task<Result<Guid, Errors>> Handle(CreateLocationCommand command, CancellationToken cancellationToken)
     {
         // валидация
-        var validationResult = await _validator.ValidateAsync(command.CreateLocationDto, cancellationToken);
+        var validationResult = await _validator.ValidateAsync(command, cancellationToken);
         
         if (!validationResult.IsValid)
         {
@@ -37,16 +37,21 @@ public class CreateLocationHandler : ICommandHandler<Guid, CreateLocationCommand
         }
         
         // создание сущности локации
-        LocationName locationName = LocationName.Create(command.CreateLocationDto.name).Value;
-        LocationAddress locationAddress = LocationAddress.Create(
-            command.CreateLocationDto.address.Country,
-            command.CreateLocationDto.address.Region,
-            command.CreateLocationDto.address.City,
-            command.CreateLocationDto.address.Street,
-            command.CreateLocationDto.address.House).Value;
-        LocationTimezone locationTimezone = LocationTimezone.Create(command.CreateLocationDto.timezone).Value;
+        var locationNameResult = LocationName.Create(command.CreateLocationDto.Name);
         
-        Result<Location> locationResult = Location.Create(locationName, locationAddress, locationTimezone);
+        var locationAddressResult = LocationAddress.Create(
+            command.CreateLocationDto.Address.Country,
+            command.CreateLocationDto.Address.Region,
+            command.CreateLocationDto.Address.City,
+            command.CreateLocationDto.Address.Street,
+            command.CreateLocationDto.Address.House);
+        
+        var locationTimezoneResult = LocationTimezone.Create(command.CreateLocationDto.Timezone);
+        
+        var locationResult = Location.Create(
+            locationNameResult.Value,
+            locationAddressResult.Value,
+            locationTimezoneResult.Value);
 
         // сохранение сущности локации в БД
         await _locationsRepository.AddAsync(locationResult.Value, cancellationToken);

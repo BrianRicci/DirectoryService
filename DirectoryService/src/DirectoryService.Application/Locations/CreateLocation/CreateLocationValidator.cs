@@ -1,22 +1,34 @@
-﻿using DirectoryService.Contracts;
+﻿using DirectoryService.Application.Validation;
+using DirectoryService.Contracts;
 using DirectoryService.Domain;
+using DirectoryService.Domain.Locations;
 using FluentValidation;
+using Shared;
 
 namespace DirectoryService.Application.Locations.CreateLocation;
 
-public class CreateLocationValidator : AbstractValidator<CreateLocationDto>
+public class CreateLocationValidator : AbstractValidator<CreateLocationCommand>
 {
     public CreateLocationValidator()
     {
-        RuleFor(x => x.name)
+        RuleFor(command => command.CreateLocationDto.Name)
             .NotEmpty().WithMessage("Название локации не может быть пустым")
             .MinimumLength(LengthConstants.LENGTH3).WithMessage("Название локации слишком короткое")
             .MaximumLength(LengthConstants.LENGTH120).WithMessage("Название локации слишком длинное");
-        
-        RuleFor(x => x.address)
-            .NotEmpty().WithMessage("Адрес локации не может быть пустым");
-        
-        RuleFor(x => x.timezone)
-            .NotEmpty().WithMessage("Часовой пояс локации не может быть пустым");
+
+        RuleFor(command => command.CreateLocationDto.Address)
+            .NotEmpty().WithMessage("Адрес локации не может быть пустым")
+            .ChildRules(address =>
+            {
+                address.RuleFor(x => x.Country).NotEmpty().WithMessage("Страна не может быть пустой");
+                address.RuleFor(x => x.Region).NotEmpty().WithMessage("Регион не может быть пустой");
+                address.RuleFor(x => x.City).NotEmpty().WithMessage("Город не может быть пустой");
+                address.RuleFor(x => x.Street).NotEmpty().WithMessage("Улица не может быть пустой");
+                address.RuleFor(x => x.House).NotEmpty().WithMessage("Номер дома не может быть пустым");
+            });
+
+        RuleFor(command => command.CreateLocationDto.Timezone)
+            .NotEmpty().WithMessage("Часовой пояс локации не может быть пустым")
+            .MustBeValueObject(LocationTimezone.Create);
     }
 }
