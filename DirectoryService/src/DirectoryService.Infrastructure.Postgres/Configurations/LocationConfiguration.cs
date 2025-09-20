@@ -60,9 +60,7 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
                 .HasMaxLength(LengthConstants.LENGTH32)
                 .IsRequired();
         });
-        
-        builder.HasIndex(l => l.Address).IsUnique();
-        
+    
         builder
             .Property(l => l.Timezone)
             .HasConversion(l => l.Value, timezone => LocationTimezone.Create(timezone).Value)
