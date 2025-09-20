@@ -37,27 +37,27 @@ public class CreateLocationHandler : ICommandHandler<Guid, CreateLocationCommand
         }
         
         // создание сущности локации
-        var locationNameResult = LocationName.Create(command.CreateLocationDto.Name);
+        var locationName = LocationName.Create(command.CreateLocationDto.Name).Value;
         
-        var locationAddressResult = LocationAddress.Create(
+        var locationAddress = LocationAddress.Create(
             command.CreateLocationDto.Address.Country,
             command.CreateLocationDto.Address.Region,
             command.CreateLocationDto.Address.City,
             command.CreateLocationDto.Address.Street,
-            command.CreateLocationDto.Address.House);
+            command.CreateLocationDto.Address.House).Value;
         
-        var locationTimezoneResult = LocationTimezone.Create(command.CreateLocationDto.Timezone);
+        var locationTimezone = LocationTimezone.Create(command.CreateLocationDto.Timezone).Value;
         
-        var locationResult = Location.Create(
-            locationNameResult.Value,
-            locationAddressResult.Value,
-            locationTimezoneResult.Value);
+        var location = Location.Create(
+            locationName,
+            locationAddress,
+            locationTimezone).Value;
 
         // сохранение сущности локации в БД
-        await _locationsRepository.AddAsync(locationResult.Value, cancellationToken);
+        await _locationsRepository.AddAsync(location, cancellationToken);
         
         // логирование
-        LocationId locationId = locationResult.Value.Id;
+        LocationId locationId = location.Id;
         
         _logger.LogInformation("Location created with id: {locationId}", locationId);
 
