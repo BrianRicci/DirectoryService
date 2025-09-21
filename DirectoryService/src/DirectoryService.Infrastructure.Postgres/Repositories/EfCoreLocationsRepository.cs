@@ -1,8 +1,6 @@
-﻿using CSharpFunctionalExtensions;
-using DirectoryService.Application.Locations;
+﻿using DirectoryService.Application.Locations;
 using DirectoryService.Domain.Locations;
 using Microsoft.EntityFrameworkCore;
-using Shared;
 
 namespace DirectoryService.Infrastructure.Postgres.Repositories;
 
@@ -23,11 +21,9 @@ public class EfCoreLocationsRepository : ILocationsRepository
         return location.Id.Value;
     }
 
-    public async Task<Location?> GetByAddressAsync(LocationAddress address, CancellationToken cancellationToken)
+    public async Task<bool> IsAddressExistsAsync(LocationAddress address, CancellationToken cancellationToken)
     {
-        Location? location = await _dbContext.Locations
-            .Where(l => l.Address == address)
-            .SingleOrDefaultAsync(cancellationToken);
+        bool location = await _dbContext.Locations.AnyAsync(l => l.Address == address, cancellationToken);
         
         return location;
     }

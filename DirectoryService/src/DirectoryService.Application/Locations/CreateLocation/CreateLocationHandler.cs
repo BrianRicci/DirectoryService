@@ -46,12 +46,12 @@ public class CreateLocationHandler : ICommandHandler<Guid, CreateLocationCommand
             command.CreateLocationDto.Address.Street,
             command.CreateLocationDto.Address.House).Value;
         
-        var existingLocation = await _locationsRepository.GetByAddressAsync(locationAddress, cancellationToken);
+        bool isAddressExists = await _locationsRepository.IsAddressExistsAsync(locationAddress, cancellationToken);
         
-        if (existingLocation != null)
+        if (isAddressExists)
         {
             _logger.LogInformation(
-                "Location({existingLocationId}) with this address already exists.", existingLocation.Id);
+                "Location with this address already exists.");
             
             return GeneralErrors.ValueAlreadyExists("address").ToErrors();
         }
