@@ -24,4 +24,10 @@ public static class GeneralErrors
     {
         return Error.Failure("server.failure", message ?? "Серверная ошибка");
     }
+
+    public static Error ValueAlreadyExists(string? name = null)
+    {
+        string label = name ?? "значение";
+        return Error.Validation("value.already.exists", $"{label} уже существует");
+    }
 }
