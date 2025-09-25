@@ -1,8 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using DirectoryService.Application.Abstractions;
 using DirectoryService.Application.Extentions;
-using DirectoryService.Application.Locations.Fails.Exceptions;
-using DirectoryService.Contracts;
 using DirectoryService.Domain.Locations;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
@@ -40,11 +38,11 @@ public class CreateLocationHandler : ICommandHandler<Guid, CreateLocationCommand
         var locationName = LocationName.Create(command.CreateLocationDto.Name).Value;
         
         var locationAddress = LocationAddress.Create(
-            command.CreateLocationDto.Address.Country,
-            command.CreateLocationDto.Address.Region,
-            command.CreateLocationDto.Address.City,
-            command.CreateLocationDto.Address.Street,
-            command.CreateLocationDto.Address.House).Value;
+            command.CreateLocationDto.LocationAddress.Country,
+            command.CreateLocationDto.LocationAddress.Region,
+            command.CreateLocationDto.LocationAddress.City,
+            command.CreateLocationDto.LocationAddress.Street,
+            command.CreateLocationDto.LocationAddress.House).Value;
         
         bool isAddressExists = await _locationsRepository.IsAddressExistsAsync(locationAddress, cancellationToken);
         

@@ -10,7 +10,7 @@ public class Department
     
     public DepartmentIdentifier Identifier { get; private set; }
     
-    public Guid? ParentId { get; private set; }
+    public DepartmentId? ParentId { get; private set; }
     
     public DepartmentPath Path { get; private set; } 
     
@@ -37,15 +37,19 @@ public class Department
     
     private Department(
         DepartmentId id,
+        DepartmentId? parentId,
         DepartmentName name,
         DepartmentIdentifier identifier,
-        Guid? parentId,
+        DepartmentPath path,
+        short depth,
         List<DepartmentLocation> departmentLocations)
     {
         Id = id;
+        ParentId = parentId;
         Name = name;
         Identifier = identifier;
-        ParentId = parentId;
+        Path = path;
+        Depth = depth;
         UpdatedAt = DateTime.UtcNow;
         _locations = departmentLocations;
 
@@ -55,15 +59,41 @@ public class Department
         }
     }
 
-    public static Result<Department> Create(
+    public static Result<Department> CreateParent(
         DepartmentName name,
         DepartmentIdentifier identifier,
-        Guid? parentId,
-        List<DepartmentLocation> departmentLocations)
+        DepartmentPath path,
+        short depth,
+        List<DepartmentLocation> departmentLocations,
+        DepartmentId? id = null)
     {
-        var id = new DepartmentId(Guid.NewGuid());
-        
-        return new Department(id, name, identifier, parentId, departmentLocations);
+        return new Department(
+            id ?? new DepartmentId(Guid.NewGuid()),
+            null,
+            name,
+            identifier,
+            path,
+            depth,
+            departmentLocations);
+    }
+
+    public static Result<Department> CreateChild(
+        DepartmentId parentId,
+        DepartmentName name,
+        DepartmentIdentifier identifier,
+        DepartmentPath path,
+        short depth,
+        List<DepartmentLocation> departmentLocations,
+        DepartmentId? id = null)
+    {
+        return new Department(
+            id ?? new DepartmentId(Guid.NewGuid()),
+            parentId,
+            name,
+            identifier,
+            path,
+            depth,
+            departmentLocations);
     }
     
     public Result Rename(DepartmentName name)

@@ -16,7 +16,7 @@ public class CreateLocationValidator : AbstractValidator<CreateLocationCommand>
             .MinimumLength(LengthConstants.LENGTH3).WithMessage("Название локации слишком короткое")
             .MaximumLength(LengthConstants.LENGTH120).WithMessage("Название локации слишком длинное");
 
-        RuleFor(command => command.CreateLocationDto.Address)
+        RuleFor(command => command.CreateLocationDto.LocationAddress)
             .NotEmpty().WithMessage("Адрес локации не может быть пустым")
             .ChildRules(address =>
             {

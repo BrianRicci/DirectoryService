@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DirectoryService.Infrastructure.Postgres.Repositories;
 
-public class EfCoreLocationsRepository : ILocationsRepository
+public class LocationsRepository : ILocationsRepository
 {
     private readonly DirectoryServiceDbContext _dbContext;
 
-    public EfCoreLocationsRepository(DirectoryServiceDbContext dbContext)
+    public LocationsRepository(DirectoryServiceDbContext dbContext)
     {
         _dbContext = dbContext;
     }
@@ -23,8 +23,17 @@ public class EfCoreLocationsRepository : ILocationsRepository
 
     public async Task<bool> IsAddressExistsAsync(LocationAddress address, CancellationToken cancellationToken)
     {
-        bool location = await _dbContext.Locations.AnyAsync(l => l.Address == address, cancellationToken);
+        bool isAddressExists = await _dbContext.Locations.AnyAsync(l => l.Address == address, cancellationToken);
         
-        return location;
+        return isAddressExists;
+    }
+    
+    public async Task<bool> IsAllLocationsExistsAsync(List<LocationId> locationIds, CancellationToken cancellationToken)
+    {
+        bool isAllLocationsExists = await _dbContext.Locations
+            .Where(l => locationIds.Contains(l.Id))
+            .CountAsync(cancellationToken) == locationIds.Count;
+        
+        return isAllLocationsExists;
     }
 }

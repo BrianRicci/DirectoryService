@@ -5,6 +5,8 @@ namespace DirectoryService.Domain.Departments;
 
 public record DepartmentPath
 {
+    private const char SEPARATOR = '.';
+    
     public string Value { get; } 
     
     private DepartmentPath(string value)
@@ -22,11 +24,6 @@ public record DepartmentPath
         if (!Regex.IsMatch(value, @"^[a-zA-Z0-9]+$"))
         {
             return Result.Failure<DepartmentPath>("Department path can only contain numbers and latin letters");
-        }
-        
-        if (value.Contains('.'))
-        {
-            return Result.Failure<DepartmentPath>($"Department path can't contain dots");
         }
         
         value = value.Trim();

@@ -4,6 +4,8 @@ namespace Shared;
 
 public record Error
 {
+    private const string SEPARATOR = "||";
+    
     public string Code { get; }
     
     public string Message { get; }
@@ -29,6 +31,28 @@ public record Error
     public static Error Failure(string code, string message) => new(code, message, ErrorType.FAILURE);
 
     public static Error Conflict(string code, string message) => new(code, message, ErrorType.CONFLICT);
+    
+    public string Serialize()
+    {
+        return string.Join(SEPARATOR, Code, Message, Type);
+    }
+
+    public static Error Deserialize(string serialized)
+    {
+        string[] parts = serialized.Split(SEPARATOR);
+
+        if (parts.Length < 3)
+        {
+            throw new ArgumentException("Invalid serialized format");
+        }
+
+        if (Enum.TryParse<ErrorType>(parts[2], out var type) == false)
+        {
+            throw new ArgumentException("Invalid serialized format");
+        }
+
+        return new Error(parts[0], parts[1], type);
+    }
     
     public Errors ToErrors() => new([this]);
 }

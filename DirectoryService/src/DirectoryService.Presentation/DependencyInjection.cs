@@ -1,5 +1,4 @@
 ﻿using DirectoryService.Application;
-using DirectoryService.Application.Locations.Fails;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Serilog;
