@@ -12,23 +12,25 @@ public class CreateLocationValidator : AbstractValidator<CreateLocationCommand>
     public CreateLocationValidator()
     {
         RuleFor(command => command.CreateLocationDto.Name)
-            .NotEmpty().WithMessage("Название локации не может быть пустым")
-            .MinimumLength(LengthConstants.LENGTH3).WithMessage("Название локации слишком короткое")
-            .MaximumLength(LengthConstants.LENGTH120).WithMessage("Название локации слишком длинное");
+            .MustBeValueObject(LocationName.Create);
 
         RuleFor(command => command.CreateLocationDto.LocationAddress)
-            .NotEmpty().WithMessage("Адрес локации не может быть пустым")
+            .NotEmpty().WithError(GeneralErrors.ValueIsRequired("address"))
             .ChildRules(address =>
             {
-                address.RuleFor(x => x.Country).NotEmpty().WithMessage("Страна не может быть пустой");
-                address.RuleFor(x => x.Region).NotEmpty().WithMessage("Регион не может быть пустой");
-                address.RuleFor(x => x.City).NotEmpty().WithMessage("Город не может быть пустой");
-                address.RuleFor(x => x.Street).NotEmpty().WithMessage("Улица не может быть пустой");
-                address.RuleFor(x => x.House).NotEmpty().WithMessage("Номер дома не может быть пустым");
+                address.RuleFor(x => x.Country)
+                    .NotEmpty().WithError(GeneralErrors.ValueIsRequired("country"));
+                address.RuleFor(x => x.Region)
+                    .NotEmpty().WithError(GeneralErrors.ValueIsRequired("region"));
+                address.RuleFor(x => x.City)
+                    .NotEmpty().WithError(GeneralErrors.ValueIsRequired("city"));
+                address.RuleFor(x => x.Street)
+                    .NotEmpty().WithError(GeneralErrors.ValueIsRequired("street"));
+                address.RuleFor(x => x.House)
+                    .NotEmpty().WithError(GeneralErrors.ValueIsRequired("house"));
             });
 
         RuleFor(command => command.CreateLocationDto.Timezone)
-            .NotEmpty().WithMessage("Часовой пояс локации не может быть пустым")
             .MustBeValueObject(LocationTimezone.Create);
     }
 }

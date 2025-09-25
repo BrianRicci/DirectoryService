@@ -37,7 +37,7 @@ public class CreateDepartmentHandler : ICommandHandler<Guid, CreateDepartmentCom
         
         if (!validationResult.IsValid)
         {
-            return validationResult.ToErrors();
+            return validationResult.ToList();
         }
         
         // создание сущности локации
@@ -55,13 +55,15 @@ public class CreateDepartmentHandler : ICommandHandler<Guid, CreateDepartmentCom
         
         if (departmentParentId.HasValue)
         {
-            Department parentDepartment = await _departmentsRepository
-                .GetByIdAsync(departmentParentId.Value, cancellationToken); // здесь лучше передавать DepartmentId или Guid?
-
-            departmentDepth = (short)(parentDepartment.Depth + 1); // приведение int единицы к short
+            var parentDepartmentResult = await _departmentsRepository
+                .GetByIdAsync(new DepartmentId(departmentParentId.Value), cancellationToken);
+            if (parentDepartmentResult.IsFailure)
+                return parentDepartmentResult.Error;
+            
+            departmentDepth = (short)(parentDepartmentResult.Value.Depth + 1); // приведение int единицы к short
             
             departmentPath = DepartmentPath
-                .Create(parentDepartment.Path.Value + SEPARATOR + departmentIdentifier).Value;
+                .Create(parentDepartmentResult.Value.Path.Value + SEPARATOR + departmentIdentifier.Value).Value;
         } else
         {
             departmentPath = DepartmentPath

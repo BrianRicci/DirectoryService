@@ -1,4 +1,6 @@
-﻿using DirectoryService.Domain.Departments;
+﻿using CSharpFunctionalExtensions;
+using DirectoryService.Domain.Departments;
+using Shared;
 
 namespace DirectoryService.Application.Departments;
 
@@ -6,5 +8,5 @@ public interface IDepartmentsRepository
 {
     Task<Guid> AddAsync(Department department, CancellationToken cancellationToken);
     
-    Task<Department> GetByIdAsync(Guid id, CancellationToken cancellationToken);
+    Task<Result<Department, Errors>> GetByIdAsync(DepartmentId departmentId, CancellationToken cancellationToken);
 }

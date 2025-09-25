@@ -10,12 +10,9 @@ public class CreateDepartmentValidator: AbstractValidator<CreateDepartmentComman
     public CreateDepartmentValidator()
     {
         RuleFor(command => command.CreateDepartmentDto.Name)
-            .NotEmpty().WithMessage("Название отдела не может быть пустым")
-            .MinimumLength(LengthConstants.LENGTH3).WithMessage("Название отдела слишком короткое")
-            .MaximumLength(LengthConstants.LENGTH150).WithMessage("Название отдела слишком длинное");
+            .MustBeValueObject(DepartmentName.Create);
         
         RuleFor(command => command.CreateDepartmentDto.Identifier)
-            .NotEmpty().WithMessage("Идентификатор отдела не может быть пустым")
             .MustBeValueObject(DepartmentIdentifier.Create);
 
         RuleFor(command => command.CreateDepartmentDto.LocationIds)

@@ -1,6 +1,8 @@
-﻿using DirectoryService.Application.Departments;
+﻿using CSharpFunctionalExtensions;
+using DirectoryService.Application.Departments;
 using DirectoryService.Domain.Departments;
 using Microsoft.EntityFrameworkCore;
+using Shared;
 
 namespace DirectoryService.Infrastructure.Postgres.Repositories;
 
@@ -21,8 +23,14 @@ public class DepartmentsRepository : IDepartmentsRepository
         return department.Id.Value;
     }
     
-    public async Task<Department> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<Result<Department, Errors>> GetByIdAsync(DepartmentId departmentId, CancellationToken cancellationToken)
     {
-        return await _dbContext.Departments.Where(d => d.Id.Value == id).FirstAsync(cancellationToken);
+        var department = await _dbContext.Departments
+            .FirstOrDefaultAsync(d => d.Id == departmentId, cancellationToken);
+        
+        if (department is null)
+            return GeneralErrors.NotFound(departmentId.Value).ToErrors();
+
+        return department;
     }
 }
