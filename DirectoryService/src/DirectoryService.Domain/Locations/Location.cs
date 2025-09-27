@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using DirectoryService.Domain.DepartmentLocations;
 using DirectoryService.Domain.Departments;
 
 namespace DirectoryService.Domain.Locations;
@@ -38,6 +39,7 @@ public class Location
         Name = name;
         Address = address;
         Timezone = timezone;
+        IsActive = true;
         UpdatedAt = DateTime.UtcNow;
 
         if (CreatedAt == default)

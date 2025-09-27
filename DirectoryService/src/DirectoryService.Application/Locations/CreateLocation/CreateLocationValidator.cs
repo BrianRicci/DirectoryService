@@ -11,10 +11,10 @@ public class CreateLocationValidator : AbstractValidator<CreateLocationCommand>
 {
     public CreateLocationValidator()
     {
-        RuleFor(command => command.CreateLocationDto.Name)
+        RuleFor(command => command.CreateLocationRequest.Name)
             .MustBeValueObject(LocationName.Create);
 
-        RuleFor(command => command.CreateLocationDto.LocationAddress)
+        RuleFor(command => command.CreateLocationRequest.LocationAddress)
             .NotEmpty().WithError(GeneralErrors.ValueIsRequired("address"))
             .ChildRules(address =>
             {
@@ -30,7 +30,7 @@ public class CreateLocationValidator : AbstractValidator<CreateLocationCommand>
                     .NotEmpty().WithError(GeneralErrors.ValueIsRequired("house"));
             });
 
-        RuleFor(command => command.CreateLocationDto.Timezone)
+        RuleFor(command => command.CreateLocationRequest.Timezone)
             .MustBeValueObject(LocationTimezone.Create);
     }
 }

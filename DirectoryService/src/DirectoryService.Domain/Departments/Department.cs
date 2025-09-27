@@ -1,4 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
+using DirectoryService.Domain.DepartmentLocations;
+using DirectoryService.Domain.DepartmentPositions;
 
 namespace DirectoryService.Domain.Departments;
 
@@ -50,6 +52,7 @@ public class Department
         Identifier = identifier;
         Path = path;
         Depth = depth;
+        IsActive = true;
         UpdatedAt = DateTime.UtcNow;
         _locations = departmentLocations;
 

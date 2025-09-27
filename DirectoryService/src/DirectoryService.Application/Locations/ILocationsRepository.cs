@@ -10,7 +10,7 @@ public interface ILocationsRepository
     
     Task<bool> IsAddressExistsAsync(LocationAddress address, CancellationToken cancellationToken);
     
-    Task<bool> IsAllLocationsExistsAsync(List<LocationId> locationIds, CancellationToken cancellationToken);
+    Task<bool> IsAllExistsAsync(List<LocationId> locationIds, CancellationToken cancellationToken);
     
     // Task<Guid> UpdateAsync(Location location, CancellationToken cancellationToken);
     //

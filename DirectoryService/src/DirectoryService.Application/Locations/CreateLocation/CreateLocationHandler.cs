@@ -34,15 +34,15 @@ public class CreateLocationHandler : ICommandHandler<Guid, CreateLocationCommand
             return validationResult.ToList();
         }
         
-        // создание сущности локации
-        var locationName = LocationName.Create(command.CreateLocationDto.Name).Value;
+        // создание сущности
+        var locationName = LocationName.Create(command.CreateLocationRequest.Name).Value;
         
         var locationAddress = LocationAddress.Create(
-            command.CreateLocationDto.LocationAddress.Country,
-            command.CreateLocationDto.LocationAddress.Region,
-            command.CreateLocationDto.LocationAddress.City,
-            command.CreateLocationDto.LocationAddress.Street,
-            command.CreateLocationDto.LocationAddress.House).Value;
+            command.CreateLocationRequest.LocationAddress.Country,
+            command.CreateLocationRequest.LocationAddress.Region,
+            command.CreateLocationRequest.LocationAddress.City,
+            command.CreateLocationRequest.LocationAddress.Street,
+            command.CreateLocationRequest.LocationAddress.House).Value;
         
         bool isAddressExists = await _locationsRepository.IsAddressExistsAsync(locationAddress, cancellationToken);
         
@@ -54,14 +54,14 @@ public class CreateLocationHandler : ICommandHandler<Guid, CreateLocationCommand
             return GeneralErrors.ValueAlreadyExists("address").ToErrors();
         }
         
-        var locationTimezone = LocationTimezone.Create(command.CreateLocationDto.Timezone).Value;
+        var locationTimezone = LocationTimezone.Create(command.CreateLocationRequest.Timezone).Value;
         
         var location = Location.Create(
             locationName,
             locationAddress,
             locationTimezone).Value;
 
-        // сохранение сущности локации в БД
+        // сохранение сущности в БД
         await _locationsRepository.AddAsync(location, cancellationToken);
         
         // логирование

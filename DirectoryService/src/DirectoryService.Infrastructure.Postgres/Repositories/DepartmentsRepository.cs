@@ -33,4 +33,13 @@ public class DepartmentsRepository : IDepartmentsRepository
 
         return department;
     }
+    
+    public async Task<bool> IsAllExistsAsync(List<DepartmentId> departmentIds, CancellationToken cancellationToken)
+    {
+        bool isAllExists = await _dbContext.Departments
+            .Where(l => departmentIds.Contains(l.Id) && l.IsActive)
+            .CountAsync(cancellationToken) == departmentIds.Count;
+        
+        return isAllExists;
+    }
 }

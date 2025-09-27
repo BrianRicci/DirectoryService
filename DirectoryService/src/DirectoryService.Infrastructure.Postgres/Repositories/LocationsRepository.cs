@@ -28,12 +28,12 @@ public class LocationsRepository : ILocationsRepository
         return isAddressExists;
     }
     
-    public async Task<bool> IsAllLocationsExistsAsync(List<LocationId> locationIds, CancellationToken cancellationToken)
+    public async Task<bool> IsAllExistsAsync(List<LocationId> locationIds, CancellationToken cancellationToken)
     {
-        bool isAllLocationsExists = await _dbContext.Locations
+        bool isAllExists = await _dbContext.Locations
             .Where(l => locationIds.Contains(l.Id))
             .CountAsync(cancellationToken) == locationIds.Count;
         
-        return isAllLocationsExists;
+        return isAllExists;
     }
 }

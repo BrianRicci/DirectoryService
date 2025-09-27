@@ -9,13 +9,13 @@ public class CreateDepartmentValidator: AbstractValidator<CreateDepartmentComman
 {
     public CreateDepartmentValidator()
     {
-        RuleFor(command => command.CreateDepartmentDto.Name)
+        RuleFor(command => command.CreateDepartmentRequest.Name)
             .MustBeValueObject(DepartmentName.Create);
         
-        RuleFor(command => command.CreateDepartmentDto.Identifier)
+        RuleFor(command => command.CreateDepartmentRequest.Identifier)
             .MustBeValueObject(DepartmentIdentifier.Create);
 
-        RuleFor(command => command.CreateDepartmentDto.LocationIds)
+        RuleFor(command => command.CreateDepartmentRequest.LocationIds)
             .NotEmpty().WithMessage("Массив локаций не может быть пустым")
             .Must(l => l != l.Distinct().ToList()).WithMessage("Массив локаций содержит дублирующиеся значения");
     }

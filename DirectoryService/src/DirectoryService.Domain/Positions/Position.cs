@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using DirectoryService.Domain.DepartmentPositions;
 using DirectoryService.Domain.Departments;
 
 namespace DirectoryService.Domain.Positions;
@@ -30,11 +31,14 @@ public class Position
     private Position(
         PositionId id,
         PositionName name,
-        PositionDescription? description)
+        PositionDescription? description,
+        List<DepartmentPosition> departmentPositions)
     {
         Id = id;
         Name = name;
         Description = description;
+        _departments = departmentPositions;
+        IsActive = true;
         UpdatedAt = DateTime.UtcNow;
 
         if (CreatedAt == default)
@@ -45,11 +49,12 @@ public class Position
 
     public static Result<Position> Create(
         PositionName name,
-        PositionDescription? description)
+        PositionDescription? description,
+        List<DepartmentPosition> departmentPositions)
     {
         var id = new PositionId(Guid.NewGuid());
         
-        return new Position(id, name, description);
+        return new Position(id, name, description, departmentPositions);
     }
 
     public Result Rename(PositionName name)

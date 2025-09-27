@@ -17,7 +17,7 @@ public class DepartmentController : ControllerBase
     [ProducesResponseType<Envelope>(500)]
     public async Task<EndpointResult<Guid>> Create(
         [FromServices] ICommandHandler<Guid, CreateDepartmentCommand> handler,
-        [FromBody] CreateDepartmentDto request,
+        [FromBody] CreateDepartmentRequest request,
         CancellationToken cancellationToken)
     {
         var command = new CreateDepartmentCommand(request);

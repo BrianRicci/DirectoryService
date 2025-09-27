@@ -9,4 +9,6 @@ public interface IDepartmentsRepository
     Task<Guid> AddAsync(Department department, CancellationToken cancellationToken);
     
     Task<Result<Department, Errors>> GetByIdAsync(DepartmentId departmentId, CancellationToken cancellationToken);
+
+    Task<bool> IsAllExistsAsync(List<DepartmentId> departmentIds, CancellationToken cancellationToken);
 }

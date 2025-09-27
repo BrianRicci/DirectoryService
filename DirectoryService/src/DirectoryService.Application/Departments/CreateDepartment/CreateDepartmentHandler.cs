@@ -2,6 +2,7 @@
 using DirectoryService.Application.Abstractions;
 using DirectoryService.Application.Extentions;
 using DirectoryService.Application.Locations;
+using DirectoryService.Domain.DepartmentLocations;
 using DirectoryService.Domain.Departments;
 using DirectoryService.Domain.Locations;
 using FluentValidation;
@@ -40,18 +41,18 @@ public class CreateDepartmentHandler : ICommandHandler<Guid, CreateDepartmentCom
             return validationResult.ToList();
         }
         
-        // создание сущности локации
+        // создание сущности
         var departmentId = new DepartmentId(Guid.NewGuid());
         
-        var departmentName = DepartmentName.Create(command.CreateDepartmentDto.Name).Value;
+        var departmentName = DepartmentName.Create(command.CreateDepartmentRequest.Name).Value;
         
-        var departmentIdentifier = DepartmentIdentifier.Create(command.CreateDepartmentDto.Identifier).Value;
+        var departmentIdentifier = DepartmentIdentifier.Create(command.CreateDepartmentRequest.Identifier).Value;
         
         DepartmentPath departmentPath;
         
         short departmentDepth = 0;
         
-        Guid? departmentParentId = command.CreateDepartmentDto.ParentId; 
+        Guid? departmentParentId = command.CreateDepartmentRequest.ParentId; 
         
         if (departmentParentId.HasValue)
         {
@@ -71,10 +72,10 @@ public class CreateDepartmentHandler : ICommandHandler<Guid, CreateDepartmentCom
         }
         
         var departmentLocationIds = 
-            command.CreateDepartmentDto.LocationIds.Select(id => new LocationId(id)).ToList();
+            command.CreateDepartmentRequest.LocationIds.Select(id => new LocationId(id)).ToList();
         
         bool isAllLocationsExists = await _locationsRepository
-            .IsAllLocationsExistsAsync(departmentLocationIds, cancellationToken);
+            .IsAllExistsAsync(departmentLocationIds, cancellationToken);
         
         if (!isAllLocationsExists)
         {
@@ -104,7 +105,7 @@ public class CreateDepartmentHandler : ICommandHandler<Guid, CreateDepartmentCom
             departmentLocations,
             departmentId).Value;
 
-        // сохранение сущности локации в БД
+        // сохранение сущности в БД
         await _departmentsRepository.AddAsync(department, cancellationToken);
         
         // логирование
