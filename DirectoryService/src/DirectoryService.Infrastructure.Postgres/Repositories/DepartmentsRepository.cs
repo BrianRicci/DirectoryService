@@ -26,6 +26,8 @@ public class DepartmentsRepository : IDepartmentsRepository
     public async Task<Result<Department, Errors>> GetByIdAsync(DepartmentId departmentId, CancellationToken cancellationToken)
     {
         var department = await _dbContext.Departments
+            .Include(d => d.DepartmentLocations)
+            .Include(d => d.DepartmentPositions)
             .FirstOrDefaultAsync(d => d.Id == departmentId, cancellationToken);
         
         if (department is null)

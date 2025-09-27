@@ -104,7 +104,7 @@ public class CreateDepartmentHandler : ICommandHandler<Guid, CreateDepartmentCom
             departmentDepth,
             departmentLocations,
             departmentId).Value;
-
+        
         // сохранение сущности в БД
         await _departmentsRepository.AddAsync(department, cancellationToken);
         

@@ -13,7 +13,6 @@ public class DepartmentLocation
     
     public DepartmentLocation(DepartmentId departmentId, LocationId locationId)
     {
-        Id = new DepartmentLocationId(Guid.NewGuid());
         DepartmentId = departmentId;
         LocationId = locationId;
     }

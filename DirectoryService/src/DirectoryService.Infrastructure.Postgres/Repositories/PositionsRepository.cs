@@ -1,6 +1,8 @@
-﻿using DirectoryService.Application.Positions;
+﻿using CSharpFunctionalExtensions;
+using DirectoryService.Application.Positions;
 using DirectoryService.Domain.Positions;
 using Microsoft.EntityFrameworkCore;
+using Shared;
 
 namespace DirectoryService.Infrastructure.Postgres.Repositories;
 
@@ -27,5 +29,17 @@ public class PositionsRepository : IPositionsRepository
             .AnyAsync(p => p.Name == name && p.IsActive, cancellationToken);
         
         return isNameExists;
+    }
+    
+    public async Task<Result<Position, Errors>> GetByIdAsync(PositionId positionId, CancellationToken cancellationToken)
+    {
+        var position = await _dbContext.Positions
+            .Include(p => p.DepartmentPositions)
+            .FirstOrDefaultAsync(p => p.Id == positionId, cancellationToken);
+        
+        if (position is null)
+            return GeneralErrors.NotFound(positionId.Value).ToErrors();
+
+        return position;
     }
 }
