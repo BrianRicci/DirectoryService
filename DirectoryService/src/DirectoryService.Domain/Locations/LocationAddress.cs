@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using Shared;
 
 namespace DirectoryService.Domain.Locations;
 
@@ -23,7 +24,7 @@ public record LocationAddress
         House = house;
     }
     
-    public static Result<LocationAddress> Create(
+    public static Result<LocationAddress, Error> Create(
         string country,
         string region,
         string city,
@@ -32,27 +33,27 @@ public record LocationAddress
     {
         if (string.IsNullOrWhiteSpace(country))
         {
-            return Result.Failure<LocationAddress>("Country can't be empty or null");
+            return GeneralErrors.ValueIsRequired("Country can't be empty or null");
         }
         
         if (string.IsNullOrWhiteSpace(region))
         {
-            return Result.Failure<LocationAddress>("Region can't be empty or null");
+            return GeneralErrors.ValueIsRequired("Region can't be empty or null");
         }
         
         if (string.IsNullOrWhiteSpace(city))
         {
-            return Result.Failure<LocationAddress>("City can't be empty or null");
+            return GeneralErrors.ValueIsRequired("City can't be empty or null");
         }
         
         if (string.IsNullOrWhiteSpace(street))
         {
-            return Result.Failure<LocationAddress>("Street can't be empty or null");
+            return GeneralErrors.ValueIsRequired("Street can't be empty or null");
         }
         
         if (string.IsNullOrWhiteSpace(house))
         {
-            return Result.Failure<LocationAddress>("House can't be empty or null");
+            return GeneralErrors.ValueIsRequired("House can't be empty or null");
         }
         
         country = country.Trim();

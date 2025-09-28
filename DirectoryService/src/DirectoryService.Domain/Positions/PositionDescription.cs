@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using Shared;
 
 namespace DirectoryService.Domain.Positions;
 
@@ -13,7 +14,7 @@ public record PositionDescription
         Value = value;
     }
     
-    public static Result<PositionDescription> Create(string? value)
+    public static Result<PositionDescription, Error> Create(string? value)
     {
         if (string.IsNullOrWhiteSpace(value))
         {
@@ -22,9 +23,9 @@ public record PositionDescription
         
         value = value.Trim();
         
-        if (value.Length <= MAX_LENGTH)
+        if (value.Length > MAX_LENGTH)
         {
-            return Result.Failure<PositionDescription>("Position description is too long");
+            return GeneralErrors.ValueIsInvalid("Position description is too long");
         }
 
         return new PositionDescription(value);

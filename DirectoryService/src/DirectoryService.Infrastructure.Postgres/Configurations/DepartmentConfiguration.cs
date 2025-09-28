@@ -19,6 +19,12 @@ public class DepartmentConfiguration : IEntityTypeConfiguration<Department>
             .HasColumnName("department_id");
         
         builder
+            .Property(d => d.ParentId)
+            .HasConversion(d => d!.Value, id => new DepartmentId(id))
+            .HasColumnName("parent_id")
+            .IsRequired(false);
+        
+        builder
             .Property(d => d.Name)
             .HasConversion(d => d.Value, name => DepartmentName.Create(name).Value)
             .HasColumnName("name")
@@ -37,6 +43,11 @@ public class DepartmentConfiguration : IEntityTypeConfiguration<Department>
             .HasConversion(d => d.Value, path => DepartmentPath.Create(path).Value)
             .HasColumnName("path")
             .HasMaxLength(LengthConstants.LENGTH256)
+            .IsRequired();
+        
+        builder
+            .Property(d => d.Depth)
+            .HasColumnName("depth")
             .IsRequired();
         
         builder

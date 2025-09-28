@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using DirectoryService.Infrastructure.Postgres;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DirectoryService.Infrastructure.Postgres.Migrations
 {
     [DbContext(typeof(DirectoryServiceDbContext))]
-    partial class DirectoryServiceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250925174450_department")]
+    partial class department
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,54 +25,6 @@ namespace DirectoryService.Infrastructure.Postgres.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("DirectoryService.Domain.DepartmentLocations.DepartmentLocation", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("department_location_id");
-
-                    b.Property<Guid>("DepartmentId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("department_id");
-
-                    b.Property<Guid>("LocationId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("location_id");
-
-                    b.HasKey("Id")
-                        .HasName("pk_department_locations");
-
-                    b.HasIndex("DepartmentId");
-
-                    b.HasIndex("LocationId");
-
-                    b.ToTable("department_locations", (string)null);
-                });
-
-            modelBuilder.Entity("DirectoryService.Domain.DepartmentPositions.DepartmentPosition", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("department_position_id");
-
-                    b.Property<Guid>("DepartmentId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("department_id");
-
-                    b.Property<Guid>("PositionId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("position_id");
-
-                    b.HasKey("Id")
-                        .HasName("pk_department_positions");
-
-                    b.HasIndex("DepartmentId");
-
-                    b.HasIndex("PositionId");
-
-                    b.ToTable("department_positions", (string)null);
-                });
 
             modelBuilder.Entity("DirectoryService.Domain.Departments.Department", b =>
                 {
@@ -116,6 +71,54 @@ namespace DirectoryService.Infrastructure.Postgres.Migrations
                         .HasName("pk_department");
 
                     b.ToTable("departments", (string)null);
+                });
+
+            modelBuilder.Entity("DirectoryService.Domain.Departments.DepartmentLocation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("department_location_id");
+
+                    b.Property<Guid>("DepartmentId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("department_id");
+
+                    b.Property<Guid>("LocationId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("location_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_department_locations");
+
+                    b.HasIndex("DepartmentId");
+
+                    b.HasIndex("LocationId");
+
+                    b.ToTable("department_locations", (string)null);
+                });
+
+            modelBuilder.Entity("DirectoryService.Domain.Departments.DepartmentPosition", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("department_position_id");
+
+                    b.Property<Guid>("DepartmentId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("department_id");
+
+                    b.Property<Guid>("PositionId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("position_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_department_positions");
+
+                    b.HasIndex("DepartmentId");
+
+                    b.HasIndex("PositionId");
+
+                    b.ToTable("department_positions", (string)null);
                 });
 
             modelBuilder.Entity("DirectoryService.Domain.Locations.Location", b =>
@@ -220,7 +223,7 @@ namespace DirectoryService.Infrastructure.Postgres.Migrations
                     b.ToTable("positions", (string)null);
                 });
 
-            modelBuilder.Entity("DirectoryService.Domain.DepartmentLocations.DepartmentLocation", b =>
+            modelBuilder.Entity("DirectoryService.Domain.Departments.DepartmentLocation", b =>
                 {
                     b.HasOne("DirectoryService.Domain.Departments.Department", null)
                         .WithMany("DepartmentLocations")
@@ -235,7 +238,7 @@ namespace DirectoryService.Infrastructure.Postgres.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("DirectoryService.Domain.DepartmentPositions.DepartmentPosition", b =>
+            modelBuilder.Entity("DirectoryService.Domain.Departments.DepartmentPosition", b =>
                 {
                     b.HasOne("DirectoryService.Domain.Departments.Department", null)
                         .WithMany("DepartmentPositions")

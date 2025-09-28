@@ -1,8 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using DirectoryService.Application.Abstractions;
 using DirectoryService.Application.Extentions;
-using DirectoryService.Application.Locations.Fails.Exceptions;
-using DirectoryService.Contracts;
 using DirectoryService.Domain.Locations;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
@@ -33,18 +31,18 @@ public class CreateLocationHandler : ICommandHandler<Guid, CreateLocationCommand
         
         if (!validationResult.IsValid)
         {
-            return validationResult.ToErrors();
+            return validationResult.ToList();
         }
         
-        // создание сущности локации
-        var locationName = LocationName.Create(command.CreateLocationDto.Name).Value;
+        // создание сущности
+        var locationName = LocationName.Create(command.CreateLocationRequest.Name).Value;
         
         var locationAddress = LocationAddress.Create(
-            command.CreateLocationDto.Address.Country,
-            command.CreateLocationDto.Address.Region,
-            command.CreateLocationDto.Address.City,
-            command.CreateLocationDto.Address.Street,
-            command.CreateLocationDto.Address.House).Value;
+            command.CreateLocationRequest.LocationAddress.Country,
+            command.CreateLocationRequest.LocationAddress.Region,
+            command.CreateLocationRequest.LocationAddress.City,
+            command.CreateLocationRequest.LocationAddress.Street,
+            command.CreateLocationRequest.LocationAddress.House).Value;
         
         bool isAddressExists = await _locationsRepository.IsAddressExistsAsync(locationAddress, cancellationToken);
         
@@ -56,21 +54,22 @@ public class CreateLocationHandler : ICommandHandler<Guid, CreateLocationCommand
             return GeneralErrors.ValueAlreadyExists("address").ToErrors();
         }
         
-        var locationTimezone = LocationTimezone.Create(command.CreateLocationDto.Timezone).Value;
+        var locationTimezone = LocationTimezone.Create(command.CreateLocationRequest.Timezone).Value;
+        
+        var locationId = new LocationId(Guid.NewGuid());
         
         var location = Location.Create(
+            locationId,
             locationName,
             locationAddress,
             locationTimezone).Value;
 
-        // сохранение сущности локации в БД
-        await _locationsRepository.AddAsync(location, cancellationToken);
+        // сохранение сущности в БД
+        var savedLocationResult = await _locationsRepository.AddAsync(location, cancellationToken);
         
         // логирование
-        LocationId locationId = location.Id;
-        
-        _logger.LogInformation("Location created with id: {locationId}", locationId);
+        _logger.LogInformation("Location created with id: {locationId}", location.Id.Value);
 
-        return locationId.Value;
+        return savedLocationResult;
     }
 }

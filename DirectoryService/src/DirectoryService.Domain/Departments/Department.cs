@@ -1,4 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
+using DirectoryService.Domain.DepartmentLocations;
+using DirectoryService.Domain.DepartmentPositions;
+using Shared;
 
 namespace DirectoryService.Domain.Departments;
 
@@ -10,7 +13,7 @@ public class Department
     
     public DepartmentIdentifier Identifier { get; private set; }
     
-    public Guid? ParentId { get; private set; }
+    public DepartmentId? ParentId { get; private set; }
     
     public DepartmentPath Path { get; private set; } 
     
@@ -22,13 +25,13 @@ public class Department
     
     public DateTime UpdatedAt { get; private set; }
     
-    public IReadOnlyList<DepartmentLocation> DepartmentLocations => _locations = [];
+    public IReadOnlyList<DepartmentLocation> DepartmentLocations => _locations;
 
-    public IReadOnlyList<DepartmentPosition> DepartmentPositions => _positions = [];
+    public IReadOnlyList<DepartmentPosition> DepartmentPositions => _positions;
     
-    private List<DepartmentLocation> _locations;
+    private readonly List<DepartmentLocation> _locations = [];
     
-    private List<DepartmentPosition> _positions;
+    private readonly List<DepartmentPosition> _positions = [];
     
     // EF Core
     private Department()
@@ -37,17 +40,22 @@ public class Department
     
     private Department(
         DepartmentId id,
+        DepartmentId? parentId,
         DepartmentName name,
         DepartmentIdentifier identifier,
-        Guid? parentId,
-        List<DepartmentLocation> departmentLocations)
+        DepartmentPath path,
+        short depth,
+        List<DepartmentLocation> locations)
     {
         Id = id;
+        ParentId = parentId;
         Name = name;
         Identifier = identifier;
-        ParentId = parentId;
+        Path = path;
+        Depth = depth;
+        IsActive = true;
         UpdatedAt = DateTime.UtcNow;
-        _locations = departmentLocations;
+        _locations = locations;
 
         if (CreatedAt == default)
         {
@@ -55,15 +63,41 @@ public class Department
         }
     }
 
-    public static Result<Department> Create(
+    public static Result<Department> CreateParent(
         DepartmentName name,
         DepartmentIdentifier identifier,
-        Guid? parentId,
-        List<DepartmentLocation> departmentLocations)
+        DepartmentPath path,
+        short depth,
+        List<DepartmentLocation> departmentLocations,
+        DepartmentId? id = null)
     {
-        var id = new DepartmentId(Guid.NewGuid());
-        
-        return new Department(id, name, identifier, parentId, departmentLocations);
+        return new Department(
+            id ?? new DepartmentId(Guid.NewGuid()),
+            null,
+            name,
+            identifier,
+            path,
+            depth,
+            departmentLocations);
+    }
+
+    public static Result<Department> CreateChild(
+        DepartmentId parentId,
+        DepartmentName name,
+        DepartmentIdentifier identifier,
+        DepartmentPath path,
+        short depth,
+        List<DepartmentLocation> departmentLocations,
+        DepartmentId? id = null)
+    {
+        return new Department(
+            id ?? new DepartmentId(Guid.NewGuid()),
+            parentId,
+            name,
+            identifier,
+            path,
+            depth,
+            departmentLocations);
     }
     
     public Result Rename(DepartmentName name)
