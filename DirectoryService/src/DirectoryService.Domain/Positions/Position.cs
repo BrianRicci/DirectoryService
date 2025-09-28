@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using DirectoryService.Domain.DepartmentPositions;
 using DirectoryService.Domain.Departments;
+using Shared;
 
 namespace DirectoryService.Domain.Positions;
 
@@ -18,12 +19,11 @@ public class Position
     
     public DateTime UpdatedAt { get; private set; }
     
-    public IReadOnlyList<DepartmentPosition> DepartmentPositions => _departments = [];
+    public IReadOnlyList<DepartmentPosition> DepartmentPositions => _departments;
     
-    private List<DepartmentPosition> _departments;
+    private readonly List<DepartmentPosition> _departments = [];
     
     // EF Core
-
     private Position()
     {
     }
@@ -31,13 +31,11 @@ public class Position
     private Position(
         PositionId id,
         PositionName name,
-        PositionDescription? description,
-        List<DepartmentPosition> departmentPositions)
+        PositionDescription? description)
     {
         Id = id;
         Name = name;
         Description = description;
-        _departments = departmentPositions;
         IsActive = true;
         UpdatedAt = DateTime.UtcNow;
 
@@ -49,12 +47,11 @@ public class Position
 
     public static Result<Position> Create(
         PositionName name,
-        PositionDescription? description,
-        List<DepartmentPosition> departmentPositions)
+        PositionDescription? description)
     {
         var id = new PositionId(Guid.NewGuid());
         
-        return new Position(id, name, description, departmentPositions);
+        return new Position(id, name, description);
     }
 
     public Result Rename(PositionName name)
@@ -63,5 +60,13 @@ public class Position
         UpdatedAt = DateTime.UtcNow;
         
         return Result.Success(this);
+    }
+    
+    public UnitResult<Error> AddDepartmentPositions(List<DepartmentPosition> departmentPositions)
+    {
+        _departments.AddRange(departmentPositions);
+        UpdatedAt = DateTime.UtcNow;
+        
+        return UnitResult.Success<Error>();
     }
 }

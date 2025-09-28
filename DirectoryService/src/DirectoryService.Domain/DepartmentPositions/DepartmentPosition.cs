@@ -5,7 +5,7 @@ namespace DirectoryService.Domain.DepartmentPositions;
 
 public class DepartmentPosition
 {
-    public DepartmentPositionId Id { get; init; }
+    public DepartmentPositionId Id { get; init; } = new DepartmentPositionId(Guid.Empty); // так правильно?
 
     public DepartmentId DepartmentId { get; init; } 
 

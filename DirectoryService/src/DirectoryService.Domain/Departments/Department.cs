@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using DirectoryService.Domain.DepartmentLocations;
 using DirectoryService.Domain.DepartmentPositions;
+using Shared;
 
 namespace DirectoryService.Domain.Departments;
 
@@ -24,13 +25,13 @@ public class Department
     
     public DateTime UpdatedAt { get; private set; }
     
-    public IReadOnlyList<DepartmentLocation> DepartmentLocations => _locations = [];
+    public IReadOnlyList<DepartmentLocation> DepartmentLocations => _locations;
 
-    public IReadOnlyList<DepartmentPosition> DepartmentPositions => _positions = [];
+    public IReadOnlyList<DepartmentPosition> DepartmentPositions => _positions;
     
-    private List<DepartmentLocation> _locations;
+    private readonly List<DepartmentLocation> _locations = [];
     
-    private List<DepartmentPosition> _positions;
+    private readonly List<DepartmentPosition> _positions = [];
     
     // EF Core
     private Department()
@@ -43,8 +44,7 @@ public class Department
         DepartmentName name,
         DepartmentIdentifier identifier,
         DepartmentPath path,
-        short depth,
-        List<DepartmentLocation> departmentLocations)
+        short depth)
     {
         Id = id;
         ParentId = parentId;
@@ -54,7 +54,6 @@ public class Department
         Depth = depth;
         IsActive = true;
         UpdatedAt = DateTime.UtcNow;
-        _locations = departmentLocations;
 
         if (CreatedAt == default)
         {
@@ -67,7 +66,6 @@ public class Department
         DepartmentIdentifier identifier,
         DepartmentPath path,
         short depth,
-        List<DepartmentLocation> departmentLocations,
         DepartmentId? id = null)
     {
         return new Department(
@@ -76,8 +74,7 @@ public class Department
             name,
             identifier,
             path,
-            depth,
-            departmentLocations);
+            depth);
     }
 
     public static Result<Department> CreateChild(
@@ -86,7 +83,6 @@ public class Department
         DepartmentIdentifier identifier,
         DepartmentPath path,
         short depth,
-        List<DepartmentLocation> departmentLocations,
         DepartmentId? id = null)
     {
         return new Department(
@@ -95,8 +91,7 @@ public class Department
             name,
             identifier,
             path,
-            depth,
-            departmentLocations);
+            depth);
     }
     
     public Result Rename(DepartmentName name)
@@ -105,5 +100,13 @@ public class Department
         UpdatedAt = DateTime.UtcNow;
         
         return Result.Success(this);
+    }
+    
+    public UnitResult<Error> AddDepartmentLocations(List<DepartmentLocation> locations)
+    {
+        _locations.AddRange(locations);
+        UpdatedAt = DateTime.UtcNow;
+        
+        return UnitResult.Success<Error>();
     }
 }

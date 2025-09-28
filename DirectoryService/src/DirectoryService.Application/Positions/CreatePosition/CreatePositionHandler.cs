@@ -42,8 +42,6 @@ public class CreatePositionHandler : ICommandHandler<Guid, CreatePositionCommand
         }
         
         // создание сущности
-        var positionId = new PositionId(Guid.NewGuid());
-        
         var positionName = PositionName.Create(command.CreatePositionRequest.Name).Value;
         
         var isNameExists = await _positionsRepository.IsNameExistsAsync(positionName, cancellationToken);
@@ -75,20 +73,23 @@ public class CreatePositionHandler : ICommandHandler<Guid, CreatePositionCommand
                 "Одна или несколько подразделений не найдены или не активны").ToErrors();
         }
         
-        var positionDepartments = positionDepartmentIds 
-            .Select(departmentId => new DepartmentPosition(departmentId, positionId)).ToList();
-        
         var position = Position.Create(
             positionName,
-            positionDescription,
-            positionDepartments).Value;
+            positionDescription).Value;
+        
+        var departmentPositions = positionDepartmentIds 
+            .Select(departmentId => new DepartmentPosition(departmentId, position.Id)).ToList();
+
+        var addDepartmentPositionsResult = position.AddDepartmentPositions(departmentPositions);
+        if (addDepartmentPositionsResult.IsFailure)
+            return addDepartmentPositionsResult.Error.ToErrors();
         
         // сохранение сущности в БД
         await _positionsRepository.AddAsync(position, cancellationToken);
         
         // логирование
-        _logger.LogInformation("Position created with id: {positionId}", positionId);
+        _logger.LogInformation("Position created with id: {positionId}", position.Id);
 
-        return positionId.Value;
+        return position.Id.Value;
     }
 }
