@@ -44,7 +44,8 @@ public class Department
         DepartmentName name,
         DepartmentIdentifier identifier,
         DepartmentPath path,
-        short depth)
+        short depth,
+        List<DepartmentLocation> locations)
     {
         Id = id;
         ParentId = parentId;
@@ -54,6 +55,7 @@ public class Department
         Depth = depth;
         IsActive = true;
         UpdatedAt = DateTime.UtcNow;
+        _locations = locations;
 
         if (CreatedAt == default)
         {
@@ -66,6 +68,7 @@ public class Department
         DepartmentIdentifier identifier,
         DepartmentPath path,
         short depth,
+        List<DepartmentLocation> departmentLocations,
         DepartmentId? id = null)
     {
         return new Department(
@@ -74,7 +77,8 @@ public class Department
             name,
             identifier,
             path,
-            depth);
+            depth,
+            departmentLocations);
     }
 
     public static Result<Department> CreateChild(
@@ -83,6 +87,7 @@ public class Department
         DepartmentIdentifier identifier,
         DepartmentPath path,
         short depth,
+        List<DepartmentLocation> departmentLocations,
         DepartmentId? id = null)
     {
         return new Department(
@@ -91,7 +96,8 @@ public class Department
             name,
             identifier,
             path,
-            depth);
+            depth,
+            departmentLocations);
     }
     
     public Result Rename(DepartmentName name)
@@ -100,13 +106,5 @@ public class Department
         UpdatedAt = DateTime.UtcNow;
         
         return Result.Success(this);
-    }
-    
-    public UnitResult<Error> AddDepartmentLocations(List<DepartmentLocation> locations)
-    {
-        _locations.AddRange(locations);
-        UpdatedAt = DateTime.UtcNow;
-        
-        return UnitResult.Success<Error>();
     }
 }

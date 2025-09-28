@@ -31,11 +31,13 @@ public class Position
     private Position(
         PositionId id,
         PositionName name,
-        PositionDescription? description)
+        PositionDescription? description,
+        List<DepartmentPosition> departmentPositions)
     {
         Id = id;
         Name = name;
         Description = description;
+        _departments = departmentPositions;
         IsActive = true;
         UpdatedAt = DateTime.UtcNow;
 
@@ -46,12 +48,12 @@ public class Position
     }
 
     public static Result<Position> Create(
+        PositionId id,
         PositionName name,
-        PositionDescription? description)
+        PositionDescription? description,
+        List<DepartmentPosition> departmentPositions)
     {
-        var id = new PositionId(Guid.NewGuid());
-        
-        return new Position(id, name, description);
+        return new Position(id, name, description, departmentPositions);
     }
 
     public Result Rename(PositionName name)
@@ -60,13 +62,5 @@ public class Position
         UpdatedAt = DateTime.UtcNow;
         
         return Result.Success(this);
-    }
-    
-    public UnitResult<Error> AddDepartmentPositions(List<DepartmentPosition> departmentPositions)
-    {
-        _departments.AddRange(departmentPositions);
-        UpdatedAt = DateTime.UtcNow;
-        
-        return UnitResult.Success<Error>();
     }
 }

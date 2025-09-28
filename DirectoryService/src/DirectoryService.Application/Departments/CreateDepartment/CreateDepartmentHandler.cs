@@ -42,8 +42,6 @@ public class CreateDepartmentHandler : ICommandHandler<Guid, CreateDepartmentCom
         }
         
         // создание сущности
-        var departmentId = new DepartmentId(Guid.NewGuid());
-        
         var departmentName = DepartmentName.Create(command.CreateDepartmentRequest.Name).Value;
         
         var departmentIdentifier = DepartmentIdentifier.Create(command.CreateDepartmentRequest.Identifier).Value;
@@ -85,12 +83,18 @@ public class CreateDepartmentHandler : ICommandHandler<Guid, CreateDepartmentCom
             return Error.NotFound("locations.not.found", "Одна или несколько локаций не найдены").ToErrors();
         }
         
+        var departmentId = new DepartmentId(Guid.NewGuid());
+        
+        var departmentLocations = 
+            departmentLocationIds.Select(locationId => new DepartmentLocation(departmentId, locationId)).ToList();
+        
         var department = departmentParentId is null
             ? Department.CreateParent(
             departmentName,
             departmentIdentifier,
             departmentPath,
             departmentDepth,
+            departmentLocations,
             departmentId).Value
             : Department.CreateChild(
             new DepartmentId(departmentParentId.Value),
@@ -98,14 +102,8 @@ public class CreateDepartmentHandler : ICommandHandler<Guid, CreateDepartmentCom
             departmentIdentifier,
             departmentPath,
             departmentDepth,
+            departmentLocations,
             departmentId).Value;
-        
-        var departmentLocations = 
-            departmentLocationIds.Select(locationId => new DepartmentLocation(departmentId, locationId)).ToList();
-        
-        var addDepartmentLocationsResult = department.AddDepartmentLocations(departmentLocations);
-        if (addDepartmentLocationsResult.IsFailure)
-            return addDepartmentLocationsResult.Error.ToErrors();
         
         // сохранение сущности в БД
         await _departmentsRepository.AddAsync(department, cancellationToken);

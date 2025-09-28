@@ -73,16 +73,16 @@ public class CreatePositionHandler : ICommandHandler<Guid, CreatePositionCommand
                 "Одна или несколько подразделений не найдены или не активны").ToErrors();
         }
         
-        var position = Position.Create(
-            positionName,
-            positionDescription).Value;
+        var positionId = new PositionId(Guid.NewGuid());
         
         var departmentPositions = positionDepartmentIds 
-            .Select(departmentId => new DepartmentPosition(departmentId, position.Id)).ToList();
-
-        var addDepartmentPositionsResult = position.AddDepartmentPositions(departmentPositions);
-        if (addDepartmentPositionsResult.IsFailure)
-            return addDepartmentPositionsResult.Error.ToErrors();
+            .Select(departmentId => new DepartmentPosition(departmentId, positionId)).ToList();
+        
+        var position = Position.Create(
+            positionId,
+            positionName,
+            positionDescription,
+            departmentPositions).Value;
         
         // сохранение сущности в БД
         await _positionsRepository.AddAsync(position, cancellationToken);

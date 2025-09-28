@@ -49,12 +49,11 @@ public class Location
     }
     
     public static Result<Location> Create(
+        LocationId id,
         LocationName name,
         LocationAddress address,
         LocationTimezone timezone)
     {
-        var id = new LocationId(Guid.NewGuid());
-        
         return new Location(id, name, address, timezone);
     }
 

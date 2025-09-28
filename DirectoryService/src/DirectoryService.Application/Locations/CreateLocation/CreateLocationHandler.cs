@@ -56,7 +56,10 @@ public class CreateLocationHandler : ICommandHandler<Guid, CreateLocationCommand
         
         var locationTimezone = LocationTimezone.Create(command.CreateLocationRequest.Timezone).Value;
         
+        var locationId = new LocationId(Guid.NewGuid());
+        
         var location = Location.Create(
+            locationId,
             locationName,
             locationAddress,
             locationTimezone).Value;
@@ -65,8 +68,6 @@ public class CreateLocationHandler : ICommandHandler<Guid, CreateLocationCommand
         await _locationsRepository.AddAsync(location, cancellationToken);
         
         // логирование
-        LocationId locationId = location.Id;
-        
         _logger.LogInformation("Location created with id: {locationId}", locationId);
 
         return locationId.Value;
