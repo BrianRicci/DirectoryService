@@ -15,12 +15,19 @@ public class DepartmentsRepository : IDepartmentsRepository
         _dbContext = dbContext;
     }
 
-    public async Task<Guid> AddAsync(Department department, CancellationToken cancellationToken)
+    public async Task<Result<Guid, Errors>> AddAsync(Department department, CancellationToken cancellationToken)
     {
-        await _dbContext.Departments.AddAsync(department, cancellationToken);
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        try
+        {
+            await _dbContext.Departments.AddAsync(department, cancellationToken);
+            await _dbContext.SaveChangesAsync(cancellationToken);
 
-        return department.Id.Value;
+            return department.Id.Value;
+        }
+        catch (Exception ex)
+        {
+            return GeneralErrors.ValueIsInvalid().ToErrors();
+        }
     }
     
     public async Task<Result<Department, Errors>> GetByIdAsync(DepartmentId departmentId, CancellationToken cancellationToken)

@@ -85,11 +85,11 @@ public class CreatePositionHandler : ICommandHandler<Guid, CreatePositionCommand
             departmentPositions).Value;
         
         // сохранение сущности в БД
-        await _positionsRepository.AddAsync(position, cancellationToken);
+        var savedPositionResult = await _positionsRepository.AddAsync(position, cancellationToken);
         
         // логирование
-        _logger.LogInformation("Position created with id: {positionId}", position.Id);
+        _logger.LogInformation("Position created with id: {positionId}", position.Id.Value);
 
-        return position.Id.Value;
+        return savedPositionResult;
     }
 }

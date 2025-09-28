@@ -5,7 +5,7 @@ namespace DirectoryService.Domain.DepartmentLocations;
 
 public class DepartmentLocation
 {
-    public DepartmentLocationId Id { get; init; } = new DepartmentLocationId(Guid.Empty);
+    public DepartmentLocationId Id { get; init; } = new DepartmentLocationId(Guid.NewGuid());
     
     public DepartmentId DepartmentId { get; init; } 
     

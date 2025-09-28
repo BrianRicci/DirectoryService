@@ -106,11 +106,11 @@ public class CreateDepartmentHandler : ICommandHandler<Guid, CreateDepartmentCom
             departmentId).Value;
         
         // сохранение сущности в БД
-        await _departmentsRepository.AddAsync(department, cancellationToken);
+        var savedDepartmentResult = await _departmentsRepository.AddAsync(department, cancellationToken);
         
         // логирование
-        _logger.LogInformation("Department created with id: {departmentId}", departmentId);
-
-        return departmentId.Value;
+        _logger.LogInformation("Department created with id: {departmentId}", department.Id.Value);
+        
+        return savedDepartmentResult;
     }
 }

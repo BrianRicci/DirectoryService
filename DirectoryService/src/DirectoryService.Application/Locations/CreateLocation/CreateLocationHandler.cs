@@ -65,11 +65,11 @@ public class CreateLocationHandler : ICommandHandler<Guid, CreateLocationCommand
             locationTimezone).Value;
 
         // сохранение сущности в БД
-        await _locationsRepository.AddAsync(location, cancellationToken);
+        var savedLocationResult = await _locationsRepository.AddAsync(location, cancellationToken);
         
         // логирование
-        _logger.LogInformation("Location created with id: {locationId}", locationId);
+        _logger.LogInformation("Location created with id: {locationId}", location.Id.Value);
 
-        return locationId.Value;
+        return savedLocationResult;
     }
 }

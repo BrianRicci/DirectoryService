@@ -15,12 +15,19 @@ public class PositionsRepository : IPositionsRepository
         _dbContext = dbContext;
     }
     
-    public async Task<Guid> AddAsync(Position position, CancellationToken cancellationToken)
+    public async Task<Result<Guid, Errors>> AddAsync(Position position, CancellationToken cancellationToken)
     {
-        await _dbContext.Positions.AddAsync(position, cancellationToken);
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        try
+        {
+            await _dbContext.Positions.AddAsync(position, cancellationToken);
+            await _dbContext.SaveChangesAsync(cancellationToken);
         
-        return position.Id.Value;
+            return position.Id.Value;
+        }
+        catch (Exception ex)
+        {
+            return GeneralErrors.ValueIsInvalid().ToErrors();
+        }
     }
     
     public async Task<bool> IsNameExistsAsync(PositionName name, CancellationToken cancellationToken)

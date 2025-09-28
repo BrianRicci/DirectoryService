@@ -1,6 +1,8 @@
-﻿using DirectoryService.Application.Locations;
+﻿using CSharpFunctionalExtensions;
+using DirectoryService.Application.Locations;
 using DirectoryService.Domain.Locations;
 using Microsoft.EntityFrameworkCore;
+using Shared;
 
 namespace DirectoryService.Infrastructure.Postgres.Repositories;
 
@@ -13,12 +15,19 @@ public class LocationsRepository : ILocationsRepository
         _dbContext = dbContext;
     }
 
-    public async Task<Guid> AddAsync(Location location, CancellationToken cancellationToken)
+    public async Task<Result<Guid, Errors>> AddAsync(Location location, CancellationToken cancellationToken)
     {
-        await _dbContext.Locations.AddAsync(location, cancellationToken);
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        try
+        {
+            await _dbContext.Locations.AddAsync(location, cancellationToken);
+            await _dbContext.SaveChangesAsync(cancellationToken);
 
-        return location.Id.Value;
+            return location.Id.Value;
+        }
+        catch (Exception ex)
+        {
+            return GeneralErrors.ValueIsInvalid().ToErrors();
+        }
     }
 
     public async Task<bool> IsAddressExistsAsync(LocationAddress address, CancellationToken cancellationToken)
