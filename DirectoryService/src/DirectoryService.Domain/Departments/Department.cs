@@ -107,4 +107,18 @@ public class Department
         
         return Result.Success(this);
     }
+
+    public UnitResult<Error> UpdateLocations(List<DepartmentLocation> locations)
+    {
+        if (locations.Count is 0)
+        {
+            return GeneralErrors.ValueIsRequired("Locations list cannot be empty");
+        }
+        
+        _locations.Clear();
+        _locations.AddRange(locations);
+        UpdatedAt = DateTime.UtcNow;
+        
+        return UnitResult.Success<Error>();
+    }
 }

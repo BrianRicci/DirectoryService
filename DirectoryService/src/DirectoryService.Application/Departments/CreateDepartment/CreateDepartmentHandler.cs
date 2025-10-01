@@ -35,7 +35,6 @@ public class CreateDepartmentHandler : ICommandHandler<Guid, CreateDepartmentCom
     {
         // валидация
         var validationResult = await _validator.ValidateAsync(command, cancellationToken);
-        
         if (!validationResult.IsValid)
         {
             return validationResult.ToList();
@@ -74,11 +73,9 @@ public class CreateDepartmentHandler : ICommandHandler<Guid, CreateDepartmentCom
         
         bool isAllLocationsExists = await _locationsRepository
             .IsAllExistsAsync(departmentLocationIds, cancellationToken);
-        
         if (!isAllLocationsExists)
         {
-            _logger.LogInformation(
-                "One or more locations were not found.");
+            _logger.LogInformation("One or more locations were not found.");
             
             return Error.NotFound("locations.not.found", "Одна или несколько локаций не найдены").ToErrors();
         }

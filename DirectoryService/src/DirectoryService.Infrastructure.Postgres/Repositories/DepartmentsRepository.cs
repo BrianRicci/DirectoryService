@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using DirectoryService.Application.Departments;
 using DirectoryService.Domain.Departments;
+using DirectoryService.Domain.Locations;
 using Microsoft.EntityFrameworkCore;
 using Shared;
 
@@ -34,8 +35,7 @@ public class DepartmentsRepository : IDepartmentsRepository
     {
         var department = await _dbContext.Departments
             .Include(d => d.DepartmentLocations)
-            .Include(d => d.DepartmentPositions)
-            .FirstOrDefaultAsync(d => d.Id == departmentId, cancellationToken);
+            .FirstOrDefaultAsync(d => d.Id == departmentId && d.IsActive, cancellationToken);
         
         if (department is null)
             return GeneralErrors.NotFound(departmentId.Value).ToErrors();
@@ -46,7 +46,7 @@ public class DepartmentsRepository : IDepartmentsRepository
     public async Task<bool> IsAllExistsAsync(List<DepartmentId> departmentIds, CancellationToken cancellationToken)
     {
         bool isAllExists = await _dbContext.Departments
-            .Where(l => departmentIds.Contains(l.Id) && l.IsActive)
+            .Where(d => departmentIds.Contains(d.Id) && d.IsActive)
             .CountAsync(cancellationToken) == departmentIds.Count;
         
         return isAllExists;

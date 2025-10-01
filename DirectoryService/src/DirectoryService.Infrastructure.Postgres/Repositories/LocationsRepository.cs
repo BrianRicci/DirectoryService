@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using DirectoryService.Application.Locations;
+using DirectoryService.Domain.Departments;
 using DirectoryService.Domain.Locations;
 using Microsoft.EntityFrameworkCore;
 using Shared;
@@ -40,7 +41,7 @@ public class LocationsRepository : ILocationsRepository
     public async Task<bool> IsAllExistsAsync(List<LocationId> locationIds, CancellationToken cancellationToken)
     {
         bool isAllExists = await _dbContext.Locations
-            .Where(l => locationIds.Contains(l.Id))
+            .Where(l => locationIds.Contains(l.Id) && l.IsActive)
             .CountAsync(cancellationToken) == locationIds.Count;
         
         return isAllExists;
