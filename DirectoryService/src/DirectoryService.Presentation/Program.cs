@@ -1,10 +1,12 @@
 using DirectoryService.Application.Departments;
 using DirectoryService.Application.Departments.CreateDepartment;
+using DirectoryService.Application.Departments.UpdateDepartment;
 using DirectoryService.Application.Locations;
 using DirectoryService.Application.Locations.CreateLocation;
 using DirectoryService.Application.Positions;
 using DirectoryService.Application.Positions.CreatePosition;
 using DirectoryService.Infrastructure.Postgres;
+using DirectoryService.Infrastructure.Postgres.Database;
 using DirectoryService.Infrastructure.Postgres.Repositories;
 using DirectoryService.Presentation;
 using DirectoryService.Presentation.Middlewares;
@@ -28,6 +30,7 @@ builder.Services.AddProgramDependencies();
 builder.Services.AddScoped<DirectoryServiceDbContext>(_ =>
     new DirectoryServiceDbContext(builder.Configuration.GetConnectionString("DirectoryServiceDb")!));
 
+builder.Services.AddScoped<ITransactionManager, TransactionManager>();
 builder.Services.AddScoped<ILocationsRepository, LocationsRepository>();
 builder.Services.AddScoped<IDepartmentsRepository, DepartmentsRepository>();
 builder.Services.AddScoped<IPositionsRepository, PositionsRepository>();
@@ -35,10 +38,12 @@ builder.Services.AddScoped<IPositionsRepository, PositionsRepository>();
 builder.Services.AddScoped<IValidator<CreateLocationCommand>, CreateLocationValidator>();
 builder.Services.AddScoped<IValidator<CreateDepartmentCommand>, CreateDepartmentValidator>();
 builder.Services.AddScoped<IValidator<CreatePositionCommand>, CreatePositionValidator>();
+builder.Services.AddScoped<IValidator<UpdateDepartmentLocationsCommand>, UpdateDepartmentLocationsValidator>();
 
 builder.Services.AddScoped<CreateLocationHandler>();
 builder.Services.AddScoped<CreateDepartmentHandler>();
 builder.Services.AddScoped<CreatePositionHandler>();
+builder.Services.AddScoped<UpdateDepartmentLocationsHandler>();
 
 var app = builder.Build();
 
