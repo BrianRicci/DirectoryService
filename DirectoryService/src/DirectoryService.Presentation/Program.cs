@@ -1,5 +1,6 @@
 using DirectoryService.Application.Departments;
 using DirectoryService.Application.Departments.CreateDepartment;
+using DirectoryService.Application.Departments.MoveDepartment;
 using DirectoryService.Application.Departments.UpdateDepartment;
 using DirectoryService.Application.Locations;
 using DirectoryService.Application.Locations.CreateLocation;
@@ -39,11 +40,13 @@ builder.Services.AddScoped<IValidator<CreateLocationCommand>, CreateLocationVali
 builder.Services.AddScoped<IValidator<CreateDepartmentCommand>, CreateDepartmentValidator>();
 builder.Services.AddScoped<IValidator<CreatePositionCommand>, CreatePositionValidator>();
 builder.Services.AddScoped<IValidator<UpdateDepartmentLocationsCommand>, UpdateDepartmentLocationsValidator>();
+builder.Services.AddScoped<IValidator<MoveDepartmentCommand>, MoveDepartmentValidator>();
 
 builder.Services.AddScoped<CreateLocationHandler>();
 builder.Services.AddScoped<CreateDepartmentHandler>();
 builder.Services.AddScoped<CreatePositionHandler>();
 builder.Services.AddScoped<UpdateDepartmentLocationsHandler>();
+builder.Services.AddScoped<MoveDepartmentHandler>();
 
 var app = builder.Build();
 

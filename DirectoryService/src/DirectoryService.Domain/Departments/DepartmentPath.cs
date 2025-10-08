@@ -14,7 +14,7 @@ public record DepartmentPath
     {
         Value = value;
     }
-    
+
     public static Result<DepartmentPath, Error> Create(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
@@ -30,5 +30,15 @@ public record DepartmentPath
         value = value.Trim();
 
         return new DepartmentPath(value);
+    }
+    
+    public static Result<DepartmentPath, Error> CreateParent(DepartmentIdentifier identifier)
+    {
+        return DepartmentPath.Create(identifier.Value.Trim());
+    }
+
+    public Result<DepartmentPath, Error> CreateChild(DepartmentIdentifier identifier)
+    {
+        return DepartmentPath.Create(Value + SEPARATOR + identifier.Value.Trim());
     }
 }

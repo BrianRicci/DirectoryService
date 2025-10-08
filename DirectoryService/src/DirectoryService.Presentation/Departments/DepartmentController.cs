@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using DirectoryService.Application.Abstractions;
 using DirectoryService.Application.Departments.CreateDepartment;
+using DirectoryService.Application.Departments.MoveDepartment;
 using DirectoryService.Application.Departments.UpdateDepartment;
 using DirectoryService.Contracts.Departments;
 using DirectoryService.Presentation.EndpointResults;
@@ -36,6 +37,18 @@ public class DepartmentController : ControllerBase
     {
         var command = new UpdateDepartmentLocationsCommand(departmentId, request);
 
+        return await handler.Handle(command, cancellationToken);
+    }
+
+    [HttpPatch("{departmentId}/parent")]
+    public async Task<EndpointResult> MoveDepartment(
+        [FromRoute] Guid departmentId,
+        [FromServices] ICommandHandler<MoveDepartmentCommand> handler,
+        [FromBody] MoveDepartmentRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = new MoveDepartmentCommand(departmentId, request);
+        
         return await handler.Handle(command, cancellationToken);
     }
 }

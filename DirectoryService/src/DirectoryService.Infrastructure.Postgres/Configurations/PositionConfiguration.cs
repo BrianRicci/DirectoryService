@@ -33,6 +33,21 @@ public class PositionConfiguration : IEntityTypeConfiguration<Position>
             .HasMaxLength(LengthConstants.LENGTH1000);
         
         builder
+            .Property(p => p.IsActive)
+            .HasColumnName("is_active")
+            .IsRequired();
+        
+        builder
+            .Property(p => p.CreatedAt)
+            .HasColumnName("created_at")
+            .IsRequired();
+        
+        builder
+            .Property(p => p.UpdatedAt)
+            .HasColumnName("updated_at")
+            .IsRequired();
+        
+        builder
             .HasMany(p => p.DepartmentPositions)
             .WithOne()
             .HasForeignKey(dp => dp.PositionId);
