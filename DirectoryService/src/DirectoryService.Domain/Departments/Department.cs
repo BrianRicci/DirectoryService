@@ -121,4 +121,20 @@ public class Department
         
         return UnitResult.Success<Error>();
     }
+    
+    public int SetParent(Department? parentDepartment)
+    {
+        ParentId = parentDepartment?.Id;
+        
+        Path = parentDepartment is null
+            ? DepartmentPath.CreateParent(Identifier).Value
+            : parentDepartment.Path.CreateChild(Identifier).Value;
+
+        short oldDepth = Depth;
+        
+        Depth = parentDepartment is null ? (short)0 : (short)(parentDepartment.Depth + 1);
+        UpdatedAt = DateTime.UtcNow;
+        
+        return Depth - oldDepth;
+    }
 }

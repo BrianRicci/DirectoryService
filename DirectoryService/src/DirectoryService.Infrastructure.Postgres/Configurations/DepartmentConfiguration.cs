@@ -40,14 +40,32 @@ public class DepartmentConfiguration : IEntityTypeConfiguration<Department>
 
         builder
             .Property(d => d.Path)
+            .HasColumnType("ltree")
             .HasConversion(d => d.Value, path => DepartmentPath.Create(path).Value)
             .HasColumnName("path")
             .HasMaxLength(LengthConstants.LENGTH256)
             .IsRequired();
         
+        builder.HasIndex(d => d.Path).HasMethod("gist").HasDatabaseName("idx_departments_path");
+        
         builder
             .Property(d => d.Depth)
             .HasColumnName("depth")
+            .IsRequired();
+        
+        builder
+            .Property(d => d.IsActive)
+            .HasColumnName("is_active")
+            .IsRequired();
+        
+        builder
+            .Property(d => d.CreatedAt)
+            .HasColumnName("created_at")
+            .IsRequired();
+        
+        builder
+            .Property(d => d.UpdatedAt)
+            .HasColumnName("updated_at")
             .IsRequired();
         
         builder

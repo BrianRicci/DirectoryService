@@ -13,7 +13,6 @@ namespace DirectoryService.Application.Departments.CreateDepartment;
 
 public class CreateDepartmentHandler : ICommandHandler<Guid, CreateDepartmentCommand>
 {
-    private const char SEPARATOR = '.';
     private readonly IDepartmentsRepository _departmentsRepository;
     private readonly ILocationsRepository _locationsRepository;
     private readonly IValidator<CreateDepartmentCommand> _validator;
@@ -60,12 +59,12 @@ public class CreateDepartmentHandler : ICommandHandler<Guid, CreateDepartmentCom
             
             departmentDepth = (short)(parentDepartmentResult.Value.Depth + 1); // приведение int единицы к short
             
-            departmentPath = DepartmentPath
-                .Create(parentDepartmentResult.Value.Path.Value + SEPARATOR + departmentIdentifier.Value).Value;
+            var parentDepartment = parentDepartmentResult.Value; 
+            
+            departmentPath = parentDepartment.Path.CreateChild(departmentIdentifier).Value;
         } else
         {
-            departmentPath = DepartmentPath
-                .Create(departmentIdentifier.Value).Value;
+            departmentPath = DepartmentPath.CreateParent(departmentIdentifier).Value;
         }
         
         var departmentLocationIds = 
