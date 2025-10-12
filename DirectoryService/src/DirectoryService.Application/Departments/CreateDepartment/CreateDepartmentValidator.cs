@@ -2,6 +2,7 @@
 using DirectoryService.Domain;
 using DirectoryService.Domain.Departments;
 using FluentValidation;
+using Shared;
 
 namespace DirectoryService.Application.Departments.CreateDepartment;
 
@@ -16,7 +17,7 @@ public class CreateDepartmentValidator: AbstractValidator<CreateDepartmentComman
             .MustBeValueObject(DepartmentIdentifier.Create);
 
         RuleFor(command => command.CreateDepartmentRequest.LocationIds)
-            .NotEmpty().WithMessage("Массив локаций не может быть пустым")
-            .Must(l => l != l.Distinct().ToList()).WithMessage("Массив локаций содержит дублирующиеся значения");
+            .NotEmpty().WithError(GeneralErrors.ValueIsRequired("locationIds"))
+            .Must(l => l != l.Distinct().ToList()).WithError(GeneralErrors.DuplicateValues("locationIds"));
     }
 }

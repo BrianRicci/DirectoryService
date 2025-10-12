@@ -30,4 +30,10 @@ public static class GeneralErrors
         string label = name ?? "значение";
         return Error.Validation("value.already.exists", $"{label} уже существует");
     }
+
+    public static Error DuplicateValues(string? name = null)
+    {
+        string label = name ?? "коллекции";
+        return Error.Validation("duplicate.values", $"В {label} значения дублируются");
+    }
 }

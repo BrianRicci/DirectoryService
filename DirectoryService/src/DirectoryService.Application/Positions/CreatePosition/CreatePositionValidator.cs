@@ -17,7 +17,7 @@ public class CreatePositionValidator : AbstractValidator<CreatePositionCommand>
             .MustBeValueObject(PositionDescription.Create);
 
         RuleFor(command => command.CreatePositionRequest.DepartmentIds)
-            .NotEmpty().WithMessage("Массив подразделений не может быть пустым")
-            .Must(l => l != l.Distinct().ToList()).WithMessage("Массив подразделений содержит дублирующиеся значения");
+            .NotEmpty().WithError(GeneralErrors.ValueIsRequired("departmentIds"))
+            .Must(l => l != l.Distinct().ToList()).WithError(GeneralErrors.DuplicateValues("departmentIds"));
     }
 }
