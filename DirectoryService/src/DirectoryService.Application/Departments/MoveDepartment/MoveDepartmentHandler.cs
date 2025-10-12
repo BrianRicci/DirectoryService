@@ -1,8 +1,8 @@
 ﻿using CSharpFunctionalExtensions;
 using DirectoryService.Application.Abstractions;
+using DirectoryService.Application.Database;
 using DirectoryService.Application.Extentions;
 using DirectoryService.Domain.Departments;
-using DirectoryService.Infrastructure.Postgres.Database;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
 using Shared;

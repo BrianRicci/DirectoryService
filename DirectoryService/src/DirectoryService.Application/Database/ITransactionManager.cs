@@ -1,7 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using Shared;
 
-namespace DirectoryService.Infrastructure.Postgres.Database;
+namespace DirectoryService.Application.Database;
 
 public interface ITransactionManager
 {
