@@ -302,7 +302,7 @@ public class CreateDepartmentTests : DirectoryBaseTests
                 DepartmentName.Create("Родительское подразделение").Value,
                 departmentIdentifier,
                 DepartmentPath.CreateParent(departmentIdentifier).Value,
-                1,
+                0,
                 departmentLocations,
                 departmentId).Value;
             

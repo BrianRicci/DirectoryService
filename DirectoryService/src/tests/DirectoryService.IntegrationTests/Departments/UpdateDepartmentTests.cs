@@ -50,8 +50,8 @@ public class UpdateDepartmentTests : DirectoryBaseTests
                 .FirstAsync(d => d.Id == departmentId, cancellationToken);
 
             List<DepartmentLocation> expected = department.DepartmentLocations.ToList();
-            expected.Sort((a, b) => a.LocationId.Value.CompareTo(b.LocationId.Value));
             List<DepartmentLocation> actual = result.Value;
+            expected.Sort((a, b) => a.LocationId.Value.CompareTo(b.LocationId.Value));
             actual.Sort((a, b) => a.LocationId.Value.CompareTo(b.LocationId.Value));
             
             Assert.Equal(expected.Count, actual.Count);
@@ -219,7 +219,7 @@ public class UpdateDepartmentTests : DirectoryBaseTests
                 DepartmentName.Create("Родительское подразделение").Value,
                 departmentIdentifier,
                 DepartmentPath.CreateParent(departmentIdentifier).Value,
-                1,
+                0,
                 departmentLocations,
                 departmentId).Value;
             
