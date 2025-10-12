@@ -9,17 +9,6 @@ public static class ValidationExtensions
     {
         var validationErrors = validationResult.Errors;
         
-        // var errors = validationErrors
-        //     .Select(e =>
-        //     {
-        //         var error = Error.Deserialize(e.ErrorMessage);
-        //         
-        //         return Error.Validation(
-        //             error.Code,
-        //             error.Message,
-        //             e.PropertyName);
-        //     }).ToList();
-        
         var errors = from validationError in validationErrors
             let errorMessage = validationError.ErrorMessage
             let error = Error.Deserialize(errorMessage)
