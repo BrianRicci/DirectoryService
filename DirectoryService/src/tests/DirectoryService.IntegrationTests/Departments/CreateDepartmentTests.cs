@@ -3,7 +3,6 @@ using DirectoryService.Contracts.Departments;
 using DirectoryService.Domain.DepartmentLocations;
 using DirectoryService.Domain.Departments;
 using DirectoryService.Domain.Locations;
-using DirectoryService.Infrastructure.Postgres;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -294,32 +293,6 @@ public class CreateDepartmentTests : DirectoryBaseTests
     {
         return await ExecuteInDb(async dbContext =>
         {
-            DepartmentId departmentId = new DepartmentId(Guid.NewGuid());
-            DepartmentIdentifier departmentIdentifier = DepartmentIdentifier.Create("department").Value;
-            List<DepartmentLocation> departmentLocations = new List<DepartmentLocation>();
-            departmentLocations.Add(new DepartmentLocation(departmentId, locationId));
-            
-            var department = Department.CreateParent(
-                DepartmentName.Create("Родительское подразделение").Value,
-                departmentIdentifier,
-                DepartmentPath.CreateParent(departmentIdentifier).Value,
-                1,
-                departmentLocations,
-                departmentId).Value;
-            
-            dbContext.Departments.Add(department);
-            await dbContext.SaveChangesAsync();
-
-            return departmentId;
-        });
-    }
-    
-    private async Task<DepartmentId> CreateParentDepartmentWithoutLocation()
-    {
-        return await ExecuteInDb(async dbContext =>
-        {
-            LocationId locationId = await CreateLocation();
-            
             DepartmentId departmentId = new DepartmentId(Guid.NewGuid());
             DepartmentIdentifier departmentIdentifier = DepartmentIdentifier.Create("department").Value;
             List<DepartmentLocation> departmentLocations = new List<DepartmentLocation>();

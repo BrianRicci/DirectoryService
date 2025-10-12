@@ -3,6 +3,7 @@ using DirectoryService.Application.Abstractions;
 using DirectoryService.Application.Database;
 using DirectoryService.Application.Extentions;
 using DirectoryService.Application.Locations;
+using DirectoryService.Contracts.Departments;
 using DirectoryService.Domain.DepartmentLocations;
 using DirectoryService.Domain.Departments;
 using DirectoryService.Domain.Locations;
@@ -12,7 +13,7 @@ using Shared;
 
 namespace DirectoryService.Application.Departments.UpdateDepartment;
 
-public class UpdateDepartmentLocationsHandler : ICommandHandler<UpdateDepartmentLocationsCommand>
+public class UpdateDepartmentLocationsHandler : ICommandHandler<List<DepartmentLocation>, UpdateDepartmentLocationsCommand>
 {
     private readonly IDepartmentsRepository _departmentsRepository;
     private readonly ILocationsRepository _locationsRepository;
@@ -34,7 +35,7 @@ public class UpdateDepartmentLocationsHandler : ICommandHandler<UpdateDepartment
         _logger = logger;
     }
     
-    public async Task<UnitResult<Errors>> Handle(UpdateDepartmentLocationsCommand command, CancellationToken cancellationToken)
+    public async Task<Result<List<DepartmentLocation>, Errors>> Handle(UpdateDepartmentLocationsCommand command, CancellationToken cancellationToken)
     {
         // валидация
         var validationResult = await _validator.ValidateAsync(command, cancellationToken);
@@ -105,6 +106,6 @@ public class UpdateDepartmentLocationsHandler : ICommandHandler<UpdateDepartment
             return commitResult.Error.ToErrors();
         }
         
-        return UnitResult.Success<Errors>();
+        return departmentLocations;
     }
 }
