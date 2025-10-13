@@ -1,3 +1,4 @@
+using DirectoryService.Application.Database;
 using DirectoryService.Application.Departments;
 using DirectoryService.Application.Departments.CreateDepartment;
 using DirectoryService.Application.Departments.MoveDepartment;
@@ -63,3 +64,8 @@ if (app.Environment.IsDevelopment())
 app.MapControllers();
 
 app.Run();
+
+namespace DirectoryService.Presentation
+{
+    public partial class Program;
+}
