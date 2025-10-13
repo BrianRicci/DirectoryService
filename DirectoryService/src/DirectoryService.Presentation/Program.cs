@@ -4,7 +4,8 @@ using DirectoryService.Application.Departments.CreateDepartment;
 using DirectoryService.Application.Departments.MoveDepartment;
 using DirectoryService.Application.Departments.UpdateDepartment;
 using DirectoryService.Application.Locations;
-using DirectoryService.Application.Locations.CreateLocation;
+using DirectoryService.Application.Locations.Command.CreateLocation;
+using DirectoryService.Application.Locations.Queries;
 using DirectoryService.Application.Positions;
 using DirectoryService.Application.Positions.CreatePosition;
 using DirectoryService.Infrastructure.Postgres;
@@ -32,6 +33,9 @@ builder.Services.AddProgramDependencies();
 builder.Services.AddScoped<DirectoryServiceDbContext>(_ =>
     new DirectoryServiceDbContext(builder.Configuration.GetConnectionString("DirectoryServiceDb")!));
 
+builder.Services.AddScoped<IReadDbContext, DirectoryServiceDbContext>(_ =>
+    new DirectoryServiceDbContext(builder.Configuration.GetConnectionString("DirectoryServiceDb")!));
+
 builder.Services.AddScoped<ITransactionManager, TransactionManager>();
 builder.Services.AddScoped<ILocationsRepository, LocationsRepository>();
 builder.Services.AddScoped<IDepartmentsRepository, DepartmentsRepository>();
@@ -48,6 +52,7 @@ builder.Services.AddScoped<CreateDepartmentHandler>();
 builder.Services.AddScoped<CreatePositionHandler>();
 builder.Services.AddScoped<UpdateDepartmentLocationsHandler>();
 builder.Services.AddScoped<MoveDepartmentHandler>();
+builder.Services.AddScoped<GetByIdHandler>();
 
 var app = builder.Build();
 

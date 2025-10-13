@@ -1,5 +1,6 @@
 ﻿using DirectoryService.Application.Abstractions;
-using DirectoryService.Application.Locations.CreateLocation;
+using DirectoryService.Application.Locations.Command.CreateLocation;
+using DirectoryService.Application.Locations.Queries;
 using DirectoryService.Contracts;
 using DirectoryService.Contracts.Locations;
 using DirectoryService.Presentation.EndpointResults;
@@ -12,6 +13,16 @@ namespace DirectoryService.Presentation.Locations;
 [Route("api/locations")]
 public class LocationsController : ControllerBase
 {
+    [HttpGet("/{locationId:guid}")]
+    public async Task<ActionResult<GetLocationDto>> GetById(
+        [FromRoute] Guid locationId,
+        [FromServices] GetByIdHandler handler,
+        CancellationToken cancellationToken)
+    {
+        var location = await handler.Handle(new GetLocationByIdRequest(locationId), cancellationToken);
+        return Ok(location);
+    }
+    
     [HttpPost]
     [ProducesResponseType<Envelope<Guid>>(201)]
     [ProducesResponseType<Envelope>(400)]
