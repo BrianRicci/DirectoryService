@@ -13,16 +13,6 @@ namespace DirectoryService.Presentation.Locations;
 [Route("api/locations")]
 public class LocationsController : ControllerBase
 {
-    [HttpGet("/{locationId:guid}")]
-    public async Task<ActionResult<GetLocationDto>> GetById(
-        [FromRoute] Guid locationId,
-        [FromServices] GetByIdHandler handler,
-        CancellationToken cancellationToken)
-    {
-        var location = await handler.Handle(new GetLocationByIdRequest(locationId), cancellationToken);
-        return Ok(location);
-    }
-    
     [HttpPost]
     [ProducesResponseType<Envelope<Guid>>(201)]
     [ProducesResponseType<Envelope>(400)]
@@ -35,5 +25,25 @@ public class LocationsController : ControllerBase
         var command = new CreateLocationCommand(request);
 
         return await handler.Handle(command, cancellationToken);
+    }
+    
+    [HttpGet("/{locationId:guid}")]
+    public async Task<ActionResult<GetLocationDto>> GetById(
+        [FromRoute] Guid locationId,
+        [FromServices] GetByIdHandler handler,
+        CancellationToken cancellationToken)
+    {
+        var location = await handler.Handle(new GetLocationByIdRequest(locationId), cancellationToken);
+        return Ok(location);
+    }
+    
+    [HttpGet("/{locationId:guid}/dapper")]
+    public async Task<ActionResult<GetLocationDto>> GetByIdDapper(
+        [FromRoute] Guid locationId,
+        [FromServices] GetByIdHandlerDapper handler,
+        CancellationToken cancellationToken)
+    {
+        var location = await handler.Handle(new GetLocationByIdRequest(locationId), cancellationToken);
+        return Ok(location);
     }
 }

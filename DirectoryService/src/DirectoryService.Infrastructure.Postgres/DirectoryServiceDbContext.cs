@@ -19,13 +19,18 @@ public class DirectoryServiceDbContext : DbContext, IReadDbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseNpgsql(_connectionString);
-        optionsBuilder.UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()));
+        optionsBuilder.UseLoggerFactory(CreateLoggerFactory());
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasPostgresExtension("ltree");
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(DirectoryServiceDbContext).Assembly);
+    }
+    
+    private ILoggerFactory CreateLoggerFactory()
+    {
+        return LoggerFactory.Create(builder => builder.AddConsole());
     }
     
     public DbSet<Department> Departments => Set<Department>();

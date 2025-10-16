@@ -36,6 +36,9 @@ builder.Services.AddScoped<DirectoryServiceDbContext>(_ =>
 builder.Services.AddScoped<IReadDbContext, DirectoryServiceDbContext>(_ =>
     new DirectoryServiceDbContext(builder.Configuration.GetConnectionString("DirectoryServiceDb")!));
 
+builder.Services.AddSingleton<IDbConnectionFactory, NpgsqlConnectionFactory>();
+Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
+
 builder.Services.AddScoped<ITransactionManager, TransactionManager>();
 builder.Services.AddScoped<ILocationsRepository, LocationsRepository>();
 builder.Services.AddScoped<IDepartmentsRepository, DepartmentsRepository>();
@@ -53,6 +56,7 @@ builder.Services.AddScoped<CreatePositionHandler>();
 builder.Services.AddScoped<UpdateDepartmentLocationsHandler>();
 builder.Services.AddScoped<MoveDepartmentHandler>();
 builder.Services.AddScoped<GetByIdHandler>();
+builder.Services.AddScoped<GetByIdHandlerDapper>();
 
 var app = builder.Build();
 
