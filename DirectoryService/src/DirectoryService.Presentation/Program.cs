@@ -55,8 +55,9 @@ builder.Services.AddScoped<CreateDepartmentHandler>();
 builder.Services.AddScoped<CreatePositionHandler>();
 builder.Services.AddScoped<UpdateDepartmentLocationsHandler>();
 builder.Services.AddScoped<MoveDepartmentHandler>();
-builder.Services.AddScoped<GetByIdHandler>();
+builder.Services.AddScoped<GetLocationByIdHandler>();
 builder.Services.AddScoped<GetByIdHandlerDapper>();
+builder.Services.AddScoped<GetLocationsHandlerDapper>();
 
 var app = builder.Build();
 

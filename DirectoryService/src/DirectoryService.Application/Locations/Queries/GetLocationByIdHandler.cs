@@ -1,4 +1,5 @@
-﻿using Dapper;
+﻿using System.Data;
+using Dapper;
 using DirectoryService.Application.Database;
 using DirectoryService.Contracts.Departments;
 using DirectoryService.Contracts.Locations;
@@ -8,11 +9,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DirectoryService.Application.Locations.Queries;
 
-public class GetByIdHandler
+public class GetLocationByIdHandler
 {
     private readonly IReadDbContext _readDbContext;
 
-    public GetByIdHandler(IReadDbContext readDbContext)
+    public GetLocationByIdHandler(IReadDbContext readDbContext)
     {
         _readDbContext = readDbContext;
     }
