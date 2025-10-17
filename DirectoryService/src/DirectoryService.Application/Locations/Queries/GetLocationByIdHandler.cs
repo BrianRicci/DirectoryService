@@ -93,16 +93,16 @@ public class GetByIdHandlerDapper
                 locationId = query.LocationId,
             },
             splitOn: "country, department_id",
-            map: (l, a, d) =>
+            map: (location, address, department) =>
             {
                 if (locationDto is null)
-                    locationDto = l;
+                    locationDto = location;
                 
                 // address mapping
-                locationDto.Address = a;
+                locationDto.Address = address;
                 
                 // department mapping
-                locationDto.Departments.Add(d);
+                locationDto.Departments.Add(department);
 
                 return locationDto;
             });
