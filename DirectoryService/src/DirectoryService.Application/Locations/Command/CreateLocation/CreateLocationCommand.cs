@@ -1,7 +1,6 @@
 ﻿using DirectoryService.Application.Abstractions;
-using DirectoryService.Contracts;
 using DirectoryService.Contracts.Locations;
 
-namespace DirectoryService.Application.Locations.CreateLocation;
+namespace DirectoryService.Application.Locations.Command.CreateLocation;
 
 public record CreateLocationCommand(CreateLocationRequest CreateLocationRequest) : ICommand;
