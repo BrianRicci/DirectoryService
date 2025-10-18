@@ -2,7 +2,7 @@
 using FluentValidation;
 using Shared;
 
-namespace DirectoryService.Application.Departments.MoveDepartment;
+namespace DirectoryService.Application.Departments.Command.MoveDepartment;
 
 public class MoveDepartmentValidator : AbstractValidator<MoveDepartmentCommand>
 {

@@ -81,13 +81,13 @@ public class GetLocationsHandlerDapper
             """,
             param: parameters,
             splitOn: "country, department_id, total_count",
-            map: (location, a, d, count) =>
+            map: (location, address, department, count) =>
             {
                 // address mapping
-                location.Address = a;
+                location.Address = address;
                 
                 // department mapping
-                location.Departments.Add(d);
+                location.Departments.Add(department);
 
                 // total_count mapping
                 totalCount = count;
