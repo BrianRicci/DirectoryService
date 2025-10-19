@@ -41,9 +41,10 @@ public class GetLocationsHandlerDapper
             conditions.Add("d.department_id = ANY(@department_ids)");
             parameters.Add("department_ids", query.DepartmentIds);
         }
-        
-        parameters.Add("offset", (query.Pagination.Page - 1) * query.Pagination.PageSize, DbType.Int32);
-        parameters.Add("page_size", query.Pagination.PageSize, DbType.Int32);
+
+        var pagination = query.EffectivePagination;
+        parameters.Add("offset", (pagination.Page - 1) * pagination.PageSize, DbType.Int32);
+        parameters.Add("page_size", pagination.PageSize, DbType.Int32);
         
         string whereClause = conditions.Count > 0 ? "WHERE " + string.Join(" AND ", conditions) : string.Empty;
 

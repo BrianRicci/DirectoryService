@@ -7,6 +7,9 @@ public record GetLocationsRequest(
     string? Search,
     List<Guid>? DepartmentIds,
     bool? IsActive,
-    PaginationRequest Pagination);
+    PaginationRequest? Pagination = null)
+{
+    public PaginationRequest EffectivePagination => Pagination ?? new PaginationRequest();
+}
     
 public record PaginationRequest(int Page = 1, int PageSize = 20);
