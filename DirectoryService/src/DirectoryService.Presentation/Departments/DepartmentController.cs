@@ -1,8 +1,9 @@
 ﻿using CSharpFunctionalExtensions;
 using DirectoryService.Application.Abstractions;
-using DirectoryService.Application.Departments.CreateDepartment;
-using DirectoryService.Application.Departments.MoveDepartment;
-using DirectoryService.Application.Departments.UpdateDepartment;
+using DirectoryService.Application.Departments.Command.CreateDepartment;
+using DirectoryService.Application.Departments.Command.MoveDepartment;
+using DirectoryService.Application.Departments.Command.UpdateDepartment;
+using DirectoryService.Application.Departments.Queries;
 using DirectoryService.Contracts.Departments;
 using DirectoryService.Domain.DepartmentLocations;
 using DirectoryService.Presentation.EndpointResults;
@@ -51,5 +52,13 @@ public class DepartmentController : ControllerBase
         var command = new MoveDepartmentCommand(departmentId, request);
         
         return await handler.Handle(command, cancellationToken);
+    }
+    
+    [HttpGet("top-positions")]
+    public async Task<ActionResult<GetDepartmentsTopDto?>> GetTopPositions(
+        [FromServices] GetDepartmentsTopHandlerDapper handler,
+        CancellationToken cancellationToken)
+    {
+        return await handler.Handle(cancellationToken);
     }
 }

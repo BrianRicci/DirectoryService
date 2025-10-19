@@ -3,7 +3,6 @@ using DirectoryService.Application.Abstractions;
 using DirectoryService.Application.Database;
 using DirectoryService.Application.Extentions;
 using DirectoryService.Application.Locations;
-using DirectoryService.Contracts.Departments;
 using DirectoryService.Domain.DepartmentLocations;
 using DirectoryService.Domain.Departments;
 using DirectoryService.Domain.Locations;
@@ -11,7 +10,7 @@ using FluentValidation;
 using Microsoft.Extensions.Logging;
 using Shared;
 
-namespace DirectoryService.Application.Departments.UpdateDepartment;
+namespace DirectoryService.Application.Departments.Command.UpdateDepartment;
 
 public class UpdateDepartmentLocationsHandler : ICommandHandler<List<DepartmentLocation>, UpdateDepartmentLocationsCommand>
 {

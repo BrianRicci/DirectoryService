@@ -1,8 +1,9 @@
 using DirectoryService.Application.Database;
 using DirectoryService.Application.Departments;
-using DirectoryService.Application.Departments.CreateDepartment;
-using DirectoryService.Application.Departments.MoveDepartment;
-using DirectoryService.Application.Departments.UpdateDepartment;
+using DirectoryService.Application.Departments.Command.CreateDepartment;
+using DirectoryService.Application.Departments.Command.MoveDepartment;
+using DirectoryService.Application.Departments.Command.UpdateDepartment;
+using DirectoryService.Application.Departments.Queries;
 using DirectoryService.Application.Locations;
 using DirectoryService.Application.Locations.Command.CreateLocation;
 using DirectoryService.Application.Locations.Queries;
@@ -58,6 +59,7 @@ builder.Services.AddScoped<MoveDepartmentHandler>();
 builder.Services.AddScoped<GetLocationByIdHandler>();
 builder.Services.AddScoped<GetByIdHandlerDapper>();
 builder.Services.AddScoped<GetLocationsHandlerDapper>();
+builder.Services.AddScoped<GetDepartmentsTopHandlerDapper>();
 
 var app = builder.Build();
 

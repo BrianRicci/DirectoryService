@@ -37,7 +37,7 @@ public class LocationsController : ControllerBase
         return Ok(location);
     }
     
-    [HttpGet("/{locationId:guid}")]
+    [HttpGet("{locationId:guid}")]
     public async Task<ActionResult<GetLocationDto>> GetById(
         [FromRoute] Guid locationId,
         [FromServices] GetLocationByIdHandler handler,
@@ -47,7 +47,7 @@ public class LocationsController : ControllerBase
         return Ok(location);
     }
     
-    [HttpGet("/{locationId:guid}/dapper")]
+    [HttpGet("{locationId:guid}/dapper")]
     public async Task<ActionResult<GetLocationDto>> GetByIdDapper(
         [FromRoute] Guid locationId,
         [FromServices] GetByIdHandlerDapper handler,
