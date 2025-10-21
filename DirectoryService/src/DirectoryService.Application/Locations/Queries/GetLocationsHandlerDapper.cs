@@ -42,7 +42,8 @@ public class GetLocationsHandlerDapper
             parameters.Add("department_ids", query.DepartmentIds);
         }
 
-        var pagination = query.EffectivePagination;
+        var pagination = query.Pagination;
+
         parameters.Add("offset", (pagination.Page - 1) * pagination.PageSize, DbType.Int32);
         parameters.Add("page_size", pagination.PageSize, DbType.Int32);
         
