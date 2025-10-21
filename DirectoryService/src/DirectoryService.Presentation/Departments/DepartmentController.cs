@@ -61,4 +61,13 @@ public class DepartmentController : ControllerBase
     {
         return await handler.Handle(cancellationToken);
     }
+    
+    [HttpGet("roots")]
+    public async Task<ActionResult<GetDepartmentRootsDto?>> GetRoots(
+        [FromQuery] GetDepartmentRootsRequest request,
+        [FromServices] GetDepartmentRootsHandlerDapper handler,
+        CancellationToken cancellationToken)
+    {
+        return await handler.Handle(request, cancellationToken);
+    }
 }
