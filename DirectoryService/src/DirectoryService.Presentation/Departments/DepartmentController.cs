@@ -4,6 +4,7 @@ using DirectoryService.Application.Departments.Command.CreateDepartment;
 using DirectoryService.Application.Departments.Command.MoveDepartment;
 using DirectoryService.Application.Departments.Command.UpdateDepartment;
 using DirectoryService.Application.Departments.Queries;
+using DirectoryService.Contracts;
 using DirectoryService.Contracts.Departments;
 using DirectoryService.Domain.DepartmentLocations;
 using DirectoryService.Presentation.EndpointResults;
@@ -68,6 +69,17 @@ public class DepartmentController : ControllerBase
         [FromServices] GetDepartmentRootsHandlerDapper handler,
         CancellationToken cancellationToken)
     {
+        return await handler.Handle(request, cancellationToken);
+    }
+    
+    [HttpGet("{parentId:guid}/children")]
+    public async Task<ActionResult<GetDepartmentChildsDto>> GetChilds(
+        [FromRoute] Guid parentId,
+        [FromQuery] PaginationRequest paginationRequest,
+        [FromServices] GetDepartmentChildsHandlerDapper handler,
+        CancellationToken cancellationToken)
+    {
+        var request = new GetDepartmentChildsRequest(parentId, paginationRequest);
         return await handler.Handle(request, cancellationToken);
     }
 }

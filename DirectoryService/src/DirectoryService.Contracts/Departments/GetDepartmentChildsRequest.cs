@@ -2,9 +2,9 @@
 
 namespace DirectoryService.Contracts.Departments;
 
-public record GetDepartmentRootsRequest(
-    PaginationRequest? Pagination,
-    int Prefetch = 3)
+public record GetDepartmentChildsRequest(
+    Guid ParentId,
+    PaginationRequest? Pagination)
 {
     public PaginationRequest Pagination { get; } = Pagination ?? new PaginationRequest();
 }

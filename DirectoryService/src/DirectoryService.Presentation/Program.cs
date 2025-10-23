@@ -61,6 +61,7 @@ builder.Services.AddScoped<GetByIdHandlerDapper>();
 builder.Services.AddScoped<GetLocationsHandlerDapper>();
 builder.Services.AddScoped<GetDepartmentsTopHandlerDapper>();
 builder.Services.AddScoped<GetDepartmentRootsHandlerDapper>();
+builder.Services.AddScoped<GetDepartmentChildsHandlerDapper>();
 
 var app = builder.Build();
 

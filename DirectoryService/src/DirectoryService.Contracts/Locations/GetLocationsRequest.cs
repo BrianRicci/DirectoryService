@@ -11,5 +11,3 @@ public record GetLocationsRequest(
 {
     public PaginationRequest Pagination { get; } = Pagination ?? new PaginationRequest();
 }
-    
-public record PaginationRequest(int Page = 1, int PageSize = 20);
