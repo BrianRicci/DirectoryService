@@ -5,8 +5,8 @@ namespace DirectoryService.Domain.Locations;
 
 public record LocationName
 {
-    private const int MIN_LENGTH = LengthConstants.LENGTH3;
-    private const int MAX_LENGTH = LengthConstants.LENGTH120;
+    private const int MIN_LENGTH = Constants.LENGTH3;
+    private const int MAX_LENGTH = Constants.LENGTH120;
     
     public string Value { get; }
     

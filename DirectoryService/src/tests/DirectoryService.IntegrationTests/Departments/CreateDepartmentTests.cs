@@ -1,4 +1,4 @@
-﻿using DirectoryService.Application.Departments.Command.CreateDepartment;
+﻿using DirectoryService.Application.Departments.Command.Create;
 using DirectoryService.Contracts.Departments;
 using DirectoryService.Domain.DepartmentLocations;
 using DirectoryService.Domain.Departments;

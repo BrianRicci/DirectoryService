@@ -5,8 +5,8 @@ namespace DirectoryService.Domain.Positions;
 
 public record PositionName
 {
-    private const int MIN_LENGTH = LengthConstants.LENGTH3;
-    private const int MAX_LENGTH = LengthConstants.LENGTH100;
+    private const int MIN_LENGTH = Constants.LENGTH3;
+    private const int MAX_LENGTH = Constants.LENGTH100;
     
     public string Value { get; }
     

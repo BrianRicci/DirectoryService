@@ -1,4 +1,4 @@
-﻿using DirectoryService.Application.Departments.Command.UpdateDepartment;
+﻿using DirectoryService.Application.Departments.Command.Update;
 using DirectoryService.Contracts.Departments;
 using DirectoryService.Domain.DepartmentLocations;
 using DirectoryService.Domain.Departments;

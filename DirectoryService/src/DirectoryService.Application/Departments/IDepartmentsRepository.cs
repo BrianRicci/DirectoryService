@@ -8,7 +8,7 @@ namespace DirectoryService.Application.Departments;
 public interface IDepartmentsRepository
 {
     Task<Result<Guid, Errors>> AddAsync(Department department, CancellationToken cancellationToken);
-    
+
     Task<Result<Department, Errors>> GetByIdAsync(DepartmentId departmentId, CancellationToken cancellationToken);
 
     Task<Result<Department, Errors>> GetByIdWithLock(DepartmentId departmentId, CancellationToken cancellationToken);

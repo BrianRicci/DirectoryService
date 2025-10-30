@@ -1,10 +1,9 @@
 ﻿using DirectoryService.Application.Validation;
-using DirectoryService.Domain.Locations;
 using DirectoryService.Domain.Positions;
 using FluentValidation;
 using Shared;
 
-namespace DirectoryService.Application.Positions.CreatePosition;
+namespace DirectoryService.Application.Positions.Create;
 
 public class CreatePositionValidator : AbstractValidator<CreatePositionCommand>
 {

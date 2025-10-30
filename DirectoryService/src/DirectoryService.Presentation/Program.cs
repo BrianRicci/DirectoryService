@@ -1,14 +1,15 @@
 using DirectoryService.Application.Database;
 using DirectoryService.Application.Departments;
-using DirectoryService.Application.Departments.Command.CreateDepartment;
-using DirectoryService.Application.Departments.Command.MoveDepartment;
-using DirectoryService.Application.Departments.Command.UpdateDepartment;
+using DirectoryService.Application.Departments.Command.Create;
+using DirectoryService.Application.Departments.Command.Delete;
+using DirectoryService.Application.Departments.Command.Move;
+using DirectoryService.Application.Departments.Command.Update;
 using DirectoryService.Application.Departments.Queries;
 using DirectoryService.Application.Locations;
-using DirectoryService.Application.Locations.Command.CreateLocation;
+using DirectoryService.Application.Locations.Command.Create;
 using DirectoryService.Application.Locations.Queries;
 using DirectoryService.Application.Positions;
-using DirectoryService.Application.Positions.CreatePosition;
+using DirectoryService.Application.Positions.Create;
 using DirectoryService.Infrastructure.Postgres;
 using DirectoryService.Infrastructure.Postgres.Database;
 using DirectoryService.Infrastructure.Postgres.Repositories;
@@ -50,6 +51,7 @@ builder.Services.AddScoped<IValidator<CreateDepartmentCommand>, CreateDepartment
 builder.Services.AddScoped<IValidator<CreatePositionCommand>, CreatePositionValidator>();
 builder.Services.AddScoped<IValidator<UpdateDepartmentLocationsCommand>, UpdateDepartmentLocationsValidator>();
 builder.Services.AddScoped<IValidator<MoveDepartmentCommand>, MoveDepartmentValidator>();
+builder.Services.AddScoped<IValidator<DeleteDepartmentCommand>, DeleteDepartmentValidator>();
 
 builder.Services.AddScoped<CreateLocationHandler>();
 builder.Services.AddScoped<CreateDepartmentHandler>();
@@ -62,6 +64,7 @@ builder.Services.AddScoped<GetLocationsHandlerDapper>();
 builder.Services.AddScoped<GetDepartmentsTopHandlerDapper>();
 builder.Services.AddScoped<GetDepartmentRootsHandlerDapper>();
 builder.Services.AddScoped<GetDepartmentChildsHandlerDapper>();
+builder.Services.AddScoped<DeleteDepartmentHandler>();
 
 var app = builder.Build();
 

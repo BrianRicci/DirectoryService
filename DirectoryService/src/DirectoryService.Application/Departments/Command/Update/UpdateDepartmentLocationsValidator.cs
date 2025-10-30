@@ -2,7 +2,7 @@
 using FluentValidation;
 using Shared;
 
-namespace DirectoryService.Application.Departments.Command.UpdateDepartment;
+namespace DirectoryService.Application.Departments.Command.Update;
 
 public class UpdateDepartmentLocationsValidator : AbstractValidator<UpdateDepartmentLocationsCommand>
 {

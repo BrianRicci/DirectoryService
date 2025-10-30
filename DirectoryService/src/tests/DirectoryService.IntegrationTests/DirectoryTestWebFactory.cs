@@ -1,4 +1,5 @@
 ﻿using System.Data.Common;
+using DirectoryService.Application.Database;
 using DirectoryService.Infrastructure.Postgres;
 using DirectoryService.Presentation;
 using Microsoft.AspNetCore.Hosting;
@@ -16,7 +17,7 @@ public class DirectoryTestWebFactory : WebApplicationFactory<Program>, IAsyncLif
 {
     private readonly PostgreSqlContainer _dbContainer = new PostgreSqlBuilder()
         .WithImage("postgres")
-        .WithDatabase("directory_service_db")
+        .WithDatabase("directory_service_db_tests")
         .WithUsername("postgres")
         .WithPassword("postgres")
         .Build();
@@ -30,9 +31,13 @@ public class DirectoryTestWebFactory : WebApplicationFactory<Program>, IAsyncLif
         builder.ConfigureTestServices(services =>
         {
             services.RemoveAll<DirectoryServiceDbContext>();
+            services.RemoveAll<NpgsqlConnectionFactory>();
             
             services.AddScoped<DirectoryServiceDbContext>(_ =>
                 new DirectoryServiceDbContext(_dbContainer.GetConnectionString()));
+
+            services.AddSingleton<IDbConnectionFactory, NpgsqlConnectionFactory>(_ =>
+                new NpgsqlConnectionFactory(_dbContainer.GetConnectionString()));
         });
     }
     

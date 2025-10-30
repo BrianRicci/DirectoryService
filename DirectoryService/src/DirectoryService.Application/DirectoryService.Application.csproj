@@ -21,7 +21,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Departments\Command\" />
       <Folder Include="Locations\Command\" />
     </ItemGroup>
 
