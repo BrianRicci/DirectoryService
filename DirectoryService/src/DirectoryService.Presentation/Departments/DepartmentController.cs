@@ -1,8 +1,9 @@
 ﻿using CSharpFunctionalExtensions;
 using DirectoryService.Application.Abstractions;
-using DirectoryService.Application.Departments.Command.CreateDepartment;
-using DirectoryService.Application.Departments.Command.MoveDepartment;
-using DirectoryService.Application.Departments.Command.UpdateDepartment;
+using DirectoryService.Application.Departments.Command.Create;
+using DirectoryService.Application.Departments.Command.Delete;
+using DirectoryService.Application.Departments.Command.Move;
+using DirectoryService.Application.Departments.Command.Update;
 using DirectoryService.Application.Departments.Queries;
 using DirectoryService.Contracts;
 using DirectoryService.Contracts.Departments;
@@ -81,5 +82,16 @@ public class DepartmentController : ControllerBase
     {
         var request = new GetDepartmentChildsRequest(parentId, paginationRequest);
         return await handler.Handle(request, cancellationToken);
+    }
+    
+    [HttpDelete("{departmentId:guid}")]
+    public async Task<EndpointResult<Guid>> Delete(
+        [FromRoute] Guid departmentId,
+        [FromServices] ICommandHandler<Guid, DeleteDepartmentCommand> handler,
+        CancellationToken cancellationToken)
+    {
+        var command = new DeleteDepartmentCommand(departmentId);
+        
+        return await handler.Handle(command, cancellationToken);
     }
 }

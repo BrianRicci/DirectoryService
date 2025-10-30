@@ -23,7 +23,7 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
             .Property(l => l.Name)
             .HasConversion(l => l.Value, name => LocationName.Create(name).Value)
             .HasColumnName("name")
-            .HasMaxLength(LengthConstants.LENGTH120)
+            .HasMaxLength(Constants.LENGTH120)
             .IsRequired();
         
         builder.HasIndex(l => l.Name).IsUnique();
@@ -33,31 +33,31 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
             ib
                 .Property(l => l.Country)
                 .HasColumnName("country")
-                .HasMaxLength(LengthConstants.LENGTH32)
+                .HasMaxLength(Constants.LENGTH32)
                 .IsRequired();
 
             ib
                 .Property(l => l.Region)
                 .HasColumnName("region")
-                .HasMaxLength(LengthConstants.LENGTH32)
+                .HasMaxLength(Constants.LENGTH32)
                 .IsRequired();
             
             ib
                 .Property(l => l.City)
                 .HasColumnName("city")
-                .HasMaxLength(LengthConstants.LENGTH32)
+                .HasMaxLength(Constants.LENGTH32)
                 .IsRequired();
             
             ib
                 .Property(l => l.Street)
                 .HasColumnName("street")
-                .HasMaxLength(LengthConstants.LENGTH32)
+                .HasMaxLength(Constants.LENGTH32)
                 .IsRequired();
             
             ib
                 .Property(l => l.House)
                 .HasColumnName("house")
-                .HasMaxLength(LengthConstants.LENGTH32)
+                .HasMaxLength(Constants.LENGTH32)
                 .IsRequired();
         });
     
@@ -80,6 +80,10 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
             .Property(l => l.UpdatedAt)
             .HasColumnName("updated_at")
             .IsRequired();
+        
+        builder
+            .Property(l => l.DeletedAt)
+            .HasColumnName("deleted_at");
         
         builder
             .HasMany(l => l.DepartmentLocations)

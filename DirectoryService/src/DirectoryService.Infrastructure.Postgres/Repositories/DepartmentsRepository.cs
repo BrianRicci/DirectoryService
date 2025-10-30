@@ -33,7 +33,7 @@ public class DepartmentsRepository : IDepartmentsRepository
             return GeneralErrors.ValueIsInvalid().ToErrors();
         }
     }
-
+    
     public async Task<Result<Department, Errors>> GetByIdAsync(
         DepartmentId departmentId,
         CancellationToken cancellationToken)
@@ -41,7 +41,7 @@ public class DepartmentsRepository : IDepartmentsRepository
         var department = await _dbContext.Departments
             .Include(d => d.DepartmentLocations)
             .FirstOrDefaultAsync(d => d.Id == departmentId && d.IsActive, cancellationToken);
-
+        
         if (department is null)
             return GeneralErrors.NotFound(departmentId.Value).ToErrors();
 

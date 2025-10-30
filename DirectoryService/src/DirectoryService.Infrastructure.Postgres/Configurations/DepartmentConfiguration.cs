@@ -28,14 +28,14 @@ public class DepartmentConfiguration : IEntityTypeConfiguration<Department>
             .Property(d => d.Name)
             .HasConversion(d => d.Value, name => DepartmentName.Create(name).Value)
             .HasColumnName("name")
-            .HasMaxLength(LengthConstants.LENGTH150)
+            .HasMaxLength(Constants.LENGTH150)
             .IsRequired();
 
         builder
             .Property(d => d.Identifier)
             .HasConversion(d => d.Value, identifier => DepartmentIdentifier.Create(identifier).Value)
             .HasColumnName("identifier")
-            .HasMaxLength(LengthConstants.LENGTH150)
+            .HasMaxLength(Constants.LENGTH150)
             .IsRequired();
 
         builder
@@ -43,7 +43,7 @@ public class DepartmentConfiguration : IEntityTypeConfiguration<Department>
             .HasColumnType("ltree")
             .HasConversion(d => d.Value, path => DepartmentPath.Create(path).Value)
             .HasColumnName("path")
-            .HasMaxLength(LengthConstants.LENGTH256)
+            .HasMaxLength(Constants.LENGTH256)
             .IsRequired();
         
         builder.HasIndex(d => d.Path).HasMethod("gist").HasDatabaseName("idx_departments_path");
@@ -67,6 +67,10 @@ public class DepartmentConfiguration : IEntityTypeConfiguration<Department>
             .Property(d => d.UpdatedAt)
             .HasColumnName("updated_at")
             .IsRequired();
+        
+        builder
+            .Property(d => d.DeletedAt)
+            .HasColumnName("deleted_at");
         
         builder
             .HasMany(d => d.DepartmentLocations)

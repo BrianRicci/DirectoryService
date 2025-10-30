@@ -1,5 +1,5 @@
 ﻿using DirectoryService.Application.Abstractions;
-using DirectoryService.Application.Locations.Command.CreateLocation;
+using DirectoryService.Application.Locations.Command.Create;
 using DirectoryService.Application.Locations.Queries;
 using DirectoryService.Contracts;
 using DirectoryService.Contracts.Locations;
