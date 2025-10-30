@@ -64,16 +64,16 @@ public class PositionsRepository : IPositionsRepository
                   relation_position_ids AS (
                       SELECT p.position_id
                       FROM positions p
-                               JOIN department_positions dp ON p.position_id = dp.position_id
-                          AND dp.department_id = {departmentId.Value}
-                               JOIN departments d ON dp.department_id = d.department_id
+                        JOIN department_positions dp ON p.position_id = dp.position_id
+                            AND dp.department_id = {departmentId.Value}
+                        JOIN departments d ON dp.department_id = d.department_id
                       WHERE d.is_active = true
                   ),
                   
                   positions_count AS (
                       SELECT dp.position_id, COUNT(dp.position_id) AS count
                       FROM department_positions dp
-                               JOIN relation_position_ids rp ON rp.position_id = dp.position_id
+                        JOIN relation_position_ids rp ON rp.position_id = dp.position_id
                       GROUP BY dp.position_id
                   ),
                   

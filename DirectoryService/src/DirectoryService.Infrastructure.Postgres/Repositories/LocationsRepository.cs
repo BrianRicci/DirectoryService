@@ -64,16 +64,16 @@ public class LocationsRepository : ILocationsRepository
                  relation_location_ids AS (
                      SELECT l.location_id
                      FROM locations l
-                              JOIN department_locations dl ON l.location_id = dl.location_id
-                         AND dl.department_id = {departmentId.Value}
-                              JOIN departments d ON dl.department_id = d.department_id
+                        JOIN department_locations dl ON l.location_id = dl.location_id
+                            AND dl.department_id = {departmentId.Value}
+                        JOIN departments d ON dl.department_id = d.department_id
                      WHERE d.is_active = true
                  ),
                  
                  locations_count AS (
                      SELECT dl.location_id, COUNT(dl.location_id) AS count
                      FROM department_locations dl
-                              JOIN relation_location_ids rl ON rl.location_id = dl.location_id
+                        JOIN relation_location_ids rl ON rl.location_id = dl.location_id
                      GROUP BY dl.location_id
                  ),
                  
