@@ -14,6 +14,6 @@ public interface IPositionsRepository
 
     Task<Result<Position, Errors>> GetByIdAsync(PositionId positionId, CancellationToken cancellationToken);
     
-    Task<Result<GetPositionsToDeleteDto, Error>> GetPositionsRelatedToDepartmentAsync(
+    Task<UnitResult<Error>> SoftDeletePositionsRelatedToDepartmentAsync(
         DepartmentId departmentId, CancellationToken cancellationToken);
 }

@@ -13,14 +13,11 @@ namespace DirectoryService.Infrastructure.Postgres.Repositories;
 public class PositionsRepository : IPositionsRepository
 {
     private readonly DirectoryServiceDbContext _dbContext;
-    private readonly IDbConnectionFactory _connectionFactory;
 
     public PositionsRepository(
-        DirectoryServiceDbContext dbContext,
-        IDbConnectionFactory connectionFactory)
+        DirectoryServiceDbContext dbContext)
     {
         _dbContext = dbContext;
-        _connectionFactory = connectionFactory;
     }
     
     public async Task<Result<Guid, Errors>> AddAsync(Position position, CancellationToken cancellationToken)
@@ -58,41 +55,42 @@ public class PositionsRepository : IPositionsRepository
         return position;
     }
     
-    // метод возвращает null если не найдена позиция или найдено несколько позиций связанных с 1 департаментом
-    // сделано для того, чтобы не пришлось вытаскивать весь список позиций в хэндлер, которые по итогу не будут использоваться
-     public async Task<Result<GetPositionsToDeleteDto, Error>> GetPositionsRelatedToDepartmentAsync(
+     public async Task<UnitResult<Error>> SoftDeletePositionsRelatedToDepartmentAsync(
          DepartmentId departmentId, CancellationToken cancellationToken)
      {
-         using var connection = await _connectionFactory.CreateConnectionAsync(cancellationToken);
+         await _dbContext.Database.ExecuteSqlAsync(
+             $"""
+              WITH 
+                  relation_position_ids AS (
+                      SELECT p.position_id
+                      FROM positions p
+                               JOIN department_positions dp ON p.position_id = dp.position_id
+                          AND dp.department_id = {departmentId.Value}
+                               JOIN departments d ON dp.department_id = d.department_id
+                      WHERE d.is_active = true
+                  ),
+                  
+                  positions_count AS (
+                      SELECT dp.position_id, COUNT(dp.position_id) AS count
+                      FROM department_positions dp
+                               JOIN relation_position_ids rp ON rp.position_id = dp.position_id
+                      GROUP BY dp.position_id
+                  ),
+                  
+                  positions_to_delete AS (
+                      SELECT pc.position_id
+                      FROM positions_count pc
+                      WHERE pc.count = 1
+                  )
 
-         var positionDtos = 
-             await connection.QueryAsync<GetPositionToDeleteDto, long, GetPositionToDeleteDto>(
-             """
-             WITH related_position_ids AS (
-                 SELECT p.position_id
-                 FROM positions p
-                     JOIN department_positions dp ON p.position_id = dp.position_id 
-                         AND dp.department_id = @departmentId
-             )
+              UPDATE positions p
+              SET
+                  is_active = false,
+                  updated_at = {DateTime.UtcNow},
+                  deleted_at = {DateTime.UtcNow}
+              WHERE p.position_id in (SELECT * FROM positions_to_delete) 
+              """, cancellationToken);
 
-             SELECT p.*, COUNT(p.position_id) AS count
-             FROM positions p
-                JOIN department_positions dp ON p.position_id = dp.position_id
-                JOIN departments d ON dp.department_id = d.department_id
-             WHERE dp.position_id IN (SELECT position_id FROM related_position_ids)
-             AND d.is_active = true
-             GROUP BY p.position_id;
-             """,
-             param: new { departmentId = departmentId.Value, },
-             splitOn: "count",
-             map: (position, count) =>
-             {
-                 position.Count = count;
-                 return position;
-             });
-
-         var result = positionDtos.Where(dto => dto.Count == 1).ToList();
-         
-         return new GetPositionsToDeleteDto(result);
+         return UnitResult.Success<Error>();
      }
 }

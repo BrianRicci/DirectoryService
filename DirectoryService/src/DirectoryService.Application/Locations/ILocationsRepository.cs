@@ -14,6 +14,6 @@ public interface ILocationsRepository
     
     Task<bool> IsAllExistsAsync(List<LocationId> locationIds, CancellationToken cancellationToken);
 
-    Task<Result<GetLocationsToDeleteDto, Error>> GetLocationsRelatedToDepartmentAsync(
+    Task<UnitResult<Error>> SoftDeleteLocationsRelatedToDepartmentAsync(
         DepartmentId departmentId, CancellationToken cancellationToken);
 }

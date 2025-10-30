@@ -55,61 +55,42 @@ public class LocationsRepository : ILocationsRepository
         return isAllExists;
     }
     
-    // метод возвращает null если не найдена локация или найдено несколько локаций связанных с 1 активным департаментом
-    // сделано для того, чтобы не пришлось вытаскивать весь список локаций в хэндлер, которые по итогу не будут использоваться
-    public async Task<Result<GetLocationsToDeleteDto, Error>> GetLocationsRelatedToDepartmentAsync(
+    public async Task<UnitResult<Error>> SoftDeleteLocationsRelatedToDepartmentAsync(
         DepartmentId departmentId, CancellationToken cancellationToken)
     {
-        using var connection = await _connectionFactory.CreateConnectionAsync(cancellationToken);
+        await _dbContext.Database.ExecuteSqlAsync(
+            $"""
+             WITH 
+                 relation_location_ids AS (
+                     SELECT l.location_id
+                     FROM locations l
+                              JOIN department_locations dl ON l.location_id = dl.location_id
+                         AND dl.department_id = {departmentId.Value}
+                              JOIN departments d ON dl.department_id = d.department_id
+                     WHERE d.is_active = true
+                 ),
+                 
+                 locations_count AS (
+                     SELECT dl.location_id, COUNT(dl.location_id) AS count
+                     FROM department_locations dl
+                              JOIN relation_location_ids rl ON rl.location_id = dl.location_id
+                     GROUP BY dl.location_id
+                 ),
+                 
+                 locations_to_delete AS (
+                     SELECT pc.location_id
+                     FROM locations_count pc
+                     WHERE pc.count = 1
+                 )
 
-        var testLocations = await connection.QueryAsync<GetLocationDto>(
-            "SELECT * FROM locations");
-            
-        var locationDtos =
-            await connection.QueryAsync<GetLocationToDeleteDto, LocationAddressDto, long, GetLocationToDeleteDto>(
-            """
-            WITH related_location_ids AS (
-                SELECT l.location_id
-                FROM locations l
-                    JOIN department_locations dl ON l.location_id = dl.location_id 
-                        AND dl.department_id = @departmentId
-            )
+             UPDATE locations l
+             SET
+                 is_active = false,
+                 updated_at = {DateTime.UtcNow},
+                 deleted_at = {DateTime.UtcNow}
+             WHERE l.location_id in (SELECT * FROM locations_to_delete) 
+             """, cancellationToken);
 
-            SELECT l.location_id,
-                   l.name, 
-                   l.is_active,
-                   l.timezone,
-                   l.created_at,
-                   l.updated_at,
-                   l.deleted_at,
-                   l.country,
-                   l.region,
-                   l.city,
-                   l.street,
-                   l.house,
-                   COUNT(l.location_id) AS count
-            FROM locations l
-               JOIN department_locations dl ON l.location_id = dl.location_id
-               JOIN departments d ON dl.department_id = d.department_id
-            WHERE dl.location_id IN (SELECT location_id FROM related_location_ids)
-            AND d.is_active = true
-            GROUP BY l.location_id;
-            """,
-            param: new { departmentId = departmentId.Value, },
-            splitOn: "country, count",
-            map: (location, address, count) =>
-            {
-                // address mapping
-                location.Address = address;
-                
-                // count mapping
-                location.Count = count;
-                
-                return location;
-            });
-
-        var result = locationDtos.Where(dto => dto.Count == 1).ToList();
-        
-        return new GetLocationsToDeleteDto(result);
+        return UnitResult.Success<Error>();
     }
 }

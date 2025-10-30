@@ -80,76 +80,23 @@ public class DeleteDepartmentHandler : ICommandHandler<Guid, DeleteDepartmentCom
             return lockDescendants.Error;
         }
 
-        Location? location = null;
-        Position? position = null;
-        
-        var locationDtoResult = await _locationsRepository.GetLocationsRelatedToDepartmentAsync(
+        var softDeleteLocationsResult = await _locationsRepository.SoftDeleteLocationsRelatedToDepartmentAsync(
             department.Id, cancellationToken);
-        if (locationDtoResult.IsFailure)
+        if (softDeleteLocationsResult.IsFailure)
         {
-            _logger.LogInformation("Failed to get locations related to department.");
+            _logger.LogInformation("Failed to delete locations.");
             transactionScope.Rollback();
-            return locationDtoResult.Error.ToErrors();
+            return softDeleteLocationsResult.Error.ToErrors();
         }
         
-        var positionDtoResult = await _positionsRepository.GetPositionsRelatedToDepartmentAsync(
+        var softDeletePositionsResult = await _positionsRepository.SoftDeletePositionsRelatedToDepartmentAsync(
             department.Id, cancellationToken);
-        if (positionDtoResult.IsFailure)
+        if (softDeletePositionsResult.IsFailure)
         {
-            _logger.LogInformation("Failed to get positions related to department.");
+            _logger.LogInformation("Failed to delete positions.");
             transactionScope.Rollback();
-            return positionDtoResult.Error.ToErrors();
+            return softDeletePositionsResult.Error.ToErrors();
         }
-        
-        if (locationDtoResult.Value.Locations.Count == 1)
-        {
-            var locationDtos = locationDtoResult.Value.Locations;
-            
-            location = locationDtos
-                .Select(dto =>
-                {
-                    var id = new LocationId(dto.LocationId);
-                    var name = LocationName.Create(dto.Name).Value;
-                    var address = LocationAddress.Create(
-                        dto.Address.Country,
-                        dto.Address.Region,
-                        dto.Address.City,
-                        dto.Address.Street,
-                        dto.Address.House).Value;
-                    var timezone = LocationTimezone.Create(dto.Timezone).Value;
-                    
-                    var locationResult = Location.Create(id, name, address, timezone);
-
-                    return locationResult.Value;
-                })
-                .First();
-        }
-
-        if (positionDtoResult.Value.Positions.Count == 1)
-        {
-            var positionDtos = positionDtoResult.Value.Positions;
-            
-            position = positionDtos
-                .Select(dto =>
-                {
-                    var id = new PositionId(dto.PositionId);
-                    var name = PositionName.Create(dto.Name).Value;
-                    var description = PositionDescription.Create(dto.Description).Value;
-
-                    var departmentPositions = dto.Departments
-                        .Select(d => 
-                            new DepartmentPosition(new DepartmentId(d.DepartmentId), id))
-                        .ToList();
-                    
-                    var positionResult = Position.Create(id, name, description, departmentPositions);
-
-                    return positionResult.Value;
-                })
-                .First();
-        }
-        
-        location?.Delete();
-        position?.Delete();
         
         department.Delete();
         
