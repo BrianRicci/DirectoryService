@@ -55,7 +55,7 @@ public class PositionsRepository : IPositionsRepository
         return position;
     }
     
-     public async Task<UnitResult<Error>> SoftDeletePositionsRelatedToDepartmentAsync(
+    public async Task<UnitResult<Error>> SoftDeletePositionsRelatedToDepartmentAsync(
          DepartmentId departmentId, CancellationToken cancellationToken)
      {
          await _dbContext.Database.ExecuteSqlAsync(

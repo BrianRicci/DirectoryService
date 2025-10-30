@@ -79,13 +79,6 @@ public class DeleteDepartmentTests : DirectoryBaseTests
             new List<DepartmentPosition>());
 
         var cancellationToken = CancellationToken.None;
-
-        await ExecuteInDb(async dbContext =>
-        {
-            return await dbContext.SaveChangesAsync();
-        });
-        
-        // проблема непрохождения теста в том, что базы данных разные, надо как то слить dbContext и NpgSQL воедино
         
         // act
         var result = await ExecuteHandler(sut =>
