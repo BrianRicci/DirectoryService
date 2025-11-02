@@ -65,7 +65,7 @@ public class DeleteDepartmentHandler : ICommandHandler<Guid, DeleteDepartmentCom
         {
             _logger.LogInformation("Department was not found.");
             transactionScope.Rollback();
-            return departmentResult.Error;
+            return departmentResult.Error.ToErrors();
         }
         
         var department = departmentResult.Value;
@@ -77,7 +77,7 @@ public class DeleteDepartmentHandler : ICommandHandler<Guid, DeleteDepartmentCom
         {
             _logger.LogInformation("Failed to lock descendants.");
             transactionScope.Rollback(); 
-            return lockDescendants.Error;
+            return lockDescendants.Error.ToErrors();
         }
 
         var softDeleteLocationsResult = await _locationsRepository.SoftDeleteLocationsRelatedToDepartmentAsync(
@@ -104,7 +104,7 @@ public class DeleteDepartmentHandler : ICommandHandler<Guid, DeleteDepartmentCom
         if (saveChanges.IsFailure)
         {
             transactionScope.Rollback();
-            return saveChanges.Error;
+            return saveChanges.Error.ToErrors();
         }
         
         int depthDelta = 0;
@@ -118,7 +118,7 @@ public class DeleteDepartmentHandler : ICommandHandler<Guid, DeleteDepartmentCom
         {
             _logger.LogInformation("Failed to update descendant departments.");
             transactionScope.Rollback();
-            return updateDescendantDepartmentsResult.Error;
+            return updateDescendantDepartmentsResult.Error.ToErrors();
         }
         
         var commitResult = transactionScope.Commit();

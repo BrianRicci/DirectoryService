@@ -60,7 +60,7 @@ public class UpdateDepartmentLocationsHandler : ICommandHandler<List<DepartmentL
         {
             _logger.LogInformation("Department was not found.");
             
-            return departmentResult.Error;
+            return departmentResult.Error.ToErrors();
         }
         
         // существуют ли локации и активны ли они

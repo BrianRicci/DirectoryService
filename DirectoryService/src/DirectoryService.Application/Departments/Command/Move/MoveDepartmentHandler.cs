@@ -50,7 +50,7 @@ public class MoveDepartmentHandler : ICommandHandler<MoveDepartmentCommand>
         if (departmentResult.IsFailure)
         {
             _logger.LogInformation("Department was not found.");
-            return departmentResult.Error;
+            return departmentResult.Error.ToErrors();
         }
         
         var department = departmentResult.Value;
@@ -61,7 +61,7 @@ public class MoveDepartmentHandler : ICommandHandler<MoveDepartmentCommand>
         if (lockDescendants.IsFailure)
         {
             _logger.LogInformation("Failed to lock descendants.");
-            return lockDescendants.Error;
+            return lockDescendants.Error.ToErrors();
         }
 
         var parentId = command.MoveDepartmentRequest.ParentId;
@@ -70,7 +70,7 @@ public class MoveDepartmentHandler : ICommandHandler<MoveDepartmentCommand>
         if (descendantsResult.IsFailure)
         {
             _logger.LogInformation("Failed to get descendants.");
-            return descendantsResult.Error;
+            return descendantsResult.Error.ToErrors();
         }
 
         List<Department> descendants = descendantsResult.Value;
@@ -91,7 +91,7 @@ public class MoveDepartmentHandler : ICommandHandler<MoveDepartmentCommand>
             if (parentDepartmentResult.IsFailure)
             {
                 _logger.LogInformation("Parent department was not found.");
-                return parentDepartmentResult.Error;
+                return parentDepartmentResult.Error.ToErrors();
             }
             
             parentDepartment = parentDepartmentResult.Value;
@@ -103,7 +103,7 @@ public class MoveDepartmentHandler : ICommandHandler<MoveDepartmentCommand>
         if (saveChanges.IsFailure)
         {
             transactionScope.Rollback();
-            return saveChanges.Error;
+            return saveChanges.Error.ToErrors();
         }
         
         var updateDescendantDepartmentsResult = await _departmentsRepository.BulkUpdateDescendantsPath(
@@ -115,7 +115,7 @@ public class MoveDepartmentHandler : ICommandHandler<MoveDepartmentCommand>
         {
             _logger.LogInformation("Failed to update descendant departments.");
             transactionScope.Rollback();
-            return updateDescendantDepartmentsResult.Error;
+            return updateDescendantDepartmentsResult.Error.ToErrors();
         }
         
         var commitResult = transactionScope.Commit();
