@@ -55,7 +55,7 @@ public class CreateDepartmentHandler : ICommandHandler<Guid, CreateDepartmentCom
             var parentDepartmentResult = await _departmentsRepository
                 .GetByIdAsync(new DepartmentId(departmentParentId.Value), cancellationToken);
             if (parentDepartmentResult.IsFailure)
-                return parentDepartmentResult.Error;
+                return parentDepartmentResult.Error.ToErrors();
             
             departmentDepth = (short)(parentDepartmentResult.Value.Depth + 1); // приведение int единицы к short
             
@@ -103,10 +103,14 @@ public class CreateDepartmentHandler : ICommandHandler<Guid, CreateDepartmentCom
         
         // сохранение сущности в БД
         var savedDepartmentResult = await _departmentsRepository.AddAsync(department, cancellationToken);
+        if (savedDepartmentResult.IsFailure)
+        {
+            return savedDepartmentResult.Error.ToErrors();
+        }
         
         // логирование
         _logger.LogInformation("Department created with id: {departmentId}", department.Id.Value);
         
-        return savedDepartmentResult;
+        return savedDepartmentResult.Value;
     }
 }

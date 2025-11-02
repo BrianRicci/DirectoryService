@@ -8,12 +8,12 @@ namespace DirectoryService.Application.Positions;
 
 public interface IPositionsRepository
 {
-    Task<Result<Guid, Errors>> AddAsync(Position position, CancellationToken cancellationToken);
+    Task<Result<Guid, Error>> AddAsync(Position position, CancellationToken cancellationToken);
     
-    Task<bool> IsNameExistsAsync(PositionName name, CancellationToken cancellationToken);
+    Task<Result<Position, Error>> GetByIdAsync(PositionId positionId, CancellationToken cancellationToken);
 
-    Task<Result<Position, Errors>> GetByIdAsync(PositionId positionId, CancellationToken cancellationToken);
-    
     Task<UnitResult<Error>> SoftDeletePositionsRelatedToDepartmentAsync(
         DepartmentId departmentId, CancellationToken cancellationToken);
+
+    Task<bool> IsNameExistsAsync(PositionName name, CancellationToken cancellationToken);
 }

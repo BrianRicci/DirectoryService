@@ -66,10 +66,15 @@ public class CreateLocationHandler : ICommandHandler<Guid, CreateLocationCommand
 
         // сохранение сущности в БД
         var savedLocationResult = await _locationsRepository.AddAsync(location, cancellationToken);
+        if (savedLocationResult.IsFailure)
+        {
+            _logger.LogInformation("Failed to save location.");
+            return savedLocationResult.Error.ToErrors();
+        }
         
         // логирование
         _logger.LogInformation("Location created with id: {locationId}", location.Id.Value);
 
-        return savedLocationResult;
+        return savedLocationResult.Value;
     }
 }

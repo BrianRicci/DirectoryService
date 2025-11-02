@@ -67,7 +67,7 @@ public class CreatePositionHandler : ICommandHandler<Guid, CreatePositionCommand
         {
             _logger.LogInformation(
                 "One or more departments were not found or are not active.");
-            
+
             return Error.NotFound(
                 "departments.not.found", 
                 "Одна или несколько подразделений не найдены или не активны").ToErrors();
@@ -86,10 +86,15 @@ public class CreatePositionHandler : ICommandHandler<Guid, CreatePositionCommand
         
         // сохранение сущности в БД
         var savedPositionResult = await _positionsRepository.AddAsync(position, cancellationToken);
+        if (savedPositionResult.IsFailure)
+        {
+            _logger.LogInformation("Failed to save position.");
+            return savedPositionResult.Error.ToErrors();
+        }
         
         // логирование
         _logger.LogInformation("Position created with id: {positionId}", position.Id.Value);
 
-        return savedPositionResult;
+        return savedPositionResult.Value;
     }
 }

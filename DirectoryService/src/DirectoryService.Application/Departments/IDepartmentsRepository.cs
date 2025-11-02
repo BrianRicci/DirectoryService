@@ -7,25 +7,25 @@ namespace DirectoryService.Application.Departments;
 
 public interface IDepartmentsRepository
 {
-    Task<Result<Guid, Errors>> AddAsync(Department department, CancellationToken cancellationToken);
+    Task<Result<Guid, Error>> AddAsync(Department department, CancellationToken cancellationToken);
 
-    Task<Result<Department, Errors>> GetByIdAsync(DepartmentId departmentId, CancellationToken cancellationToken);
+    Task<Result<Department, Error>> GetByIdAsync(DepartmentId departmentId, CancellationToken cancellationToken);
 
-    Task<Result<Department, Errors>> GetByIdWithLock(DepartmentId departmentId, CancellationToken cancellationToken);
+    Task<Result<Department, Error>> GetByIdWithLock(DepartmentId departmentId, CancellationToken cancellationToken);
 
-    Task<Result<List<Department>, Errors>> GetDescendantsByPath(
+    Task<Result<List<Department>, Error>> GetDescendantsByPath(
         DepartmentPath path,
         CancellationToken cancellationToken);
-    
-    Task<bool> IsAllExistsAsync(List<DepartmentId> departmentIds, CancellationToken cancellationToken);
-    
-    Task<UnitResult<Errors>> LockDescendants(DepartmentPath oldPath, CancellationToken cancellationToken);
 
-    Task<UnitResult<Errors>> BulkUpdateDescendantsPath(
+    Task<UnitResult<Error>> LockDescendants(DepartmentPath oldPath, CancellationToken cancellationToken);
+
+    Task<UnitResult<Error>> BulkUpdateDescendantsPath(
         DepartmentPath oldPath,
         DepartmentPath newPath,
         int depthDelta,
         CancellationToken cancellationToken);
-    
-    Task<UnitResult<Errors>> SaveChangesAsync(CancellationToken cancellationToken);
+
+    Task<UnitResult<Error>> SaveChangesAsync(CancellationToken cancellationToken);
+
+    Task<bool> IsAllExistsAsync(List<DepartmentId> departmentIds, CancellationToken cancellationToken);
 }

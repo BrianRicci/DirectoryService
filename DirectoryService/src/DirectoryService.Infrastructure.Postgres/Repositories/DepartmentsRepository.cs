@@ -19,7 +19,7 @@ public class DepartmentsRepository : IDepartmentsRepository
         _logger = logger;
     }
 
-    public async Task<Result<Guid, Errors>> AddAsync(Department department, CancellationToken cancellationToken)
+    public async Task<Result<Guid, Error>> AddAsync(Department department, CancellationToken cancellationToken)
     {
         try
         {
@@ -30,25 +30,25 @@ public class DepartmentsRepository : IDepartmentsRepository
         }
         catch (Exception ex)
         {
-            return GeneralErrors.ValueIsInvalid().ToErrors();
+            return GeneralErrors.ValueIsInvalid();
         }
     }
-    
-    public async Task<Result<Department, Errors>> GetByIdAsync(
+
+    public async Task<Result<Department, Error>> GetByIdAsync(
         DepartmentId departmentId,
         CancellationToken cancellationToken)
     {
         var department = await _dbContext.Departments
             .Include(d => d.DepartmentLocations)
             .FirstOrDefaultAsync(d => d.Id == departmentId && d.IsActive, cancellationToken);
-        
+
         if (department is null)
-            return GeneralErrors.NotFound(departmentId.Value).ToErrors();
+            return GeneralErrors.NotFound(departmentId.Value);
 
         return department;
     }
 
-    public async Task<Result<Department, Errors>> GetByIdWithLock(
+    public async Task<Result<Department, Error>> GetByIdWithLock(
         DepartmentId departmentId,
         CancellationToken cancellationToken)
     {
@@ -58,12 +58,12 @@ public class DepartmentsRepository : IDepartmentsRepository
             .FirstOrDefaultAsync(cancellationToken);
 
         if (department is null)
-            return GeneralErrors.NotFound(departmentId.Value).ToErrors();
+            return GeneralErrors.NotFound(departmentId.Value);
 
         return department;
     }
 
-    public async Task<Result<List<Department>, Errors>> GetDescendantsByPath(
+    public async Task<Result<List<Department>, Error>> GetDescendantsByPath(
         DepartmentPath path,
         CancellationToken cancellationToken)
     {
@@ -73,25 +73,16 @@ public class DepartmentsRepository : IDepartmentsRepository
 
         return departments;
     }
-    
-    public async Task<bool> IsAllExistsAsync(List<DepartmentId> departmentIds, CancellationToken cancellationToken)
-    {
-        bool isAllExists = await _dbContext.Departments
-            .Where(d => departmentIds.Contains(d.Id) && d.IsActive)
-            .CountAsync(cancellationToken) == departmentIds.Count;
-        
-        return isAllExists;
-    }
 
-    public async Task<UnitResult<Errors>> LockDescendants(DepartmentPath path, CancellationToken cancellationToken)
+    public async Task<UnitResult<Error>> LockDescendants(DepartmentPath path, CancellationToken cancellationToken)
     {
         await _dbContext.Database.ExecuteSqlAsync(
             $"SELECT * FROM departments WHERE path <@ {path.Value}::ltree FOR UPDATE", cancellationToken);
-        
-        return UnitResult.Success<Errors>();
+
+        return UnitResult.Success<Error>();
     }
-    
-    public async Task<UnitResult<Errors>> BulkUpdateDescendantsPath(
+
+    public async Task<UnitResult<Error>> BulkUpdateDescendantsPath(
         DepartmentPath oldPath,
         DepartmentPath newPath,
         int depthDelta,
@@ -105,22 +96,31 @@ public class DepartmentsRepository : IDepartmentsRepository
                  updated_at = {DateTime.UtcNow}
              WHERE path <@ {oldPath.Value}::ltree AND path != {oldPath.Value}::ltree
              """, cancellationToken);
-        
-        return UnitResult.Success<Errors>();
+
+        return UnitResult.Success<Error>();
     }
 
-    public async Task<UnitResult<Errors>> SaveChangesAsync(CancellationToken cancellationToken)
+    public async Task<UnitResult<Error>> SaveChangesAsync(CancellationToken cancellationToken)
     {
         try
         {
             await _dbContext.SaveChangesAsync(cancellationToken);
-            
-            return UnitResult.Success<Errors>();
+
+            return UnitResult.Success<Error>();
         }
         catch (Exception e)
         {
             _logger.LogError(e, "Failed to save changes");
-            return GeneralErrors.Failure("Failed to save changes").ToErrors();    
+            return GeneralErrors.Failure("Failed to save changes");
         }
+    }
+
+    public async Task<bool> IsAllExistsAsync(List<DepartmentId> departmentIds, CancellationToken cancellationToken)
+    {
+        bool isAllExists = await _dbContext.Departments
+            .Where(d => departmentIds.Contains(d.Id) && d.IsActive)
+            .CountAsync(cancellationToken) == departmentIds.Count;
+
+        return isAllExists;
     }
 }

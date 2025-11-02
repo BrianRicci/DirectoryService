@@ -149,7 +149,7 @@ public class Department : ISoftDeletable
             return GeneralErrors.ValueIsRequired("Locations list cannot be empty");
         }
         
-        // _locations.Clear();
+        _locations.Clear();
         _locations.AddRange(locations);
         UpdatedAt = DateTime.UtcNow;
         

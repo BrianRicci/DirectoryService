@@ -23,8 +23,8 @@ public class LocationsRepository : ILocationsRepository
         _dbContext = dbContext;
         _connectionFactory = connectionFactory;
     }
-    
-    public async Task<Result<Guid, Errors>> AddAsync(Location location, CancellationToken cancellationToken)
+
+    public async Task<Result<Guid, Error>> AddAsync(Location location, CancellationToken cancellationToken)
     {
         try
         {
@@ -35,26 +35,10 @@ public class LocationsRepository : ILocationsRepository
         }
         catch (Exception ex)
         {
-            return GeneralErrors.ValueIsInvalid().ToErrors();
+            return GeneralErrors.ValueIsInvalid();
         }
     }
 
-    public async Task<bool> IsAddressExistsAsync(LocationAddress address, CancellationToken cancellationToken)
-    {
-        bool isAddressExists = await _dbContext.Locations.AnyAsync(l => l.Address == address, cancellationToken);
-        
-        return isAddressExists;
-    }
-    
-    public async Task<bool> IsAllExistsAsync(List<LocationId> locationIds, CancellationToken cancellationToken)
-    {
-        bool isAllExists = await _dbContext.Locations
-            .Where(l => locationIds.Contains(l.Id) && l.IsActive)
-            .CountAsync(cancellationToken) == locationIds.Count;
-        
-        return isAllExists;
-    }
-    
     public async Task<UnitResult<Error>> SoftDeleteLocationsRelatedToDepartmentAsync(
         DepartmentId departmentId, CancellationToken cancellationToken)
     {
@@ -92,5 +76,21 @@ public class LocationsRepository : ILocationsRepository
              """, cancellationToken);
 
         return UnitResult.Success<Error>();
+    }
+
+    public async Task<bool> IsAddressExistsAsync(LocationAddress address, CancellationToken cancellationToken)
+    {
+        bool isAddressExists = await _dbContext.Locations.AnyAsync(l => l.Address == address, cancellationToken);
+
+        return isAddressExists;
+    }
+
+    public async Task<bool> IsAllExistsAsync(List<LocationId> locationIds, CancellationToken cancellationToken)
+    {
+        bool isAllExists = await _dbContext.Locations
+            .Where(l => locationIds.Contains(l.Id) && l.IsActive)
+            .CountAsync(cancellationToken) == locationIds.Count;
+
+        return isAllExists;
     }
 }
