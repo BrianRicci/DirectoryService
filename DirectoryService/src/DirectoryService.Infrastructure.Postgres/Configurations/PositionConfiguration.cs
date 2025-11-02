@@ -23,14 +23,14 @@ public class PositionConfiguration : IEntityTypeConfiguration<Position>
             .Property(p => p.Name)
             .HasConversion(p => p.Value, name => PositionName.Create(name).Value)
             .HasColumnName("name")
-            .HasMaxLength(LengthConstants.LENGTH100)
+            .HasMaxLength(Constants.LENGTH100)
             .IsRequired();
 
         builder
             .Property(p => p.Description)
             .HasConversion(p => p.Value, description => PositionDescription.Create(description).Value)
             .HasColumnName("description")
-            .HasMaxLength(LengthConstants.LENGTH1000);
+            .HasMaxLength(Constants.LENGTH1000);
         
         builder
             .Property(p => p.IsActive)
@@ -46,6 +46,10 @@ public class PositionConfiguration : IEntityTypeConfiguration<Position>
             .Property(p => p.UpdatedAt)
             .HasColumnName("updated_at")
             .IsRequired();
+        
+        builder
+            .Property(p => p.DeletedAt)
+            .HasColumnName("deleted_at");
         
         builder
             .HasMany(p => p.DepartmentPositions)

@@ -5,7 +5,7 @@ using Shared;
 
 namespace DirectoryService.Domain.Positions;
 
-public class Position
+public class Position : ISoftDeletable
 {
     public PositionId Id { get; private set; }
 
@@ -19,6 +19,8 @@ public class Position
     
     public DateTime UpdatedAt { get; private set; }
     
+    public DateTime? DeletedAt { get; private set; }
+
     public IReadOnlyList<DepartmentPosition> DepartmentPositions => _departments;
     
     private readonly List<DepartmentPosition> _departments = [];
@@ -56,6 +58,24 @@ public class Position
         return new Position(id, name, description, departmentPositions);
     }
 
+    public UnitResult<Error> Delete()
+    {
+        IsActive = false;
+        UpdatedAt = DateTime.UtcNow;
+        DeletedAt = DateTime.UtcNow;
+        
+        return UnitResult.Success<Error>();
+    }
+    
+    public UnitResult<Error> Restore()
+    {
+        IsActive = true;
+        UpdatedAt = DateTime.UtcNow;
+        DeletedAt = null;
+        
+        return UnitResult.Success<Error>();
+    }
+    
     public Result Rename(PositionName name)
     {
         Name = name;

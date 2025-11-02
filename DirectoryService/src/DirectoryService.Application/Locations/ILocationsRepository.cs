@@ -1,4 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
+using DirectoryService.Contracts.Locations;
+using DirectoryService.Domain.Departments;
 using DirectoryService.Domain.Locations;
 using Shared;
 
@@ -11,4 +13,7 @@ public interface ILocationsRepository
     Task<bool> IsAddressExistsAsync(LocationAddress address, CancellationToken cancellationToken);
     
     Task<bool> IsAllExistsAsync(List<LocationId> locationIds, CancellationToken cancellationToken);
+
+    Task<UnitResult<Error>> SoftDeleteLocationsRelatedToDepartmentAsync(
+        DepartmentId departmentId, CancellationToken cancellationToken);
 }

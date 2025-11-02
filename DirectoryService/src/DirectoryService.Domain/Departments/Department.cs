@@ -5,7 +5,7 @@ using Shared;
 
 namespace DirectoryService.Domain.Departments;
 
-public class Department
+public class Department : ISoftDeletable
 {
     public DepartmentId Id { get; private set; }
     
@@ -24,6 +24,8 @@ public class Department
     public DateTime CreatedAt { get; private set; }
     
     public DateTime UpdatedAt { get; private set; }
+    
+    public DateTime? DeletedAt { get; private set; }
     
     public IReadOnlyList<DepartmentLocation> DepartmentLocations => _locations;
 
@@ -100,6 +102,38 @@ public class Department
             departmentLocations);
     }
     
+    public UnitResult<Error> Delete()
+    {
+        var newPath = Path.AddDeletedStatus();
+        if (newPath.IsFailure)
+        {
+            return newPath.Error;
+        }
+        
+        Path = newPath.Value;
+        IsActive = false;
+        UpdatedAt = DateTime.UtcNow;
+        DeletedAt = DateTime.UtcNow;
+        
+        return UnitResult.Success<Error>();
+    }
+    
+    public UnitResult<Error> Restore()
+    {
+        var newPath = Path.RemoveDeletedStatus();
+        if (newPath.IsFailure)
+        {
+            return newPath.Error;
+        }
+        
+        Path = newPath.Value;
+        IsActive = true;
+        UpdatedAt = DateTime.UtcNow;
+        DeletedAt = null;
+        
+        return UnitResult.Success<Error>();
+    }
+    
     public Result Rename(DepartmentName name)
     {
         Name = name;
@@ -115,7 +149,7 @@ public class Department
             return GeneralErrors.ValueIsRequired("Locations list cannot be empty");
         }
         
-        _locations.Clear();
+        // _locations.Clear();
         _locations.AddRange(locations);
         UpdatedAt = DateTime.UtcNow;
         

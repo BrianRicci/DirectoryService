@@ -1,5 +1,9 @@
 ﻿using CSharpFunctionalExtensions;
+using Dapper;
+using DirectoryService.Application.Database;
 using DirectoryService.Application.Locations;
+using DirectoryService.Contracts.Locations;
+using DirectoryService.Domain.DepartmentLocations;
 using DirectoryService.Domain.Departments;
 using DirectoryService.Domain.Locations;
 using Microsoft.EntityFrameworkCore;
@@ -10,10 +14,14 @@ namespace DirectoryService.Infrastructure.Postgres.Repositories;
 public class LocationsRepository : ILocationsRepository
 {
     private readonly DirectoryServiceDbContext _dbContext;
+    private readonly IDbConnectionFactory _connectionFactory;
 
-    public LocationsRepository(DirectoryServiceDbContext dbContext)
+    public LocationsRepository(
+        DirectoryServiceDbContext dbContext,
+        IDbConnectionFactory connectionFactory)
     {
         _dbContext = dbContext;
+        _connectionFactory = connectionFactory;
     }
     
     public async Task<Result<Guid, Errors>> AddAsync(Location location, CancellationToken cancellationToken)
@@ -45,5 +53,44 @@ public class LocationsRepository : ILocationsRepository
             .CountAsync(cancellationToken) == locationIds.Count;
         
         return isAllExists;
+    }
+    
+    public async Task<UnitResult<Error>> SoftDeleteLocationsRelatedToDepartmentAsync(
+        DepartmentId departmentId, CancellationToken cancellationToken)
+    {
+        await _dbContext.Database.ExecuteSqlAsync(
+            $"""
+             WITH 
+                 relation_location_ids AS (
+                     SELECT l.location_id
+                     FROM locations l
+                        JOIN department_locations dl ON l.location_id = dl.location_id
+                            AND dl.department_id = {departmentId.Value}
+                        JOIN departments d ON dl.department_id = d.department_id
+                     WHERE d.is_active = true
+                 ),
+                 
+                 locations_count AS (
+                     SELECT dl.location_id, COUNT(dl.location_id) AS count
+                     FROM department_locations dl
+                        JOIN relation_location_ids rl ON rl.location_id = dl.location_id
+                     GROUP BY dl.location_id
+                 ),
+                 
+                 locations_to_delete AS (
+                     SELECT pc.location_id
+                     FROM locations_count pc
+                     WHERE pc.count = 1
+                 )
+
+             UPDATE locations l
+             SET
+                 is_active = false,
+                 updated_at = {DateTime.UtcNow},
+                 deleted_at = {DateTime.UtcNow}
+             WHERE l.location_id in (SELECT * FROM locations_to_delete) 
+             """, cancellationToken);
+
+        return UnitResult.Success<Error>();
     }
 }

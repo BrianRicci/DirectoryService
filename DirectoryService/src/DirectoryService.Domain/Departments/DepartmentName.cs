@@ -5,8 +5,8 @@ namespace DirectoryService.Domain.Departments;
 
 public record DepartmentName
 {
-    private const int MIN_LENGTH = LengthConstants.LENGTH3;
-    private const int MAX_LENGTH = LengthConstants.LENGTH150;
+    private const int MIN_LENGTH = Constants.LENGTH3;
+    private const int MAX_LENGTH = Constants.LENGTH150;
     
     public string Value { get; }
     
