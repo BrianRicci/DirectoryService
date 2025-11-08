@@ -7,6 +7,7 @@ using DirectoryService.Domain.Locations;
 using DirectoryService.Domain.Positions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Shared;
 
 namespace DirectoryService.IntegrationTests.Departments;
 

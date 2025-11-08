@@ -2,6 +2,7 @@ using DirectoryService.Application.Database;
 using DirectoryService.Application.Departments;
 using DirectoryService.Application.Departments.Command.Create;
 using DirectoryService.Application.Departments.Command.Delete;
+using DirectoryService.Application.Departments.Command.DeleteInactive;
 using DirectoryService.Application.Departments.Command.Move;
 using DirectoryService.Application.Departments.Command.Update;
 using DirectoryService.Application.Departments.Queries;
@@ -65,6 +66,7 @@ builder.Services.AddScoped<GetDepartmentsTopHandlerDapper>();
 builder.Services.AddScoped<GetDepartmentRootsHandlerDapper>();
 builder.Services.AddScoped<GetDepartmentChildsHandlerDapper>();
 builder.Services.AddScoped<DeleteDepartmentHandler>();
+builder.Services.AddScoped<DeleteInactiveHandler>();
 
 var app = builder.Build();
 

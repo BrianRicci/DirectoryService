@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using DirectoryService.Domain.Departments;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Shared;
 
 namespace DirectoryService.Infrastructure.Postgres.Configurations;
 
@@ -75,11 +76,13 @@ public class DepartmentConfiguration : IEntityTypeConfiguration<Department>
         builder
             .HasMany(d => d.DepartmentLocations)
             .WithOne()
-            .HasForeignKey(dl => dl.DepartmentId);
+            .HasForeignKey(dl => dl.DepartmentId)
+            .OnDelete(DeleteBehavior.Cascade);
         
         builder
             .HasMany(d => d.DepartmentPositions)
             .WithOne()
-            .HasForeignKey(dp => dp.DepartmentId);
+            .HasForeignKey(dp => dp.DepartmentId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
