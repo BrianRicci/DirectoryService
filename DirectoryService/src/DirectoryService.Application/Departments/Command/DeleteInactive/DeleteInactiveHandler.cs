@@ -1,5 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using DirectoryService.Application.Database;
+using DirectoryService.Application.Locations;
+using DirectoryService.Application.Positions;
 using DirectoryService.Domain.Departments;
 using Microsoft.Extensions.Logging;
 using Shared;
@@ -10,15 +12,21 @@ public class DeleteInactiveHandler
 {
     private readonly ILogger<DeleteInactiveHandler> _logger;
     private readonly IDepartmentsRepository _departmentsRepository;
+    private readonly ILocationsRepository _locationsRepository;
+    private readonly IPositionsRepository _positionsRepository;
     private readonly ITransactionManager _transactionManager;
 
     public DeleteInactiveHandler(
         ILogger<DeleteInactiveHandler> logger,
         IDepartmentsRepository departmentsRepository,
+        ILocationsRepository locationsRepository,
+        IPositionsRepository positionsRepository,
         ITransactionManager transactionManager)
     {
         _logger = logger;
         _departmentsRepository = departmentsRepository;
+        _locationsRepository = locationsRepository;
+        _positionsRepository = positionsRepository;
         _transactionManager = transactionManager;
     }
     
@@ -96,9 +104,14 @@ public class DeleteInactiveHandler
             return saveChanges.Error.ToErrors();
         }
         
-        // удаление неактивных департаментов, его связей и связанных локаций и позиций
+        // удаление неактивных элементов
+        // с департаментом каскадно удалятся связи department_locations, department_positions
         await _departmentsRepository.BulkDeleteAsync(
             inactiveDepartments.Select(d => d.Id).ToList(), cancellationToken);
+        
+        // очистка оставшихся элементов
+        await _locationsRepository.DeleteInactiveAsync(cancellationToken);
+        await _positionsRepository.DeleteInactiveAsync(cancellationToken);
         
         // закрыть транзакцию
         var commitResult = transactionScope.Commit();
