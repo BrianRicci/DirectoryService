@@ -14,6 +14,8 @@ public interface IPositionsRepository
 
     Task<UnitResult<Error>> SoftDeletePositionsRelatedToDepartmentAsync(
         DepartmentId departmentId, CancellationToken cancellationToken);
+    
+    Task<UnitResult<Error>> DeleteInactiveAsync(CancellationToken cancellationToken);
 
     Task<bool> IsNameExistsAsync(PositionName name, CancellationToken cancellationToken);
 }

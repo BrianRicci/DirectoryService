@@ -94,7 +94,6 @@ public class DepartmentsRepository : IDepartmentsRepository
     public async Task<Result<List<Department>, Error>> GetInactiveAsync(
         FilterOptions timeFilterOptions, CancellationToken cancellationToken)
     {
-        var allDepartments = await _dbContext.Departments.ToListAsync(cancellationToken); 
         var departments = await _dbContext.Departments
             .Where(d => !d.IsActive && d.DeletedAt < timeFilterOptions.ThresholdDate)
             .ToListAsync(cancellationToken);
@@ -114,43 +113,12 @@ public class DepartmentsRepository : IDepartmentsRepository
         List<DepartmentId> departmentIds, CancellationToken cancellationToken)
     {
         var departmentIdsArray = departmentIds.Select(d => d.Value).ToArray();
-
-        // удаление уже выбранных департаментов и локаций и позиций, которые остались после каскадного удаления связей
+        
         await _dbContext.Database.ExecuteSqlAsync(
             $"""
              DELETE FROM departments
              WHERE department_id = ANY({departmentIdsArray})
              RETURNING department_id
-             """, cancellationToken);
-        
-        await _dbContext.Database.ExecuteSqlAsync(
-            $"""
-             WITH 
-                 delete_locations AS (
-                    DELETE FROM locations
-                    WHERE is_active = false
-                           AND NOT EXISTS (
-                               SELECT 1
-                               FROM department_locations
-                               WHERE location_id = locations.location_id
-                           )
-                    RETURNING location_id
-                 ),
-                 
-                 delete_positions AS (
-                    DELETE FROM positions
-                    WHERE is_active = false
-                        AND NOT EXISTS (
-                            SELECT 1
-                            FROM department_positions
-                            WHERE position_id = positions.position_id
-                        )
-                    RETURNING position_id
-                 )
-             
-             SELECT
-                 (SELECT COUNT(*) FROM delete_locations) AS deleted_locations,
-                 (SELECT COUNT(*) FROM delete_positions) AS deleted_positions
              """, cancellationToken);
         
         return UnitResult.Success<Error>();

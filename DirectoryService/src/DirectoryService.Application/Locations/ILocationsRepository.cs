@@ -13,6 +13,8 @@ public interface ILocationsRepository
     Task<UnitResult<Error>> SoftDeleteLocationsRelatedToDepartmentAsync(
         DepartmentId departmentId, CancellationToken cancellationToken);
 
+    Task<UnitResult<Error>> DeleteInactiveAsync(CancellationToken cancellationToken);
+
     Task<bool> IsAddressExistsAsync(LocationAddress address, CancellationToken cancellationToken);
 
     Task<bool> IsAllExistsAsync(List<LocationId> locationIds, CancellationToken cancellationToken);

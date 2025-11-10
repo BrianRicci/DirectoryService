@@ -78,6 +78,21 @@ public class LocationsRepository : ILocationsRepository
         return UnitResult.Success<Error>();
     }
 
+    public async Task<UnitResult<Error>> DeleteInactiveAsync(CancellationToken cancellationToken)
+    {
+        await _dbContext.Database.ExecuteSqlAsync(
+            $"""
+             DELETE FROM locations
+             WHERE is_active = false
+                    AND NOT EXISTS (
+                        SELECT 1
+                        FROM department_locations
+                        WHERE location_id = locations.location_id)
+             """, cancellationToken);
+
+        return UnitResult.Success<Error>();
+    }
+
     public async Task<bool> IsAddressExistsAsync(LocationAddress address, CancellationToken cancellationToken)
     {
         bool isAddressExists = await _dbContext.Locations.AnyAsync(l => l.Address == address, cancellationToken);
