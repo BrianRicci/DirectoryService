@@ -1,4 +1,4 @@
-﻿namespace DirectoryService.Domain;
+﻿namespace Shared;
 
 public readonly struct Constants
 {

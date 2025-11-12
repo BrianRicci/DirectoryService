@@ -85,6 +85,21 @@ public class PositionsRepository : IPositionsRepository
 
         return UnitResult.Success<Error>();
     }
+    
+    public async Task<UnitResult<Error>> DeleteInactiveAsync(CancellationToken cancellationToken)
+    {
+        await _dbContext.Database.ExecuteSqlAsync(
+            $"""
+             DELETE FROM positions
+             WHERE is_active = false
+                 AND NOT EXISTS (
+                     SELECT 1
+                     FROM department_positions
+                     WHERE position_id = positions.position_id)
+             """, cancellationToken);
+
+        return UnitResult.Success<Error>();
+    }
 
     public async Task<bool> IsNameExistsAsync(PositionName name, CancellationToken cancellationToken)
     {

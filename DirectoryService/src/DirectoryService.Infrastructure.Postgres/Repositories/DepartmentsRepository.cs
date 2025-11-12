@@ -35,8 +35,7 @@ public class DepartmentsRepository : IDepartmentsRepository
     }
 
     public async Task<Result<Department, Error>> GetByIdAsync(
-        DepartmentId departmentId,
-        CancellationToken cancellationToken)
+        DepartmentId departmentId, CancellationToken cancellationToken)
     {
         var department = await _dbContext.Departments
             .Include(d => d.DepartmentLocations)
@@ -48,9 +47,18 @@ public class DepartmentsRepository : IDepartmentsRepository
         return department;
     }
 
+    public async Task<Result<List<Department>, Error>> GetByIdsAsync(
+        List<DepartmentId?> departmentIds, CancellationToken cancellationToken)
+    {
+        var departments = await _dbContext.Departments
+            .Where(d => departmentIds.Contains(d.Id) && d.IsActive)
+            .ToListAsync(cancellationToken);
+
+        return departments;
+    }
+
     public async Task<Result<Department, Error>> GetByIdWithLock(
-        DepartmentId departmentId,
-        CancellationToken cancellationToken)
+        DepartmentId departmentId, CancellationToken cancellationToken)
     {
         var department = await _dbContext.Departments
             .FromSql(
@@ -62,13 +70,32 @@ public class DepartmentsRepository : IDepartmentsRepository
 
         return department;
     }
+    
+    public async Task<Result<List<Department>, Error>> GetByParentIdsAsync(
+        List<DepartmentId> parentIds, CancellationToken cancellationToken)
+    {
+        var departments = await _dbContext.Departments
+            .Where(d => d.ParentId != null && parentIds.Contains(d.ParentId))
+            .ToListAsync(cancellationToken);
+
+        return departments;
+    }
 
     public async Task<Result<List<Department>, Error>> GetDescendantsByPath(
-        DepartmentPath path,
-        CancellationToken cancellationToken)
+        DepartmentPath path, CancellationToken cancellationToken)
     {
         var departments = await _dbContext.Departments
             .FromSqlInterpolated($"SELECT * FROM departments WHERE path <@ {path.Value}::ltree FOR UPDATE")
+            .ToListAsync(cancellationToken);
+
+        return departments;
+    }
+    
+    public async Task<Result<List<Department>, Error>> GetInactiveAsync(
+        FilterOptions timeFilterOptions, CancellationToken cancellationToken)
+    {
+        var departments = await _dbContext.Departments
+            .Where(d => !d.IsActive && d.DeletedAt < timeFilterOptions.ThresholdDate)
             .ToListAsync(cancellationToken);
 
         return departments;
@@ -82,6 +109,21 @@ public class DepartmentsRepository : IDepartmentsRepository
         return UnitResult.Success<Error>();
     }
 
+    public async Task<UnitResult<Error>> BulkDeleteAsync(
+        List<DepartmentId> departmentIds, CancellationToken cancellationToken)
+    {
+        var departmentIdsArray = departmentIds.Select(d => d.Value).ToArray();
+        
+        await _dbContext.Database.ExecuteSqlAsync(
+            $"""
+             DELETE FROM departments
+             WHERE department_id = ANY({departmentIdsArray})
+             RETURNING department_id
+             """, cancellationToken);
+        
+        return UnitResult.Success<Error>();
+    }
+    
     public async Task<UnitResult<Error>> BulkUpdateDescendantsPath(
         DepartmentPath oldPath,
         DepartmentPath newPath,

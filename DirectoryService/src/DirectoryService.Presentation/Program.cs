@@ -2,6 +2,7 @@ using DirectoryService.Application.Database;
 using DirectoryService.Application.Departments;
 using DirectoryService.Application.Departments.Command.Create;
 using DirectoryService.Application.Departments.Command.Delete;
+using DirectoryService.Application.Departments.Command.DeleteInactive;
 using DirectoryService.Application.Departments.Command.Move;
 using DirectoryService.Application.Departments.Command.Update;
 using DirectoryService.Application.Departments.Queries;
@@ -11,6 +12,7 @@ using DirectoryService.Application.Locations.Queries;
 using DirectoryService.Application.Positions;
 using DirectoryService.Application.Positions.Create;
 using DirectoryService.Infrastructure.Postgres;
+using DirectoryService.Infrastructure.Postgres.BackgroundServices;
 using DirectoryService.Infrastructure.Postgres.Database;
 using DirectoryService.Infrastructure.Postgres.Repositories;
 using DirectoryService.Presentation;
@@ -65,6 +67,9 @@ builder.Services.AddScoped<GetDepartmentsTopHandlerDapper>();
 builder.Services.AddScoped<GetDepartmentRootsHandlerDapper>();
 builder.Services.AddScoped<GetDepartmentChildsHandlerDapper>();
 builder.Services.AddScoped<DeleteDepartmentHandler>();
+builder.Services.AddScoped<DeleteInactiveHandler>();
+
+builder.Services.AddHostedService<InactiveDepartmentsCleanerBackgroundService>();
 
 var app = builder.Build();
 

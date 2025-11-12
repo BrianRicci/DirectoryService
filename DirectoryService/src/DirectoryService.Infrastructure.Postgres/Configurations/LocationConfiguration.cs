@@ -3,6 +3,7 @@ using DirectoryService.Domain.Departments;
 using DirectoryService.Domain.Locations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Shared;
 
 namespace DirectoryService.Infrastructure.Postgres.Configurations;
 
@@ -88,6 +89,7 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
         builder
             .HasMany(l => l.DepartmentLocations)
             .WithOne()
-            .HasForeignKey(dl => dl.LocationId);
+            .HasForeignKey(dl => dl.LocationId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
