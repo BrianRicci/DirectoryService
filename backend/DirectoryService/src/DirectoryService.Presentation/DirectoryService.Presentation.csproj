@@ -5,6 +5,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <OutputType>Exe</OutputType>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
     <ItemGroup>
@@ -38,6 +39,8 @@
       <PackageReference Include="Serilog.Exceptions" Version="8.4.0" />
       <PackageReference Include="Serilog.Sinks.Http" Version="9.2.0" />
       <PackageReference Include="Serilog.Sinks.Seq" Version="9.0.0" />
+      <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="9.0.6" />
+      <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="9.0.6" />
       <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="9.0.4" />
     </ItemGroup>
 
