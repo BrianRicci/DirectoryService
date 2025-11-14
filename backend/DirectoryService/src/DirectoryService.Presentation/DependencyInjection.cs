@@ -35,7 +35,7 @@ public static class DependencyInjection
             .AddApplication()
             .AddInfrastructureServices(configuration)
             .AddDistributedCache(configuration);
-
+        
         return services;
     }
     
@@ -114,6 +114,8 @@ public static class DependencyInjection
 
             options.Configuration = connection;
         });
+        
+        services.AddHybridCache();
 
         return services;
     }
