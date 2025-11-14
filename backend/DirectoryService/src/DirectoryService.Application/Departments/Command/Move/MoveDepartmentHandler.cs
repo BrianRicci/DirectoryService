@@ -4,6 +4,7 @@ using DirectoryService.Application.Database;
 using DirectoryService.Application.Extentions;
 using DirectoryService.Domain.Departments;
 using FluentValidation;
+using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Logging;
 using Shared;
 
@@ -15,17 +16,20 @@ public class MoveDepartmentHandler : ICommandHandler<MoveDepartmentCommand>
     private readonly ITransactionManager _transactionManager;
     private readonly IValidator<MoveDepartmentCommand> _validator;
     private readonly ILogger<MoveDepartmentHandler> _logger;
+    private readonly HybridCache _cache;
 
     public MoveDepartmentHandler(
         IDepartmentsRepository departmentsRepository,
         ITransactionManager transactionManager,
         IValidator<MoveDepartmentCommand> validator,
-        ILogger<MoveDepartmentHandler> logger)
+        ILogger<MoveDepartmentHandler> logger,
+        HybridCache cache)
     {
         _departmentsRepository = departmentsRepository;
         _transactionManager = transactionManager;
         _validator = validator;
         _logger = logger;
+        _cache = cache;
     }
     
     public async Task<UnitResult<Errors>> Handle(MoveDepartmentCommand command, CancellationToken cancellationToken)
@@ -125,6 +129,9 @@ public class MoveDepartmentHandler : ICommandHandler<MoveDepartmentCommand>
             transactionScope.Rollback();
             return commitResult.Error.ToErrors();
         }
+        
+        // инвалидация кэша
+        await _cache.RemoveByTagAsync(Constants.DEPARTMENT_CACHE_KEY, cancellationToken);
         
         return UnitResult.Success<Errors>();
     }

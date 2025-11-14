@@ -3,6 +3,7 @@ using Dapper;
 using DirectoryService.Application.Database;
 using DirectoryService.Contracts.Departments;
 using Microsoft.Extensions.Caching.Hybrid;
+using Shared;
 
 namespace DirectoryService.Application.Departments.Queries;
 
@@ -31,7 +32,7 @@ public class GetDepartmentChildsHandlerDapper
         parameters.Add("offset", (pagination.Page - 1) * pagination.PageSize, DbType.Int32);
         parameters.Add("page_size", pagination.PageSize, DbType.Int32);
         
-        string cacheKey = $"departmentChilds_parentId_{query.ParentId}_page_{pagination.Page}_pageSize_{pagination.PageSize}";
+        string cacheKey = $"{Constants.DEPARTMENT_CACHE_KEY}Childs_parentId_{query.ParentId}_page_{pagination.Page}_pageSize_{pagination.PageSize}";
         var options = new HybridCacheEntryOptions
         {
             Expiration = TimeSpan.FromMinutes(5),
