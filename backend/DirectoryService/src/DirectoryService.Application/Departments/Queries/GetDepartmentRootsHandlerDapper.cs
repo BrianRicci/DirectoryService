@@ -33,7 +33,14 @@ public class GetDepartmentRootsHandlerDapper
         parameters.Add("offset", (pagination.Page - 1) * pagination.PageSize, DbType.Int32);
         parameters.Add("page_size", pagination.PageSize, DbType.Int32);
         
-        string cacheKey = $"{Constants.DEPARTMENT_CACHE_KEY}Roots_prefetch_{prefetch}_page_{pagination.Page}_pageSize_{pagination.PageSize}";
+        string prefix = $"{Constants.DEPARTMENT_CACHE_PREFIX}Roots";
+        
+        string cacheKey = CacheKeyBuilder.Build(
+            prefix, 
+            ("prefetch", prefetch),
+            ("page", pagination.Page),
+            ("page_size", pagination.PageSize));
+        
         var options = new HybridCacheEntryOptions
         {
             Expiration = TimeSpan.FromMinutes(5),

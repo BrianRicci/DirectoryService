@@ -134,7 +134,7 @@ public class DeleteDepartmentHandler : ICommandHandler<Guid, DeleteDepartmentCom
         }
         
         // инвалидация кэша
-        await _cache.RemoveByTagAsync(Constants.DEPARTMENT_CACHE_KEY, cancellationToken);
+        await _cache.RemoveByTagAsync(Constants.DEPARTMENT_CACHE_PREFIX, cancellationToken);
         
         _logger.LogInformation("Department {DepartmentId} softly deleted", command.DepartmentId);
         

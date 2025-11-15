@@ -110,7 +110,7 @@ public class UpdateDepartmentLocationsHandler : ICommandHandler<List<DepartmentL
         }
         
         // инвалидация кэша
-        await _cache.RemoveByTagAsync(Constants.DEPARTMENT_CACHE_KEY, cancellationToken);
+        await _cache.RemoveByTagAsync(Constants.DEPARTMENT_CACHE_PREFIX, cancellationToken);
         
         return departmentLocations;
     }

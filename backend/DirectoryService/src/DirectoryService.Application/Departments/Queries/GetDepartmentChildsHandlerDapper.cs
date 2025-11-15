@@ -31,8 +31,15 @@ public class GetDepartmentChildsHandlerDapper
         var pagination = query.Pagination;
         parameters.Add("offset", (pagination.Page - 1) * pagination.PageSize, DbType.Int32);
         parameters.Add("page_size", pagination.PageSize, DbType.Int32);
+
+        string prefix = $"{Constants.DEPARTMENT_CACHE_PREFIX}Childs";
         
-        string cacheKey = $"{Constants.DEPARTMENT_CACHE_KEY}Childs_parentId_{query.ParentId}_page_{pagination.Page}_pageSize_{pagination.PageSize}";
+        string cacheKey = CacheKeyBuilder.Build(
+            prefix, 
+            ("parent_id", query.ParentId),
+            ("page", pagination.Page),
+            ("page_size", pagination.PageSize));
+        
         var options = new HybridCacheEntryOptions
         {
             Expiration = TimeSpan.FromMinutes(5),

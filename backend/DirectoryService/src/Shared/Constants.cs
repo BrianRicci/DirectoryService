@@ -12,5 +12,5 @@ public readonly struct Constants
     
     public const string DELETED_PREFIX = "deleted_";
     public const char SEPARATOR = '.';
-    public const string DEPARTMENT_CACHE_KEY = "department";
+    public const string DEPARTMENT_CACHE_PREFIX = "department";
 }

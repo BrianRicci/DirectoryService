@@ -23,7 +23,8 @@ public class GetDepartmentsTopHandlerDapper
     {
         using var connection = await _connectionFactory.CreateConnectionAsync(cancellationToken);
         
-        string cacheKey = $"{Constants.DEPARTMENT_CACHE_KEY}Childs_top_5";
+        string cacheKey = $"{Constants.DEPARTMENT_CACHE_PREFIX}Childs_top_5";
+        
         var options = new HybridCacheEntryOptions
         {
             Expiration = TimeSpan.FromMinutes(5),
