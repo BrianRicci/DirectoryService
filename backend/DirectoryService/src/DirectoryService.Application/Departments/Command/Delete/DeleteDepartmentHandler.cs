@@ -10,6 +10,7 @@ using DirectoryService.Domain.Departments;
 using DirectoryService.Domain.Locations;
 using DirectoryService.Domain.Positions;
 using FluentValidation;
+using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Logging;
 using Shared;
 
@@ -23,6 +24,7 @@ public class DeleteDepartmentHandler : ICommandHandler<Guid, DeleteDepartmentCom
     private readonly ITransactionManager _transactionManager;
     private readonly IValidator<DeleteDepartmentCommand> _validator;
     private readonly ILogger<DeleteDepartmentHandler> _logger;
+    private readonly HybridCache _cache;
 
     public DeleteDepartmentHandler(
         IDepartmentsRepository departmentsRepository,
@@ -30,7 +32,8 @@ public class DeleteDepartmentHandler : ICommandHandler<Guid, DeleteDepartmentCom
         IPositionsRepository positionsRepository,
         ITransactionManager transactionManager,
         IValidator<DeleteDepartmentCommand> validator,
-        ILogger<DeleteDepartmentHandler> logger)
+        ILogger<DeleteDepartmentHandler> logger,
+        HybridCache cache)
     {
         _departmentsRepository = departmentsRepository;
         _locationsRepository = locationsRepository;
@@ -38,6 +41,7 @@ public class DeleteDepartmentHandler : ICommandHandler<Guid, DeleteDepartmentCom
         _transactionManager = transactionManager;
         _validator = validator;
         _logger = logger;
+        _cache = cache;
     }
     
     public async Task<Result<Guid, Errors>> Handle(DeleteDepartmentCommand command, CancellationToken cancellationToken)
@@ -128,6 +132,9 @@ public class DeleteDepartmentHandler : ICommandHandler<Guid, DeleteDepartmentCom
             transactionScope.Rollback();
             return commitResult.Error.ToErrors();
         }
+        
+        // инвалидация кэша
+        await _cache.RemoveByTagAsync(Constants.DEPARTMENT_CACHE_PREFIX, cancellationToken);
         
         _logger.LogInformation("Department {DepartmentId} softly deleted", command.DepartmentId);
         

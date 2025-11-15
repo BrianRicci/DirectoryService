@@ -3,7 +3,6 @@ using Dapper;
 using DirectoryService.Application.Database;
 using DirectoryService.Contracts.Departments;
 using DirectoryService.Contracts.Locations;
-using Microsoft.EntityFrameworkCore;
 
 namespace DirectoryService.Application.Locations.Queries;
 

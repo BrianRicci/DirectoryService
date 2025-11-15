@@ -33,8 +33,9 @@ public static class DependencyInjection
         services
             .AddWebDependencies()
             .AddApplication()
-            .AddInfrastructureServices(configuration);
-
+            .AddInfrastructureServices(configuration)
+            .AddDistributedCache(configuration);
+        
         return services;
     }
     
@@ -99,6 +100,22 @@ public static class DependencyInjection
         services.AddScoped<DeleteInactiveHandler>();
         
         services.AddHostedService<InactiveDepartmentsCleanerBackgroundService>();
+
+        return services;
+    }
+    
+    private static IServiceCollection AddDistributedCache(
+        this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddStackExchangeRedisCache(options =>
+        {
+            string connection = configuration.GetConnectionString("Redis") 
+                                ?? throw new ArgumentNullException(nameof(connection));
+
+            options.Configuration = connection;
+        });
+        
+        services.AddHybridCache();
 
         return services;
     }
