@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace Shared;
+namespace DirectoryService.Domain.Shared;
 
 public static class CacheKeyBuilder
 {

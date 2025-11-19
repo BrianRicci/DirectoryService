@@ -1,8 +1,8 @@
 ﻿using DirectoryService.Domain;
 using Microsoft.EntityFrameworkCore;
 using DirectoryService.Domain.Departments;
+using DirectoryService.Domain.Shared;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Shared;
 
 namespace DirectoryService.Infrastructure.Postgres.Configurations;
 

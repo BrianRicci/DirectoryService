@@ -1,6 +1,6 @@
-﻿using DirectoryService.Application.Validation;
+﻿using Core.Validation;
 using FluentValidation;
-using Shared;
+using Shared.SharedKernel;
 
 namespace DirectoryService.Application.Departments.Command.Move;
 

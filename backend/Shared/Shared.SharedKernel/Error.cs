@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Shared;
+namespace Shared.SharedKernel;
 
 public record Error
 {

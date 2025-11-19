@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 
-namespace Shared;
+namespace Shared.SharedKernel;
 
 public class Errors : IEnumerable<Error>
 {

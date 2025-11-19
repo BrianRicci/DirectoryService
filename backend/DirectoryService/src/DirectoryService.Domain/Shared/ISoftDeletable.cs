@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
+using Shared.SharedKernel;
 
-namespace Shared;
+namespace DirectoryService.Domain.Shared;
 
 public interface ISoftDeletable
 {
