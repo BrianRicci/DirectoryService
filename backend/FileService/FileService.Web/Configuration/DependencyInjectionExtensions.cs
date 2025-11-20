@@ -1,4 +1,5 @@
 ﻿using FileService.Core;
+using FileService.Infrastructure.S3;
 using Framework.Endpoints;
 using Framework.Logging;
 using Framework.Swagger;
@@ -12,7 +13,8 @@ public static class DependencyInjectionExtensions
         services
             .AddSerilogLogging(configuration, "FileService")
             .AddOpenApiSpec("FileService", "v1")
-            .AddEndpoints(typeof(DependencyInjectionCoreExtensions).Assembly);
+            .AddEndpoints(typeof(DependencyInjectionCoreExtensions).Assembly)
+            .AddS3(configuration);
 
         services
             .AddCore(configuration);
