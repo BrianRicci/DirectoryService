@@ -1,5 +1,4 @@
-﻿using CSharpFunctionalExtensions;
-using DirectoryService.Application.Abstractions;
+﻿using Core.Abstractions;
 using DirectoryService.Application.Departments.Command.Create;
 using DirectoryService.Application.Departments.Command.Delete;
 using DirectoryService.Application.Departments.Command.Move;
@@ -8,9 +7,9 @@ using DirectoryService.Application.Departments.Queries;
 using DirectoryService.Contracts;
 using DirectoryService.Contracts.Departments;
 using DirectoryService.Domain.DepartmentLocations;
-using DirectoryService.Presentation.EndpointResults;
+using Framework.EndpointResults;
 using Microsoft.AspNetCore.Mvc;
-using Shared;
+using Shared.SharedKernel;
 
 namespace DirectoryService.Presentation.Departments;
 

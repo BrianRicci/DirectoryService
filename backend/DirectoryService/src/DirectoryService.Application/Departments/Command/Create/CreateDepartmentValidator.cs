@@ -1,7 +1,7 @@
-﻿using DirectoryService.Application.Validation;
+﻿using Core.Validation;
 using DirectoryService.Domain.Departments;
 using FluentValidation;
-using Shared;
+using Shared.SharedKernel;
 
 namespace DirectoryService.Application.Departments.Command.Create;
 

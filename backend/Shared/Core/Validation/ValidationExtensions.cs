@@ -1,7 +1,7 @@
 ﻿using FluentValidation.Results;
-using Shared;
+using Shared.SharedKernel;
 
-namespace DirectoryService.Application.Extentions;
+namespace Core.Validation;
 
 public static class ValidationExtensions
 {

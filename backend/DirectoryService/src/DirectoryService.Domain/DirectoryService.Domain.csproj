@@ -7,11 +7,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="CSharpFunctionalExtensions" Version="3.6.0" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\Shared\Shared.csproj" />
+      <PackageReference Include="CSharpFunctionalExtensions" />
+      <PackageReference Include="ricci.sharedkernel" />
     </ItemGroup>
   
 </Project>

@@ -21,8 +21,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Serilog;
-using Shared;
-using Errors = Shared.Errors;
+using Errors = Shared.SharedKernel.Errors;
 
 namespace DirectoryService.Presentation;
 

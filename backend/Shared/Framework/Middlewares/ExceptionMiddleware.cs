@@ -1,11 +1,11 @@
 ﻿using System.Text.Json;
-using DirectoryService.Application.Exceptions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Shared;
+using Shared.SharedKernel;
+using Shared.SharedKernel.Exceptions;
 
-namespace DirectoryService.Presentation.Middlewares;
+namespace Framework.Middlewares;
 
 public class ExceptionMiddleware
 {

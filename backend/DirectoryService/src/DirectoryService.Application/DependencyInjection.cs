@@ -1,4 +1,5 @@
-﻿using DirectoryService.Application.Abstractions;
+﻿using Core.Abstractions;
+
 using DirectoryService.Application.Locations;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,7 +16,7 @@ public static class DependencyInjection
 
         services.Scan(scan => scan.FromAssemblies([assembly])
             .AddClasses(classes => classes
-                .AssignableToAny(typeof(ICommandHandler<,>), typeof(ICommandHandler<>)))
+                .AssignableToAny(typeof(ICommandHandler<,>), typeof(ICommandHandler<,>)))
             .AsSelfWithInterfaces()
             .WithScopedLifetime());
 

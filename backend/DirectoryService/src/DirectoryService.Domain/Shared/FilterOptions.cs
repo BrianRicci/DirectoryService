@@ -1,4 +1,4 @@
-﻿namespace Shared;
+﻿namespace DirectoryService.Domain.Shared;
 
 public sealed class FilterOptions
 {

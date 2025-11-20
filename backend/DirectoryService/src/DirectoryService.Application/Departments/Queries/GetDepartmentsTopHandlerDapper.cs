@@ -1,8 +1,8 @@
 ﻿using Dapper;
 using DirectoryService.Application.Database;
 using DirectoryService.Contracts.Departments;
+using DirectoryService.Domain.Shared;
 using Microsoft.Extensions.Caching.Hybrid;
-using Shared;
 
 namespace DirectoryService.Application.Departments.Queries;
 

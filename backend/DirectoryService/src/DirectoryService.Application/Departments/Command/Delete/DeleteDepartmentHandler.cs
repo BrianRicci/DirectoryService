@@ -1,18 +1,15 @@
-﻿using CSharpFunctionalExtensions;
-using DirectoryService.Application.Abstractions;
+﻿using Core.Abstractions;
+using Core.Validation;
+using CSharpFunctionalExtensions;
 using DirectoryService.Application.Database;
-using DirectoryService.Application.Extentions;
 using DirectoryService.Application.Locations;
 using DirectoryService.Application.Positions;
-using DirectoryService.Domain.DepartmentLocations;
-using DirectoryService.Domain.DepartmentPositions;
 using DirectoryService.Domain.Departments;
-using DirectoryService.Domain.Locations;
-using DirectoryService.Domain.Positions;
+using DirectoryService.Domain.Shared;
 using FluentValidation;
 using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Logging;
-using Shared;
+using Shared.SharedKernel;
 
 namespace DirectoryService.Application.Departments.Command.Delete;
 

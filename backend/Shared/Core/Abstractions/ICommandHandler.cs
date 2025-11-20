@@ -1,7 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
-using Shared;
+using Shared.SharedKernel;
 
-namespace DirectoryService.Application.Abstractions;
+namespace Core.Abstractions;
 
 public interface ICommandHandler<TResponse, in TCommand>
     where TCommand : ICommand

@@ -1,7 +1,6 @@
 ﻿using System.Text.Json;
-using Shared;
 
-namespace DirectoryService.Application.Exceptions;
+namespace Shared.SharedKernel.Exceptions;
 
 public class NotFoundException : Exception
 {

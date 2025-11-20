@@ -1,11 +1,10 @@
-﻿using DirectoryService.Application.Abstractions;
+﻿using Core.Abstractions;
 using DirectoryService.Application.Locations.Command.Create;
 using DirectoryService.Application.Locations.Queries;
-using DirectoryService.Contracts;
 using DirectoryService.Contracts.Locations;
-using DirectoryService.Presentation.EndpointResults;
+using Framework.EndpointResults;
 using Microsoft.AspNetCore.Mvc;
-using Shared;
+using Shared.SharedKernel;
 
 namespace DirectoryService.Presentation.Locations;
 

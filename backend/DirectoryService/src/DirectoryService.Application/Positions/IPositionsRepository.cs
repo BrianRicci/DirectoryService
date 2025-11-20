@@ -2,7 +2,7 @@
 using DirectoryService.Contracts.Positions;
 using DirectoryService.Domain.Departments;
 using DirectoryService.Domain.Positions;
-using Shared;
+using Shared.SharedKernel;
 
 namespace DirectoryService.Application.Positions;
 

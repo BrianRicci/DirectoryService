@@ -14,6 +14,7 @@ COPY ["src/Shared/Shared.csproj", "src/Shared/"]
 COPY ["src/DirectoryService.Infrastructure.Postgres/DirectoryService.Infrastructure.Postgres.csproj", "src/DirectoryService.Infrastructure.Postgres/"]
 
 COPY ["Directory.Build.props", "./"]
+COPY ["Directory.Packages.props", "./"]
 
 RUN dotnet restore "src/DirectoryService.Presentation/DirectoryService.Presentation.csproj"
 COPY . .

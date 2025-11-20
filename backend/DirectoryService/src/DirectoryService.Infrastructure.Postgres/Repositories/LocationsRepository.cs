@@ -7,7 +7,7 @@ using DirectoryService.Domain.DepartmentLocations;
 using DirectoryService.Domain.Departments;
 using DirectoryService.Domain.Locations;
 using Microsoft.EntityFrameworkCore;
-using Shared;
+using Shared.SharedKernel;
 
 namespace DirectoryService.Infrastructure.Postgres.Repositories;
 
