@@ -13,7 +13,7 @@ public sealed record StorageKey
     
     public string Value { get; }
     
-    public string FullPath { get; private set; }
+    public string FullPath { get; }
     
     private StorageKey(string bucket, string prefix, string key)
     {
@@ -40,15 +40,17 @@ public sealed record StorageKey
         return new StorageKey(location.Trim(), normalizedPrefixResult.Value, normalizedKeyResult.Value);
     }
     
-    public UnitResult<Error> AppendSegment(string value)
+    public Result<StorageKey, Error> AppendSegment(string value)
     {
-        Result<string, Error> normalizedValue = NormalizeSegment(value);
-        if (normalizedValue.IsFailure)
-            return normalizedValue.Error;
+        Result<string, Error> normalizedValueResult = NormalizeSegment(value);
+        if (normalizedValueResult.IsFailure)
+            return normalizedValueResult.Error;
+
+        var appendedStorageKeyResult = Create(Bucket, Prefix, $"{Key}/{normalizedValueResult.Value}");
+        if (appendedStorageKeyResult.IsFailure)
+            return appendedStorageKeyResult.Error;
         
-        FullPath = $"{FullPath}/{normalizedValue.Value}";
-        
-        return UnitResult.Success<Error>();
+        return appendedStorageKeyResult.Value;
     }
     
     private static Result<string, Error> NormalizePrefix(string? prefix)

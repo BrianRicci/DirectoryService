@@ -67,7 +67,11 @@ public class VideoAsset : MediaAsset
     
     public UnitResult<Error> CompleteProcessing(DateTime timestamp)
     {
-        HlsRootKey.AppendSegment(MASTER_PLAYLIST_NAME);
+        Result<StorageKey, Error> newHlsRootKeyResult = HlsRootKey.AppendSegment(MASTER_PLAYLIST_NAME);
+        if (newHlsRootKeyResult.IsFailure)
+            return newHlsRootKeyResult.Error;
+        
+        HlsRootKey = newHlsRootKeyResult.Value;
         
         MarkReady(HlsRootKey, timestamp);
         
