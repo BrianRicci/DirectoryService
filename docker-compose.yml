@@ -1,17 +1,18 @@
 services:
-  directory_service:
-    container_name: directory-service
-    restart: always
-    build:
-      context: ./backend/DirectoryService
-      dockerfile: Dockerfile
-    ports:
-      - "9001:9001"
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Docker
-      - ASPNETCORE_URLS=http://+:9001
+  # directory_service:
+  #   container_name: directory-service
+  #   restart: always
+  #   build:
+  #     context: ./backend/DirectoryService
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "9001:9001"
+  #   environment:
+  #     - ASPNETCORE_ENVIRONMENT=Docker
+  #     - ASPNETCORE_URLS=http://+:9001
+      
   postgres:
-    container_name: postgres
+    container_name: postgres-ricci
     image: postgres
     restart: always
     environment:
@@ -22,9 +23,10 @@ services:
       - "5432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
+
   seq:
+    container_name: seq-ricci
     image: datalust/seq:latest
-    container_name: seq
     restart: always
     environment:
       - ACCEPT_EULA=Y
@@ -32,14 +34,28 @@ services:
     ports:
       - "5341:5341"
       - "8081:80"
+
   redis:
+    container_name: redis-ricci
     image: redis:latest
-    container_name: redis
     ports:
       - "6379:6379"
     volumes:
       - redis_data:/data
     restart: always
+
+  minio:
+    container_name: minio-ricci
+    image: minio/minio:latest
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    command: server --console-address ":9001" /data
+    restart: always
+
 
 volumes:
   postgres-data:
