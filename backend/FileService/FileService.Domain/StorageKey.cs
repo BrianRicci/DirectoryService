@@ -15,6 +15,11 @@ public sealed record StorageKey
     
     public string FullPath { get; }
     
+    // EF Core
+    private StorageKey()
+    {
+    }
+    
     private StorageKey(string bucket, string prefix, string key)
     {
         Bucket = bucket;

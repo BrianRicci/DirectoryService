@@ -13,6 +13,11 @@ public sealed record MediaData
     
     public int ExpectedChunksCount { get; }
 
+    // EF Core
+    private MediaData()
+    {
+    }
+    
     private MediaData(FileName fileName, ContentType contentType, long size, int expectedChunksCount)
     {
         FileName = fileName;
