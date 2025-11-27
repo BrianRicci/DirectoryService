@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using FileService.Domain.Assets;
 using Shared.SharedKernel;
 
 namespace FileService.Domain;

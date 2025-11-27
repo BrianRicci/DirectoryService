@@ -1,8 +1,7 @@
-﻿using System.Reflection.Metadata;
-using CSharpFunctionalExtensions;
+﻿using CSharpFunctionalExtensions;
 using Shared.SharedKernel;
 
-namespace FileService.Domain;
+namespace FileService.Domain.Assets;
 
 public abstract class MediaAsset
 {

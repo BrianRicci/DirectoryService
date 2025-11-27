@@ -24,7 +24,7 @@ try
     WebApplication app = builder.Build();
 
     app.Configure();
-
+    
     app.Run();
 }
 catch (Exception ex)

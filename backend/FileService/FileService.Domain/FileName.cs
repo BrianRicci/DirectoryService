@@ -7,12 +7,15 @@ public sealed record FileName
 {
     public string Value { get; }
     
+    public string Name { get; }
+    
     public string Extension { get; }
     
-    private FileName(string value, string extension)
+    private FileName(string name, string extension)
     {
-        Value = value;
-        Extension = Path.GetExtension(value);
+        Name = name;
+        Extension = extension;
+        Value = name + "." + extension;
     }
 
     public static Result<FileName, Error> Create(string filename)
