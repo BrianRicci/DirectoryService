@@ -9,4 +9,12 @@ public record S3Options
     public string SecretKey { get; init; } = string.Empty;
     
     public bool WithSsl { get; init; }
+
+    public IReadOnlyList<string> RequiredBuckets { get; init; } = [];
+
+    public double UploadUrlExpirationHours { get; init; }
+    
+    public int DownloadUrlExpirationHours { get; init; } = 24;
+    
+    public int MaxConcurrentRequests { get; init; } = 20;
 }
