@@ -12,6 +12,7 @@
     <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
     <PackageVersion Include="Ricci.Core" Version="0.0.1" />
     <PackageVersion Include="ricci.framework" Version="0.0.2" />
+    <PackageVersion Include="Ricci.Framework" Version="0.0.2" />
     <PackageVersion Include="ricci.sharedkernel" Version="0.0.1" />
     <PackageVersion Include="StyleCop.Analyzers" Version="1.2.0-beta.556" />
   </ItemGroup>

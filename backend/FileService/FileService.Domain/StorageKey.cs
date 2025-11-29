@@ -29,10 +29,10 @@ public sealed record StorageKey
         FullPath = $"{Bucket}/{Value}";
     }
     
-    public static Result<StorageKey, Error> Create(string location, string? prefix, string key)
+    public static Result<StorageKey, Error> Create(string bucket, string? prefix, string key)
     {
-        if (string.IsNullOrWhiteSpace(location))
-            return GeneralErrors.ValueIsInvalid(nameof(location));
+        if (string.IsNullOrWhiteSpace(bucket))
+            return GeneralErrors.ValueIsInvalid(nameof(bucket));
         
         Result<string, Error> normalizedKeyResult = NormalizeSegment(key);
         if (normalizedKeyResult.IsFailure)
@@ -42,7 +42,7 @@ public sealed record StorageKey
         if (normalizedPrefixResult.IsFailure)
             return normalizedPrefixResult.Error;
         
-        return new StorageKey(location.Trim(), normalizedPrefixResult.Value, normalizedKeyResult.Value);
+        return new StorageKey(bucket.Trim(), normalizedPrefixResult.Value, normalizedKeyResult.Value);
     }
     
     public Result<StorageKey, Error> AppendSegment(string value)
