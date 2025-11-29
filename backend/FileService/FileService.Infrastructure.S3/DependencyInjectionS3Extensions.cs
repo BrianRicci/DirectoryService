@@ -19,7 +19,7 @@ public static class DependencyInjectionS3Extensions
             S3Options s3Options = sp.GetRequiredService<IOptions<S3Options>>().Value;
             
             var config = new AmazonS3Config { 
-                ServiceURL = configuration.GetConnectionString(s3Options.Endpoint),
+                ServiceURL = s3Options.Endpoint,
                 UseHttp = !s3Options.WithSsl,
                 ForcePathStyle = true,
             };
