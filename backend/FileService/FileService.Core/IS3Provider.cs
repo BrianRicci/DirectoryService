@@ -30,22 +30,33 @@ public interface IS3Provider
     Task<Result<IReadOnlyList<string>, Error>> GenerateDownloadUrlsAsync(IEnumerable<StorageKey> keys);
 
     Task<Result<string, Error>> StartMultipartUploadAsync(
-        string bucketName,
-        string key,
-        string contentType,
+        StorageKey key,
+        MediaData mediaData,
         CancellationToken cancellationToken);
 
+    Task<Result<string, Error>> GenerateChunkUploadUrlAsync(
+        StorageKey key,
+        string uploadId,
+        CancellationToken cancellationToken);
+    
     Task<Result<IReadOnlyList<string>, Error>> GenerateAllChunksUploadUrlsAsync(
-        string bucketName,
-        string key,
+        StorageKey key,
         string uploadId,
         int totalChunks,
         CancellationToken cancellationToken);
 
     Task<Result<string, Error>> CompleteMultipartUploadAsync(
-        string bucketName,
-        string key,
+        StorageKey key,
         string uploadId,
-        IReadOnlyList<PartETagDto> partETags,
+        List<PartETagDto> partETags,
+        CancellationToken cancellationToken);
+    
+    Task<Result<string, Error>> AbortMultipartUploadAsync(
+        StorageKey key,
+        string uploadId,
+        CancellationToken cancellationToken);
+    
+    Task<Result<IReadOnlyList<string>, Error>> ListMultipartUploadsAsync(
+        string bucketName,
         CancellationToken cancellationToken);
 }
