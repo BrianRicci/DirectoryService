@@ -1,4 +1,5 @@
-﻿using CSharpFunctionalExtensions;
+﻿using Amazon.S3.Model;
+using CSharpFunctionalExtensions;
 using FileService.Contracts;
 using FileService.Domain;
 using Shared.SharedKernel;
@@ -45,18 +46,18 @@ public interface IS3Provider
         int totalChunks,
         CancellationToken cancellationToken);
 
-    Task<Result<string, Error>> CompleteMultipartUploadAsync(
+    Task<Result<CompleteMultipartUploadResponse, Error>> CompleteMultipartUploadAsync(
         StorageKey key,
         string uploadId,
         List<PartETagDto> partETags,
         CancellationToken cancellationToken);
     
-    Task<Result<string, Error>> AbortMultipartUploadAsync(
+    Task<UnitResult<Error>> AbortMultipartUploadAsync(
         StorageKey key,
         string uploadId,
         CancellationToken cancellationToken);
     
-    Task<Result<IReadOnlyList<string>, Error>> ListMultipartUploadsAsync(
+    Task<Result<ListMultipartUploadsResponse, Error>> ListMultipartUploadsAsync(
         string bucketName,
         CancellationToken cancellationToken);
 }
