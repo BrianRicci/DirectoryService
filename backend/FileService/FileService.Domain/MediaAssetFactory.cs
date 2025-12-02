@@ -4,9 +4,9 @@ using Shared.SharedKernel;
 
 namespace FileService.Domain;
 
-public class MediaAssetFactory : IMediaAssetFactory
+public static class MediaAssetFactory
 {
-    public Result<MediaAsset, Error> CreateForUpload(AssetType assetType, Guid id, MediaData mediaData)
+    public static Result<MediaAsset, Error> CreateForUpload(AssetType assetType, Guid id, MediaData mediaData)
     {
         return assetType switch
         {
