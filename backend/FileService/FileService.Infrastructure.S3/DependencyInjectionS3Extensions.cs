@@ -28,6 +28,8 @@ public static class DependencyInjectionS3Extensions
         });
         
         services.AddHostedService<S3BucketInitializationService>();
+
+        services.AddTransient<IChunkSizeCalculator, ChunkSizeCalculator>();
         
         return services;
     }
