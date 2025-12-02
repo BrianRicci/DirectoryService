@@ -35,7 +35,7 @@ public class MediaAssetConfiguration : IEntityTypeConfiguration<MediaAsset>
                 fb.Property(x => x.Value).HasColumnName("value");
             });
 
-            mb.Property(x => x.Size).HasColumnName("size");
+            mb.Property(x => x.FileSize).HasColumnName("size");
             mb.Property(x => x.ExpectedChunksCount).HasColumnName("expected_chunks_count");
         });
         

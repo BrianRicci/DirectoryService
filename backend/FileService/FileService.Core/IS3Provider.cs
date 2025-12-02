@@ -35,13 +35,11 @@ public interface IS3Provider
         MediaData mediaData,
         CancellationToken cancellationToken);
 
-    Task<Result<string, Error>> GenerateChunkUploadUrlAsync(
-        StorageKey key,
+    Task<Result<ChunkUploadUrl, Error>> GenerateChunkUploadUrlAsync(StorageKey key,
         string uploadId,
         CancellationToken cancellationToken);
     
-    Task<Result<IReadOnlyList<string>, Error>> GenerateAllChunksUploadUrlsAsync(
-        StorageKey key,
+    Task<Result<IReadOnlyList<ChunkUploadUrl>, Error>> GenerateAllChunksUploadUrlsAsync(StorageKey key,
         string uploadId,
         int totalChunks,
         CancellationToken cancellationToken);

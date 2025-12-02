@@ -192,7 +192,7 @@ public class S3Provider : IS3Provider
         }
     }
 
-    public async Task<Result<string, Error>> GenerateChunkUploadUrlAsync(
+    public async Task<Result<ChunkUploadUrl, Error>> GenerateChunkUploadUrlAsync(
         StorageKey key,
         string uploadId,
         CancellationToken cancellationToken)
@@ -211,8 +211,8 @@ public class S3Provider : IS3Provider
         try
         {
             string? url = await _s3Client.GetPreSignedURLAsync(request);
-    
-            return url;
+
+            return new ChunkUploadUrl(1, url);
         }
         catch (Exception ex)
         {
@@ -222,7 +222,7 @@ public class S3Provider : IS3Provider
         }
     }
 
-    public async Task<Result<IReadOnlyList<string>, Error>> GenerateAllChunksUploadUrlsAsync(
+    public async Task<Result<IReadOnlyList<ChunkUploadUrl>, Error>> GenerateAllChunksUploadUrlsAsync(
         StorageKey key,
         string uploadId,
         int totalChunks,
@@ -230,7 +230,7 @@ public class S3Provider : IS3Provider
     {
         try
         {
-            IEnumerable<Task<string>> tasks = Enumerable.Range(1, totalChunks)
+            IEnumerable<Task<ChunkUploadUrl>> tasks = Enumerable.Range(1, totalChunks)
                 .Select(async partNumber =>
                 {
                     await _requestsSemaphore.WaitAsync(cancellationToken);
@@ -249,7 +249,7 @@ public class S3Provider : IS3Provider
                     {
                         string? url = await _s3Client.GetPreSignedURLAsync(request);
                 
-                        return url;
+                        return new ChunkUploadUrl(partNumber, url);
                     }
                     finally
                     {
@@ -257,7 +257,7 @@ public class S3Provider : IS3Provider
                     }
                 });
         
-            string[] results = await Task.WhenAll(tasks);
+            ChunkUploadUrl[] results = await Task.WhenAll(tasks);
         
             return results;
         }
