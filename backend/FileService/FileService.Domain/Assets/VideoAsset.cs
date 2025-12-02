@@ -25,9 +25,8 @@ public class VideoAsset : MediaAsset
         Guid id,
         MediaData mediaData,
         MediaStatus status,
-        MediaOwner owner,
         StorageKey key)
-        : base(id, mediaData, status, AssetType.VIDEO, owner, key)
+        : base(id, mediaData, status, AssetType.VIDEO, key)
     {
     }
 
@@ -47,7 +46,7 @@ public class VideoAsset : MediaAsset
                 $"File content type must be {ALLOWED_CONTENT_TYPE}");
         }
         
-        if (mediaData.Size > MAX_SIZE)
+        if (mediaData.FileSize > MAX_SIZE)
         {
             return Error.Validation(
                 "video.invalid.size",
@@ -57,7 +56,7 @@ public class VideoAsset : MediaAsset
         return UnitResult.Success<Error>();
     }
     
-    public static Result<VideoAsset, Error> CreateForUpload(Guid id, MediaData mediaData, MediaOwner owner)
+    public static Result<VideoAsset, Error> CreateForUpload(Guid id, MediaData mediaData)
     {
         UnitResult<Error> validationResult = ValidateForUpload(mediaData);
         if (validationResult.IsFailure)
@@ -67,7 +66,7 @@ public class VideoAsset : MediaAsset
         if (key.IsFailure)
             return key.Error;
         
-        return new VideoAsset(id, mediaData, MediaStatus.UPLOADING, owner, key.Value);
+        return new VideoAsset(id, mediaData, MediaStatus.UPLOADING, key.Value);
     }
     
     public UnitResult<Error> CompleteProcessing(DateTime timestamp)

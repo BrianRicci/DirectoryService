@@ -33,14 +33,12 @@ public abstract class MediaAsset
         MediaData mediaData,
         MediaStatus status,
         AssetType assetType,
-        MediaOwner owner,
         StorageKey rawKey)
     {
         Id = id;
         MediaData = mediaData;
         Status = status;
         AssetType = assetType;
-        Owner = owner;
         RawKey = rawKey;
     }
     
