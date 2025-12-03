@@ -1,8 +1,8 @@
 ﻿using CSharpFunctionalExtensions;
-using FileService.Contracts;
 using FileService.Contracts.StartMultipartUpload;
 using FileService.Domain;
 using Framework.EndpointResults;
+using Framework.Endpoints;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
@@ -11,11 +11,11 @@ using Shared.SharedKernel;
 
 namespace FileService.Core.Features;
 
-public sealed class StartMultipartUpload
+public sealed class StartMultipartUpload : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("/files/multipart-upload", async Task<EndpointResult<StartMultipartUploadResponse>> (
+        app.MapPost("/files/multipart/start", async Task<EndpointResult<StartMultipartUploadResponse>> (
             [FromBody] StartMultipartUploadRequest request,
             [FromServices] StartMultipartUploadHandler handler,
             CancellationToken token) => await handler.Handle(request, token));
