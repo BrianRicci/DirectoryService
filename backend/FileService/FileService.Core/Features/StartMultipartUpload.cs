@@ -40,18 +40,21 @@ public sealed class StartMultipartUploadHandler
         _s3Provider = s3Provider;
         _logger = logger;
     }
-    
-    public async Task<Result<StartMultipartUploadResponse, Error>> Handle(StartMultipartUploadRequest request, CancellationToken cancellationToken)
+
+    public async Task<Result<StartMultipartUploadResponse, Error>> Handle(
+        StartMultipartUploadRequest request,
+        CancellationToken cancellationToken)
     {
         var fileNameResult = FileName.Create(request.FileName);
         if (fileNameResult.IsFailure)
             return fileNameResult.Error;
-        
+
         var contentTypeResult = ContentType.Create(request.ContentType);
         if (contentTypeResult.IsFailure)
             return contentTypeResult.Error;
 
-        Result<(int ChunkSize, int TotalChunks), Error> chunkCalculationResult = _chunkSizeCalculator.Calculate(request.FileSize);
+        Result<(int ChunkSize, int TotalChunks), Error> chunkCalculationResult =
+            _chunkSizeCalculator.Calculate(request.FileSize);
         if (chunkCalculationResult.IsFailure)
             return chunkCalculationResult.Error;
 
@@ -64,18 +67,18 @@ public sealed class StartMultipartUploadHandler
             return mediaDataResult.Error;
 
         var assetType = request.AssetType.ToAssetType();
-        
+
         var mediaAssetResult = MediaAssetFactory.CreateForUpload(assetType, Guid.NewGuid(), mediaDataResult.Value);
         if (mediaAssetResult.IsFailure)
             return mediaAssetResult.Error;
-        
+
         var startUploadResult = await _s3Provider.StartMultipartUploadAsync(
             mediaAssetResult.Value.RawKey, mediaDataResult.Value, cancellationToken);
         if (startUploadResult.IsFailure)
             return startUploadResult.Error;
 
         await _mediaAssetsRepository.AddAsync(mediaAssetResult.Value, cancellationToken);
-        
+
         var chunkUploadUrlsResult = await _s3Provider.GenerateAllChunksUploadUrlsAsync(
             mediaAssetResult.Value.RawKey,
             startUploadResult.Value,
@@ -83,12 +86,12 @@ public sealed class StartMultipartUploadHandler
             cancellationToken);
         if (chunkUploadUrlsResult.IsFailure)
             return chunkUploadUrlsResult.Error;
-        
+
         _logger.LogInformation(
             "Started multipart upload for media asset {MediaAssetId} with key: {Key}",
             mediaAssetResult.Value.Id,
             mediaAssetResult.Value.RawKey);
-        
+
         return new StartMultipartUploadResponse(
             mediaAssetResult.Value.Id,
             startUploadResult.Value,

@@ -43,4 +43,19 @@ public class MediaAssetsRepository : IMediaAssetsRepository
 
         return mediaAsset;
     }
+    
+    public async Task<UnitResult<Error>> SaveChangesAsync(CancellationToken cancellationToken)
+    {
+        try
+        {
+            await _dbContext.SaveChangesAsync(cancellationToken);
+
+            return UnitResult.Success<Error>();
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Failed to save changes");
+            return GeneralErrors.Failure("Failed to save changes");
+        }
+    }
 }

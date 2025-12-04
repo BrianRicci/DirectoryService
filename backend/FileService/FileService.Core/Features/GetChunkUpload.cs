@@ -62,7 +62,7 @@ public sealed class GetChunkUploadHandler
             cancellationToken);
         if (chunkUploadUrlsResult.IsFailure)
             return chunkUploadUrlsResult.Error;
-        
+
         _logger.LogInformation("Generated chunk upload url for media asset {MediaAssetId}", request.MediaAssetId);
 
         return new GetChunkUploadResponse(chunkUploadUrlsResult.Value);
