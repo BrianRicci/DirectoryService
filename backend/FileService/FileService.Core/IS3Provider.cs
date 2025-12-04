@@ -35,11 +35,13 @@ public interface IS3Provider
         MediaData mediaData,
         CancellationToken cancellationToken);
 
-    Task<Result<ChunkUploadUrl, Error>> GenerateChunkUploadUrlAsync(StorageKey key,
-        string uploadId,
+    Task<Result<ChunkUploadUrl, Error>> GenerateChunkUploadUrlAsync(
+        StorageKey key,
+        ChunkUploadUrl chunkUploadUrl,
         CancellationToken cancellationToken);
-    
-    Task<Result<IReadOnlyList<ChunkUploadUrl>, Error>> GenerateAllChunksUploadUrlsAsync(StorageKey key,
+
+    Task<Result<IReadOnlyList<ChunkUploadUrl>, Error>> GenerateAllChunksUploadUrlsAsync(
+        StorageKey key,
         string uploadId,
         int totalChunks,
         CancellationToken cancellationToken);
@@ -49,12 +51,12 @@ public interface IS3Provider
         string uploadId,
         List<PartETagDto> partETags,
         CancellationToken cancellationToken);
-    
+
     Task<UnitResult<Error>> AbortMultipartUploadAsync(
         StorageKey key,
         string uploadId,
         CancellationToken cancellationToken);
-    
+
     Task<Result<ListMultipartUploadsResponse, Error>> ListMultipartUploadsAsync(
         string bucketName,
         CancellationToken cancellationToken);

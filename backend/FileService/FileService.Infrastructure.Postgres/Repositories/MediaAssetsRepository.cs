@@ -2,6 +2,7 @@
 using FileService.Core;
 using FileService.Domain;
 using FileService.Domain.Assets;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Shared.SharedKernel;
 
@@ -31,5 +32,15 @@ public class MediaAssetsRepository : IMediaAssetsRepository
         {
             return GeneralErrors.ValueIsInvalid();
         }
+    }
+    
+    public async Task<Result<MediaAsset, Error>> GetByIdAsync(Guid mediaAssetId, CancellationToken cancellationToken)
+    {
+        var mediaAsset = await _dbContext.MediaAssets.FirstOrDefaultAsync(ma => ma.Id == mediaAssetId, cancellationToken);
+        
+        if (mediaAsset is null)
+            return GeneralErrors.NotFound(mediaAssetId);
+
+        return mediaAsset;
     }
 }
