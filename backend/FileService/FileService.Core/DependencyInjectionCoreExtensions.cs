@@ -14,6 +14,7 @@ public static class DependencyInjectionCoreExtensions
         services.AddScoped<StartMultipartUploadHandler>();
         services.AddScoped<GetChunkUploadHandler>();
         services.AddScoped<CompleteMultipartUploadHandler>();
+        services.AddScoped<AbortMultipartUploadHandler>();
         
         return services;
     }
