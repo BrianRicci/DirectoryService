@@ -66,6 +66,8 @@ public sealed class CompleteMultipartUploadHandler
         mediaAsset.MarkUploaded(DateTime.UtcNow);
 
         await _mediaAssetsRepository.SaveChangesAsync(cancellationToken);
+        
+        _logger.LogInformation("Completed multipart upload for media asset {MediaAssetId}", mediaAsset.Id);
 
         return new CompleteMultipartUploadResponse(mediaAsset.Id);
     }

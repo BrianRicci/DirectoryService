@@ -12,6 +12,8 @@ public static class DependencyInjectionCoreExtensions
         services.AddValidatorsFromAssembly(typeof(DependencyInjectionCoreExtensions).Assembly);
 
         services.AddScoped<StartMultipartUploadHandler>();
+        services.AddScoped<GetChunkUploadHandler>();
+        services.AddScoped<CompleteMultipartUploadHandler>();
         
         return services;
     }

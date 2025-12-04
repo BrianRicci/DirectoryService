@@ -24,18 +24,15 @@ public class GetChunkUpload : IEndpoint
 
 public sealed class GetChunkUploadHandler
 {
-    private readonly IChunkSizeCalculator _chunkSizeCalculator;
     private readonly IMediaAssetsRepository _mediaAssetsRepository;
     private readonly IS3Provider _s3Provider;
     private readonly ILogger<GetChunkUploadHandler> _logger;
 
     public GetChunkUploadHandler(
-        IChunkSizeCalculator chunkSizeCalculator,
         IMediaAssetsRepository mediaAssetsRepository,
         IS3Provider s3Provider,
         ILogger<GetChunkUploadHandler> logger)
     {
-        _chunkSizeCalculator = chunkSizeCalculator;
         _mediaAssetsRepository = mediaAssetsRepository;
         _s3Provider = s3Provider;
         _logger = logger;
