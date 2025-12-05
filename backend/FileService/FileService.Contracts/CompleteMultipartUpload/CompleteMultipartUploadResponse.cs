@@ -1,0 +1,3 @@
+﻿namespace FileService.Contracts.CompleteMultipartUpload;
+
+public record CompleteMultipartUploadResponse(Guid MediaAssetId);

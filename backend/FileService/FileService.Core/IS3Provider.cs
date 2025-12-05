@@ -1,4 +1,5 @@
-﻿using CSharpFunctionalExtensions;
+﻿using Amazon.S3.Model;
+using CSharpFunctionalExtensions;
 using FileService.Contracts;
 using FileService.Domain;
 using Shared.SharedKernel;
@@ -30,22 +31,33 @@ public interface IS3Provider
     Task<Result<IReadOnlyList<string>, Error>> GenerateDownloadUrlsAsync(IEnumerable<StorageKey> keys);
 
     Task<Result<string, Error>> StartMultipartUploadAsync(
-        string bucketName,
-        string key,
-        string contentType,
+        StorageKey key,
+        MediaData mediaData,
         CancellationToken cancellationToken);
 
-    Task<Result<IReadOnlyList<string>, Error>> GenerateAllChunksUploadUrlsAsync(
-        string bucketName,
-        string key,
+    Task<Result<ChunkUploadUrl, Error>> GenerateChunkUploadUrlAsync(
+        StorageKey key,
+        ChunkUploadUrl chunkUploadUrl,
+        CancellationToken cancellationToken);
+
+    Task<Result<IReadOnlyList<ChunkUploadUrl>, Error>> GenerateAllChunksUploadUrlsAsync(
+        StorageKey key,
         string uploadId,
         int totalChunks,
         CancellationToken cancellationToken);
 
-    Task<Result<string, Error>> CompleteMultipartUploadAsync(
-        string bucketName,
-        string key,
+    Task<Result<CompleteMultipartUploadResponse, Error>> CompleteMultipartUploadAsync(
+        StorageKey key,
         string uploadId,
-        IReadOnlyList<PartETagDto> partETags,
+        List<PartETagDto> partETags,
+        CancellationToken cancellationToken);
+
+    Task<UnitResult<Error>> AbortMultipartUploadAsync(
+        StorageKey key,
+        string uploadId,
+        CancellationToken cancellationToken);
+
+    Task<Result<ListMultipartUploadsResponse, Error>> ListMultipartUploadsAsync(
+        string bucketName,
         CancellationToken cancellationToken);
 }

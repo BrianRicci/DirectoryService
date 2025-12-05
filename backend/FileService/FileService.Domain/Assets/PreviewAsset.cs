@@ -21,9 +21,8 @@ public class PreviewAsset : MediaAsset
         Guid id,
         MediaData mediaData,
         MediaStatus status,
-        MediaOwner owner,
         StorageKey key)
-        : base(id, mediaData, status, AssetType.PREVIEW, owner, key)
+        : base(id, mediaData, status, AssetType.PREVIEW, key)
     {
     }
 
@@ -43,7 +42,7 @@ public class PreviewAsset : MediaAsset
                 $"File content type must be {ALLOWED_CONTENT_TYPE}");
         }
         
-        if (mediaData.Size > MAX_SIZE)
+        if (mediaData.FileSize > MAX_SIZE)
         {
             return Error.Validation(
                 "preview.invalid.size",
@@ -53,7 +52,7 @@ public class PreviewAsset : MediaAsset
         return UnitResult.Success<Error>();
     }
     
-    public static Result<PreviewAsset, Error> CreateForUpload(Guid id, MediaData mediaData, MediaOwner owner)
+    public static Result<PreviewAsset, Error> CreateForUpload(Guid id, MediaData mediaData)
     {
         UnitResult<Error> validationResult = ValidateForUpload(mediaData);
         if (validationResult.IsFailure)
@@ -63,7 +62,7 @@ public class PreviewAsset : MediaAsset
         if (key.IsFailure)
             return key.Error;
         
-        return new PreviewAsset(id, mediaData, MediaStatus.UPLOADING, owner, key.Value);
+        return new PreviewAsset(id, mediaData, MediaStatus.UPLOADING, key.Value);
     }
     
     public UnitResult<Error> CompleteProcessing(DateTime timestamp)

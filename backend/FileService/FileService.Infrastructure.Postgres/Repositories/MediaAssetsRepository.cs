@@ -2,6 +2,7 @@
 using FileService.Core;
 using FileService.Domain;
 using FileService.Domain.Assets;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Shared.SharedKernel;
 
@@ -30,6 +31,31 @@ public class MediaAssetsRepository : IMediaAssetsRepository
         catch (Exception ex)
         {
             return GeneralErrors.ValueIsInvalid();
+        }
+    }
+    
+    public async Task<Result<MediaAsset, Error>> GetByIdAsync(Guid mediaAssetId, CancellationToken cancellationToken)
+    {
+        var mediaAsset = await _dbContext.MediaAssets.FirstOrDefaultAsync(ma => ma.Id == mediaAssetId, cancellationToken);
+        
+        if (mediaAsset is null)
+            return GeneralErrors.NotFound(mediaAssetId);
+
+        return mediaAsset;
+    }
+    
+    public async Task<UnitResult<Error>> SaveChangesAsync(CancellationToken cancellationToken)
+    {
+        try
+        {
+            await _dbContext.SaveChangesAsync(cancellationToken);
+
+            return UnitResult.Success<Error>();
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Failed to save changes");
+            return GeneralErrors.Failure("Failed to save changes");
         }
     }
 }
