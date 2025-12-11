@@ -1,4 +1,4 @@
-﻿using FileService.Core.Features;
+﻿using FileService.Core.Command;
 using FluentValidation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
