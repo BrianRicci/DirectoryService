@@ -10,6 +10,8 @@ public class FileServiceDbContext : DbContext
     private readonly string _connectionString;
 
     public DbSet<MediaAsset> MediaAssets => Set<MediaAsset>();
+    
+    public IQueryable<MediaAsset> MediaAssetsQuery => MediaAssets.AsQueryable().AsNoTracking();
  
     public FileServiceDbContext(string connectionString)
     {

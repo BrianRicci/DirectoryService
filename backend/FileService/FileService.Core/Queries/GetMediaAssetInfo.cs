@@ -6,6 +6,7 @@ using Framework.Endpoints;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 using Shared.SharedKernel;
 using FileInfo = FileService.Contracts.GetMediaAssetInfo.FileInfo;
 
@@ -24,12 +25,12 @@ public sealed class GetMediaAssetInfo : IEndpoint
 
 public sealed class GetMediaAssetInfoHandler
 {
-    private readonly IMediaAssetsRepository _mediaAssetsRepository;
+    private readonly IReadDbContext _readDbContext;
     private readonly IS3Provider _s3Provider;
 
-    public GetMediaAssetInfoHandler(IMediaAssetsRepository mediaAssetsRepository, IS3Provider s3Provider)
+    public GetMediaAssetInfoHandler(IReadDbContext readDbContext, IS3Provider s3Provider)
     {
-        _mediaAssetsRepository = mediaAssetsRepository;
+        _readDbContext = readDbContext;
         _s3Provider = s3Provider;
     }
 
@@ -37,13 +38,12 @@ public sealed class GetMediaAssetInfoHandler
         Guid mediaAssetId,
         CancellationToken cancellationToken)
     {
-        var mediaAssetResult = await _mediaAssetsRepository.GetBy(
+        var mediaAsset = await _readDbContext.MediaAssetsQuery.FirstOrDefaultAsync(
             ma => ma.Id == mediaAssetId && ma.Status != MediaStatus.DELETED,
             cancellationToken);
-        if (mediaAssetResult.IsFailure)
-            return mediaAssetResult.Error;
-
-        var mediaAsset = mediaAssetResult.Value;
+        
+        if (mediaAsset == null)
+            return GeneralErrors.NotFound(mediaAssetId);
         
         string? downloadUrl = null;
         
