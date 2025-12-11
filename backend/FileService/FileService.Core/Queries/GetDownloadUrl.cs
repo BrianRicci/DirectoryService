@@ -17,7 +17,7 @@ public sealed class GetDownloadUrl : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapGet("/files/url", async Task<EndpointResult<GetDownloadUrlResponse>> (
+        app.MapPost("/files/url", async Task<EndpointResult<GetDownloadUrlResponse>> (
             [FromBody] GetDownloadUrlRequest request,
             [FromServices] GetDownloadUrlHandler handler,
             CancellationToken token) => await handler.Handle(request, token));
