@@ -1,4 +1,5 @@
 ﻿using FileService.Core.Command;
+using FileService.Core.Queries;
 using FluentValidation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,6 +16,10 @@ public static class DependencyInjectionCoreExtensions
         services.AddScoped<GetChunkUploadHandler>();
         services.AddScoped<CompleteMultipartUploadHandler>();
         services.AddScoped<AbortMultipartUploadHandler>();
+        services.AddScoped<GetMediaAssetInfoHandler>();
+        services.AddScoped<GetMediaAssetsInfoHandler>();
+        services.AddScoped<GetDownloadUrlHandler>();
+        services.AddScoped<DeleteFileHandler>();
         
         return services;
     }
