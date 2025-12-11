@@ -126,11 +126,12 @@ public class S3Provider : IS3Provider
         }
     }
 
-    public async Task<Result<IReadOnlyList<string>, Error>> GenerateDownloadUrlsAsync(IEnumerable<StorageKey> keys)
+    public async Task<Result<IReadOnlyDictionary<StorageKey, string>, Error>> GenerateDownloadUrlsAsync(
+        IEnumerable<StorageKey> keys)
     {
         try
         {
-            IEnumerable<Task<string>> tasks = keys
+            IEnumerable<Task<(StorageKey, string)>> tasks = keys
                 .Select(async key =>
                 {
                     await _requestsSemaphore.WaitAsync();
@@ -147,7 +148,7 @@ public class S3Provider : IS3Provider
                     {
                         string? url = await _s3Client.GetPreSignedURLAsync(request);
                 
-                        return url;
+                        return (key, url);
                     }
                     finally
                     {
@@ -155,9 +156,9 @@ public class S3Provider : IS3Provider
                     }
                 });
         
-            string[] results = await Task.WhenAll(tasks);
-        
-            return results;
+            var results = await Task.WhenAll(tasks);
+            
+            return results.ToDictionary();
         }
         catch (Exception ex)
         {

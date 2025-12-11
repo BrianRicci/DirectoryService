@@ -1,4 +1,5 @@
-﻿using CSharpFunctionalExtensions;
+﻿using System.Linq.Expressions;
+using CSharpFunctionalExtensions;
 using FileService.Core;
 using FileService.Domain;
 using FileService.Domain.Assets;
@@ -40,6 +41,18 @@ public class MediaAssetsRepository : IMediaAssetsRepository
         
         if (mediaAsset is null)
             return GeneralErrors.NotFound(mediaAssetId);
+
+        return mediaAsset;
+    }
+    
+    public async Task<Result<MediaAsset, Error>> GetBy(
+        Expression<Func<MediaAsset, bool>> predicate,
+        CancellationToken cancellationToken = default)
+    {
+        MediaAsset? mediaAsset = await _dbContext.MediaAssets.FirstOrDefaultAsync(predicate, cancellationToken);
+        
+        if (mediaAsset is null)
+            return GeneralErrors.NotFound(null, "media file");
 
         return mediaAsset;
     }

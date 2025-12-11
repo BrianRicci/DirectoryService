@@ -22,7 +22,13 @@ public sealed record MediaOwner
         EntityId = entityId;
     }
 
-    public static Result<MediaOwner, Error> Create(string context, Guid entityId)
+    public static Result<MediaOwner, Error> ForDepartment(Guid departmentId) => Create("department", departmentId);
+    
+    public static Result<MediaOwner, Error> ForLocation(Guid locationId) => Create("location", locationId);
+    
+    public static Result<MediaOwner, Error> ForPosition(Guid positionId) => Create("position", positionId);
+    
+    private static Result<MediaOwner, Error> Create(string context, Guid entityId)
     {
         if (string.IsNullOrWhiteSpace(context) || context.Length > 50)
             return GeneralErrors.ValueIsInvalid(nameof(context));
@@ -36,10 +42,4 @@ public sealed record MediaOwner
 
         return new MediaOwner(context, entityId);
     }
-    
-    public static Result<MediaOwner, Error> ForDepartment(Guid departmentId) => Create("department", departmentId);
-    
-    public static Result<MediaOwner, Error> ForLocation(Guid locationId) => Create("location", locationId);
-    
-    public static Result<MediaOwner, Error> ForPosition(Guid positionId) => Create("position", positionId);
 }
