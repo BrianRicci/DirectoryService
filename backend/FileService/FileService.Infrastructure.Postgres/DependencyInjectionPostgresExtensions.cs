@@ -11,6 +11,9 @@ public static class DependencyInjectionPostgresExtensions
     {
         services.AddScoped<FileServiceDbContext>(_ => 
             new FileServiceDbContext(configuration.GetConnectionString("FileServiceDb")!));
+        
+        services.AddScoped<IReadDbContext, FileServiceDbContext>(_ => 
+            new FileServiceDbContext(configuration.GetConnectionString("FileServiceDb")!));
 
         services.AddScoped<IMediaAssetsRepository, MediaAssetsRepository>();
 
