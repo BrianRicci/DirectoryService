@@ -1,6 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
 using FileService.Contracts.GetChunkUpload;
-using FileService.Domain;
 using Framework.EndpointResults;
 using Framework.Endpoints;
 using Microsoft.AspNetCore.Builder;
@@ -9,7 +8,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 using Shared.SharedKernel;
 
-namespace FileService.Core.Features;
+namespace FileService.Core.Command;
 
 public class GetChunkUpload : IEndpoint
 {

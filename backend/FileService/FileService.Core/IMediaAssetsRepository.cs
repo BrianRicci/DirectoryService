@@ -1,5 +1,5 @@
-﻿using CSharpFunctionalExtensions;
-using FileService.Domain;
+﻿using System.Linq.Expressions;
+using CSharpFunctionalExtensions;
 using FileService.Domain.Assets;
 using Shared.SharedKernel;
 
@@ -10,6 +10,10 @@ public interface IMediaAssetsRepository
     Task<Result<Guid, Error>> AddAsync(MediaAsset mediaAsset, CancellationToken cancellationToken);
 
     Task<Result<MediaAsset, Error>> GetByIdAsync(Guid mediaAssetId, CancellationToken cancellationToken);
+
+    Task<Result<MediaAsset, Error>> GetBy(
+        Expression<Func<MediaAsset, bool>> predicate,
+        CancellationToken cancellationToken = default);
     
     Task<UnitResult<Error>> SaveChangesAsync(CancellationToken cancellationToken);
 }

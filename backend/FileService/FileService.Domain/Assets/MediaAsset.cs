@@ -40,6 +40,7 @@ public abstract class MediaAsset
         Status = status;
         AssetType = assetType;
         RawKey = rawKey;
+        FinalKey = rawKey; // TODO: НЕ ЗАБЫТЬ ПОМЕНЯТЬ!
     }
     
     public UnitResult<Error> MarkUploaded(DateTime timestamp)

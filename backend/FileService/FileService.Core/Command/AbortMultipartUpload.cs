@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 using Shared.SharedKernel;
 
-namespace FileService.Core.Features;
+namespace FileService.Core.Command;
 
 public class AbortMultipartUpload : IEndpoint
 {

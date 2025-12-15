@@ -28,7 +28,7 @@ public interface IS3Provider
 
     Task<Result<string, Error>> GenerateDownloadUrlAsync(StorageKey key);
 
-    Task<Result<IReadOnlyList<string>, Error>> GenerateDownloadUrlsAsync(IEnumerable<StorageKey> keys);
+    Task<Result<IReadOnlyDictionary<StorageKey, string>, Error>> GenerateDownloadUrlsAsync(IEnumerable<StorageKey> keys);
 
     Task<Result<string, Error>> StartMultipartUploadAsync(
         StorageKey key,
