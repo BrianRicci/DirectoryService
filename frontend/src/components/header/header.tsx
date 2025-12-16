@@ -6,7 +6,7 @@ import { SidebarTrigger } from "../ui/sidebar";
 export default function Header() {
   return (
     <header className="sticky top-0 z-50 w-full bg-black backdrop-blur border-b border-none">
-      <div className="max-w-6xl mx-auto px-4 py-1 flex items-center justify-between">
+      <div className="mx-auto px-4 py-1 flex items-center justify-between">
         {/* Left: logo + sidebar trigger */}
         <div className="flex items-center gap-3">
           <SidebarTrigger />
