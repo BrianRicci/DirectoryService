@@ -1,4 +1,4 @@
-import Positions from "../../components/positions";
+import Positions from "@/features/positions";
 
 export default function Home() {
   return <Positions />;

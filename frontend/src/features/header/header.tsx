@@ -1,7 +1,7 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/shared/components/ui/button";
 import { routes } from "@/shared/routes";
 import Link from "next/link";
-import { SidebarTrigger } from "../ui/sidebar";
+import { SidebarTrigger } from "../../shared/components/ui/sidebar";
 
 export default function Header() {
   return (

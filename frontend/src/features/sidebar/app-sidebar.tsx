@@ -9,7 +9,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarTrigger,
-} from "../ui/sidebar";
+} from "../../shared/components/ui/sidebar";
 import { routes } from "@/shared/routes";
 import {
   Calculator,

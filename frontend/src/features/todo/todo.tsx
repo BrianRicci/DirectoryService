@@ -1,9 +1,9 @@
 "use client";
 
-import { Input } from "./ui/input";
-import { Button } from "./ui/button";
+import { Input } from "../../shared/components/ui/input";
+import { Button } from "../../shared/components/ui/button";
 import { useState } from "react";
-import { Checkbox } from "./ui/checkbox";
+import { Checkbox } from "../../shared/components/ui/checkbox";
 
 type Todo = {
   id: number;
