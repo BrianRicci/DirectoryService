@@ -1,5 +1,5 @@
-import Locations from "@/features/locations";
+import Locations from "@/features/locations/locations";
 
-export default function Home() {
+export default function Page() {
   return <Locations />;
 }
