@@ -20,6 +20,14 @@ builder.Services.AddProgramDependencies(builder.Configuration);
 
 var app = builder.Build();
 
+app.UseCors(builder =>
+{
+    builder.WithOrigins("http://localhost:3000")
+           .AllowCredentials()
+           .AllowAnyHeader()
+           .AllowAnyMethod();
+});
+
 app.UseExceptionMiddleware();
 
 app.UseSerilogRequestLogging();

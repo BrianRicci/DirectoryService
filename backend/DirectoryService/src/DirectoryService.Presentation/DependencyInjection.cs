@@ -21,7 +21,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Serilog;
-using Errors = Shared.SharedKernel.Errors;
 
 namespace DirectoryService.Presentation;
 
@@ -40,6 +39,8 @@ public static class DependencyInjection
     
     private static IServiceCollection AddWebDependencies(this IServiceCollection services)
     {
+        services.AddCors();
+
         services.AddControllers();
         services.AddOpenApi();
 
