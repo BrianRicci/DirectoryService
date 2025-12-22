@@ -1,23 +1,23 @@
 services:
-  # directory_service:
-  #   container_name: directory-service
-  #   restart: always
-  #   build:
-  #     context: ./backend/DirectoryService
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "9001:9001"
-  #   environment:
-  #     - ASPNETCORE_ENVIRONMENT=Docker
-  #     - ASPNETCORE_URLS=http://+:9001
-      
+  directory_service:
+    container_name: directory-service
+    restart: always
+    build:
+      context: ./backend/DirectoryService
+      dockerfile: Dockerfile
+    ports:
+      - "9001:9001"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+      - ASPNETCORE_URLS=http://+:9001
+
   postgres:
     container_name: postgres-ricci
     image: postgres
     restart: always
     environment:
-      POSTGRES_DB: directory_service_db 
-      POSTGRES_USER: postgres 
+      POSTGRES_DB: directory_service_db
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
       - "5432:5432"
@@ -55,7 +55,6 @@ services:
       MINIO_ROOT_PASSWORD: minioadmin
     command: server --console-address ":9001" /data
     restart: always
-
 
 volumes:
   postgres-data:
