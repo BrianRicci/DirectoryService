@@ -28,19 +28,6 @@ export type LocationsResult = {
 //   timeGenerated: string;
 // };
 
-// export type ApiError = {
-//   messages: ErrorMessage[];
-//   type: ErrorType;
-// };
-
-// export type ErrorMessage = {
-//   code: string;
-//   message: string;
-//   invalidField?: string | null;
-// };
-
-export type ErrorType = "validation" | "not_found" | "conflict" | "failure";
-
 export const locationsApi = {
   getLocations: async (
     request: GetLocationsRequest
