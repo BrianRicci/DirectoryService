@@ -1,5 +1,5 @@
-import Locations from "../../components/locations";
+import LocationsList from "@/features/locations/locations-list";
 
-export default function Home() {
-  return <Locations />;
+export default function Page() {
+  return <LocationsList />;
 }

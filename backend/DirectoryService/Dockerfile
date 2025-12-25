@@ -10,7 +10,6 @@ COPY ["src/DirectoryService.Presentation/DirectoryService.Presentation.csproj", 
 COPY ["src/DirectoryService.Application/DirectoryService.Application.csproj", "src/DirectoryService.Application/"]
 COPY ["src/DirectoryService.Contracts/DirectoryService.Contracts.csproj", "src/DirectoryService.Contracts/"]
 COPY ["src/DirectoryService.Domain/DirectoryService.Domain.csproj", "src/DirectoryService.Domain/"]
-COPY ["src/Shared/Shared.csproj", "src/Shared/"]
 COPY ["src/DirectoryService.Infrastructure.Postgres/DirectoryService.Infrastructure.Postgres.csproj", "src/DirectoryService.Infrastructure.Postgres/"]
 
 COPY ["Directory.Build.props", "./"]

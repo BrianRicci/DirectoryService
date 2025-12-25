@@ -1,4 +1,4 @@
-import Departments from "../../components/departments";
+import Departments from "@/features/departments/departments";
 
 export default function Home() {
   return <Departments />;

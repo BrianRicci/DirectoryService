@@ -55,6 +55,10 @@ public class DeleteInactiveHandler
 
         var inactiveDepartments = inactiveDepartmentsResult.Value;
 
+        // TODO
+        // добавить здесь проверку на наличие неактивных департаментов, если их нет - выход из хэндлера
+        // далее и с родительскими так
+        
         // получение дочерних элементов первого колена неактивных департаментов
         var firstDescendantsOfInactiveDepartmentsResult = await _departmentsRepository.GetByParentIdsAsync(
             inactiveDepartments.Select(d => d.Id).ToList(), cancellationToken);
