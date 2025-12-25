@@ -20,9 +20,10 @@ builder.Services.AddProgramDependencies(builder.Configuration);
 
 var app = builder.Build();
 
-app.UseCors(builder =>
+app.UseCors(corsPolicyBuilder =>
 {
-    builder.WithOrigins("http://localhost:3000")
+    corsPolicyBuilder.WithOrigins(
+            builder.Configuration.GetValue<string>("CorsAllowedOrigins:React", "http://localhost:3000"))
            .AllowCredentials()
            .AllowAnyHeader()
            .AllowAnyMethod();
