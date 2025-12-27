@@ -22,7 +22,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Serilog;
 
-namespace DirectoryService.Presentation;
+namespace DirectoryService.Presentation.Configuration;
 
 public static class DependencyInjection
 {

@@ -6,10 +6,10 @@ services:
       context: ./backend/DirectoryService
       dockerfile: Dockerfile
     ports:
-      - "9001:9001"
+      - "9101:9101"
     environment:
       - ASPNETCORE_ENVIRONMENT=Docker
-      - ASPNETCORE_URLS=http://+:9001
+      - ASPNETCORE_URLS=http://+:9101
 
   postgres:
     container_name: postgres-ricci

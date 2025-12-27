@@ -58,6 +58,29 @@ public class DepartmentsRepository : IDepartmentsRepository
         return departments;
     }
 
+    // Блокирует себя и всех потомков
+    public async Task<Result<Department, Error>> GetByIdWithLockDescendants(
+        DepartmentId departmentId, CancellationToken cancellationToken)
+    {
+        var department = await _dbContext.Departments
+            .FromSql(
+                $"""
+                 SELECT * FROM departments
+                 WHERE path <@ (
+                     SELECT path FROM departments
+                     WHERE department_id = {departmentId.Value}
+                 )
+                 FOR UPDATE
+                 """)
+            .FirstOrDefaultAsync(cancellationToken);
+
+        if (department is null)
+            return GeneralErrors.NotFound(departmentId.Value);
+
+        return department;
+    }
+    
+    // Блокирует только себя
     public async Task<Result<Department, Error>> GetByIdWithLock(
         DepartmentId departmentId, CancellationToken cancellationToken)
     {
@@ -100,14 +123,6 @@ public class DepartmentsRepository : IDepartmentsRepository
             .ToListAsync(cancellationToken);
 
         return departments;
-    }
-
-    public async Task<UnitResult<Error>> LockDescendants(DepartmentPath path, CancellationToken cancellationToken)
-    {
-        await _dbContext.Database.ExecuteSqlAsync(
-            $"SELECT * FROM departments WHERE path <@ {path.Value}::ltree FOR UPDATE", cancellationToken);
-
-        return UnitResult.Success<Error>();
     }
 
     public async Task<UnitResult<Error>> BulkDeleteAsync(

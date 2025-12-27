@@ -145,6 +145,95 @@ public class DeleteInactiveDepartmentTests : DirectoryBaseTests
         });
     }
     
+    [Fact]
+    public async Task DeleteInactiveDepartment_WhenNotDepartmentToDelete_Should_Succeed()
+    {
+        // arrange
+        Location location = await CreateLocation(
+            LocationName.Create("Первая локация").Value,
+            LocationAddress.Create("Россия", "Москва", "Москва", "Ленина", "1").Value,
+            LocationTimezone.Create("Europe/Moscow").Value);
+
+        DepartmentIdentifier rootDepartmentIdentifier = DepartmentIdentifier.Create("rootDepartment").Value;
+        Department rootDepartment = await CreateDepartmentWithLocation(
+            location.Id,
+            new DepartmentId(Guid.NewGuid()),
+            DepartmentName.Create("Родительское подразделение").Value,
+            rootDepartmentIdentifier,
+            DepartmentPath.CreateParent(rootDepartmentIdentifier).Value,
+            0,
+            new List<DepartmentLocation>());
+        
+        DepartmentIdentifier devDepartmentIdentifier = DepartmentIdentifier.Create("dev").Value;
+        Department devDepartment = await CreateDepartmentWithLocation(
+            location.Id,
+            new DepartmentId(Guid.NewGuid()),
+            DepartmentName.Create("Отдел разработки").Value,
+            devDepartmentIdentifier,
+            rootDepartment.Path.CreateChild(devDepartmentIdentifier).Value,
+            1,
+            new List<DepartmentLocation>(),
+            rootDepartment.Id);
+        
+        Position position = await CreatePosition(
+            devDepartment.Id,
+            PositionName.Create("Должность").Value,
+            PositionDescription.Create("Описание должности 1").Value,
+            new List<DepartmentPosition>());
+        
+        var cancellationToken = CancellationToken.None;
+
+        await ExecuteInDb(async dbContext =>
+        {
+            dbContext.Entry(devDepartment).State = EntityState.Modified;
+            dbContext.Entry(location).State = EntityState.Modified;
+            dbContext.Entry(position).State = EntityState.Modified;
+    
+            await dbContext.SaveChangesAsync(cancellationToken);
+        });
+        
+        // act
+        var result = await ExecuteHandler(sut => sut.Handle(cancellationToken));
+        
+        // assert
+        await ExecuteInDb(async dbContext =>
+        {
+            var devDepartmentForAssert = await dbContext.Departments
+                .FirstOrDefaultAsync(d => d.Identifier == devDepartmentIdentifier, cancellationToken);
+            
+            var locationForAssert = await dbContext.Locations
+                .FirstOrDefaultAsync(l => l.Id == location.Id, cancellationToken);
+            
+            var positionForAssert = await dbContext.Positions
+                .FirstOrDefaultAsync(p => p.Id == position.Id, cancellationToken);
+            
+            int departmentLocations = await dbContext.DepartmentLocations
+                .Where(dl => dl.LocationId == location.Id)
+                .CountAsync(cancellationToken);
+            
+            int departmentPositions = await dbContext.DepartmentPositions
+                .Where(dp => dp.PositionId == position.Id)
+                .CountAsync(cancellationToken);
+            
+            // department asserts
+            Assert.NotNull(devDepartmentForAssert);
+            
+            // location asserts
+            Assert.NotNull(locationForAssert);
+            
+            // position asserts
+            Assert.NotNull(positionForAssert);
+            
+            // department locations asserts
+            Assert.Equal(2, departmentLocations);
+            
+            // department positions asserts
+            Assert.Equal(1, departmentPositions);
+            
+            Assert.True(result.IsSuccess);
+        });
+    }
+    
     private async Task<Location> CreateLocation(
         LocationName locationName,
         LocationAddress locationAddress,

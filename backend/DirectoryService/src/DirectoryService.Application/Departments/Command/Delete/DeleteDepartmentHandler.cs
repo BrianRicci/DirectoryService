@@ -60,8 +60,7 @@ public class DeleteDepartmentHandler : ICommandHandler<Guid, DeleteDepartmentCom
         
         using var transactionScope = transactionScopeResult.Value;
         
-        // проверка есть ли department
-        var departmentResult = await _departmentsRepository.GetByIdWithLock(new DepartmentId(command.DepartmentId), cancellationToken);
+        var departmentResult = await _departmentsRepository.GetByIdWithLockDescendants(new DepartmentId(command.DepartmentId), cancellationToken);
         if (departmentResult.IsFailure)
         {
             _logger.LogInformation("Department was not found.");
@@ -72,14 +71,6 @@ public class DeleteDepartmentHandler : ICommandHandler<Guid, DeleteDepartmentCom
         var department = departmentResult.Value;
 
         var oldPath = department.Path;
-        
-        var lockDescendants = await _departmentsRepository.LockDescendants(oldPath, cancellationToken);
-        if (lockDescendants.IsFailure)
-        {
-            _logger.LogInformation("Failed to lock descendants.");
-            transactionScope.Rollback(); 
-            return lockDescendants.Error.ToErrors();
-        }
 
         var softDeleteLocationsResult = await _locationsRepository.SoftDeleteLocationsRelatedToDepartmentAsync(
             department.Id, cancellationToken);

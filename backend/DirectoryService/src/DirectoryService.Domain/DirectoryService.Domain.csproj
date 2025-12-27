@@ -8,7 +8,7 @@
 
     <ItemGroup>
       <PackageReference Include="CSharpFunctionalExtensions" />
-      <PackageReference Include="ricci.sharedkernel" />
+      <PackageReference Include="Ricci.SharedKernel" />
     </ItemGroup>
   
 </Project>

@@ -51,7 +51,7 @@ public class MoveDepartmentHandler : ICommandHandler<MoveDepartmentCommand>
         
         using var transactionScope = transactionScopeResult.Value;
         
-        var departmentResult = await _departmentsRepository.GetByIdWithLock(new DepartmentId(command.DepartmentId), cancellationToken);
+        var departmentResult = await _departmentsRepository.GetByIdWithLockDescendants(new DepartmentId(command.DepartmentId), cancellationToken);
         if (departmentResult.IsFailure)
         {
             _logger.LogInformation("Department was not found.");
@@ -61,13 +61,6 @@ public class MoveDepartmentHandler : ICommandHandler<MoveDepartmentCommand>
         var department = departmentResult.Value;
 
         var oldPath = department.Path;
-        
-        var lockDescendants = await _departmentsRepository.LockDescendants(oldPath, cancellationToken);
-        if (lockDescendants.IsFailure)
-        {
-            _logger.LogInformation("Failed to lock descendants.");
-            return lockDescendants.Error.ToErrors();
-        }
 
         var parentId = command.MoveDepartmentRequest.ParentId;
 

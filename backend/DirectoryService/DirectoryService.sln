@@ -11,6 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Dockerfile = Dockerfile
 		.dockerignore = .dockerignore
 		Directory.Packages.props = Directory.Packages.props
+		..\..\docker-compose.yml = ..\..\docker-compose.yml
+		..\..\nuget.config = ..\..\nuget.config
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectoryService.Application", "src\DirectoryService.Application\DirectoryService.Application.csproj", "{DBD603D0-1C58-4363-9EA9-857DF5470D0B}"

@@ -69,8 +69,11 @@ public class DeleteInactiveHandler
         }
 
         // получение родительских департаментов неактивных департаментов
+        List<DepartmentId?> inactiveDepartmentParentIds =
+            inactiveDepartments.Where(d => d.ParentId != null).Select(d => d.ParentId).ToList();
+        
         var parentsOfInactiveDepartmentsResult = await _departmentsRepository.GetByIdsAsync(
-            inactiveDepartments.Select(d => d.ParentId).ToList(), cancellationToken);
+            inactiveDepartmentParentIds, cancellationToken);
         if (parentsOfInactiveDepartmentsResult.IsFailure)
         {
             _logger.LogInformation("Failed to get parents of inactive departments.");
