@@ -37,7 +37,7 @@
       </PackageReference>
       <PackageReference Include="Microsoft.Extensions.Caching.Hybrid" />
       <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" />
-      <PackageReference Include="ricci.framework" />
+      <PackageReference Include="Ricci.Framework" />
       <PackageReference Include="Serilog.AspNetCore" />
       <PackageReference Include="Serilog.Exceptions" />
       <PackageReference Include="Serilog.Sinks.Http" />
