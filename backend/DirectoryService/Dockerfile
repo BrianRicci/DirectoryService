@@ -1,11 +1,14 @@
 ﻿FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
 USER $APP_UID
 WORKDIR /app
-EXPOSE 9001
+EXPOSE 9101
 
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
-WORKDIR /src
+WORKDIR /
+
+COPY ["nuget.config", "./"]
+
 COPY ["src/DirectoryService.Presentation/DirectoryService.Presentation.csproj", "src/DirectoryService.Presentation/"]
 COPY ["src/DirectoryService.Application/DirectoryService.Application.csproj", "src/DirectoryService.Application/"]
 COPY ["src/DirectoryService.Contracts/DirectoryService.Contracts.csproj", "src/DirectoryService.Contracts/"]
@@ -17,7 +20,7 @@ COPY ["Directory.Packages.props", "./"]
 
 RUN dotnet restore "src/DirectoryService.Presentation/DirectoryService.Presentation.csproj"
 COPY . .
-WORKDIR "/src/src/DirectoryService.Presentation"
+WORKDIR "/src/DirectoryService.Presentation"
 RUN dotnet build "./DirectoryService.Presentation.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish

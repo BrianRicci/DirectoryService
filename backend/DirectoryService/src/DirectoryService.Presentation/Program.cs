@@ -1,46 +1,43 @@
+using System.Globalization;
 using DirectoryService.Presentation;
-using Framework.Middlewares;
+using DirectoryService.Presentation.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 
-var builder = WebApplication.CreateBuilder(args);
 
-string environment = builder.Environment.EnvironmentName;
-
-builder.Configuration.AddJsonFile($"appsettings.{environment}.json", optional: true, reloadOnChange: true);
-
-Log.Logger = new LoggerConfiguration()
-    .WriteTo.Console()
-    .WriteTo.Seq(builder.Configuration.GetConnectionString("Seq") 
-             ?? throw new ArgumentNullException("Seq"))
-    .CreateLogger();
-
-builder.Services.AddProgramDependencies(builder.Configuration);
-
-var app = builder.Build();
-
-app.UseCors(corsPolicyBuilder =>
+try
 {
-    corsPolicyBuilder.WithOrigins(
-            builder.Configuration.GetValue<string>("CorsAllowedOrigins:React", "http://localhost:3000"))
-           .AllowCredentials()
-           .AllowAnyHeader()
-           .AllowAnyMethod();
-});
+    Log.Information("Starting web application");
+    
+    var builder = WebApplication.CreateBuilder(args);
+    
+    Log.Logger = new LoggerConfiguration()
+        .WriteTo.Console(formatProvider: CultureInfo.InvariantCulture)
+        .WriteTo.Seq(builder.Configuration.GetConnectionString("Seq") 
+                 ?? throw new ArgumentNullException("Seq"))
+        .CreateLogger();
 
-app.UseExceptionMiddleware();
+    string environment = builder.Environment.EnvironmentName;
 
-app.UseSerilogRequestLogging();
+    builder.Configuration.AddJsonFile($"appsettings.{environment}.json", optional: true, reloadOnChange: true);
 
-app.MapOpenApi();
+    builder.Services.AddProgramDependencies(builder.Configuration);
 
-app.UseSwagger();
-app.UseSwaggerUI(options => options.SwaggerEndpoint("/openapi/v1.json", "DirectoryService V1"));
+    var app = builder.Build();
 
-app.MapControllers();
+    app.Configure();
 
-app.Run();
+    app.Run();
+}
+catch (Exception ex)
+{
+    Log.Fatal(ex, "Application terminated unexpectedly");
+}
+finally
+{
+    Log.CloseAndFlush();
+}
 
 namespace DirectoryService.Presentation
 {
