@@ -37,7 +37,8 @@ public interface IS3Provider
 
     Task<Result<ChunkUploadUrl, Error>> GenerateChunkUploadUrlAsync(
         StorageKey key,
-        ChunkUploadUrl chunkUploadUrl,
+        string uploadId,
+        int partNumber,
         CancellationToken cancellationToken);
 
     Task<Result<IReadOnlyList<ChunkUploadUrl>, Error>> GenerateAllChunksUploadUrlsAsync(

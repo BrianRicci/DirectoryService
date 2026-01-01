@@ -11,6 +11,7 @@
     <PackageVersion Include="Microsoft.Extensions.Logging.Console" Version="9.0.11" />
     <PackageVersion Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.11" />
     <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
+    <PackageVersion Include="Respawn" Version="6.2.1" />
     <PackageVersion Include="Ricci.Core" Version="0.0.1" />
     <PackageVersion Include="ricci.framework" Version="0.0.2" />
     <PackageVersion Include="Ricci.Framework" Version="0.0.2" />
