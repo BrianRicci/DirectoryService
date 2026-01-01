@@ -19,7 +19,9 @@ public abstract class MediaAsset
     
     public StorageKey FinalKey { get; protected set; } = null!;
 
-    public MediaOwner Owner { get; protected set; } = null!;
+    // TODO
+    // НЕ ЗАБЫТЬ РАСКОММЕНТИТЬ ПОТОМ
+    // public MediaOwner Owner { get; protected set; } = null!;
     
     public MediaStatus Status { get; protected set; }
 

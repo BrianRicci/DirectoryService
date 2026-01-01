@@ -1,4 +1,5 @@
-﻿using CSharpFunctionalExtensions;
+﻿using System.Text.Json.Serialization;
+using CSharpFunctionalExtensions;
 using Shared.SharedKernel;
 
 namespace FileService.Domain;
@@ -20,6 +21,7 @@ public sealed record StorageKey
     {
     }
     
+    [JsonConstructor]
     private StorageKey(string bucket, string prefix, string key)
     {
         Bucket = bucket;

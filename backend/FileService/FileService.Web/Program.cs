@@ -35,3 +35,8 @@ finally
 {
     Log.CloseAndFlush();
 }
+
+namespace FileService.Web
+{
+    public partial class Program;
+}
