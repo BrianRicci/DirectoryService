@@ -1,4 +1,5 @@
-﻿using Amazon.S3;
+﻿using System.Data.Common;
+using Amazon.S3;
 using FileService.Core;
 using FileService.Infrastructure.Postgres;
 using FileService.Infrastructure.S3;
@@ -11,6 +12,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
+using Npgsql;
+using Respawn;
 using Testcontainers.Minio;
 using Testcontainers.PostgreSql;
 
@@ -30,6 +33,10 @@ public class IntegrationTestsWebFactory : WebApplicationFactory<Program>, IAsync
         .WithUsername("minioadmin")
         .WithPassword("minioadmin")
         .Build();
+    
+    private Respawner _respawner = null!;
+    
+    private DbConnection _dbConnection = null!;
 
     public async Task InitializeAsync()
     {
@@ -41,8 +48,13 @@ public class IntegrationTestsWebFactory : WebApplicationFactory<Program>, IAsync
 
         await dbContext.Database.EnsureDeletedAsync();
         await dbContext.Database.EnsureCreatedAsync();
-    }
+        
+        _dbConnection = new NpgsqlConnection(_dbContainer.GetConnectionString());
+        await _dbConnection.OpenAsync();
 
+        await InitializeRespawner();
+    }
+    
     public new async Task DisposeAsync()
     {
         await _minioContainer.StopAsync();
@@ -50,6 +62,11 @@ public class IntegrationTestsWebFactory : WebApplicationFactory<Program>, IAsync
         
         await _dbContainer.StopAsync();
         await _dbContainer.DisposeAsync();
+    }
+    
+    public async Task ResetDatabeseAsync()
+    {
+        await _respawner.ResetAsync(_dbConnection);
     }
     
     protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -87,5 +104,16 @@ public class IntegrationTestsWebFactory : WebApplicationFactory<Program>, IAsync
                 return new AmazonS3Client(s3Options.AccessKey, s3Options.SecretKey, config);
             });
         });
+    }
+    
+    private async Task InitializeRespawner()
+    {
+        _respawner = await Respawner.CreateAsync(
+            _dbConnection,
+            new RespawnerOptions
+            {
+                DbAdapter = DbAdapter.Postgres,
+                SchemasToInclude = ["public"],
+            });
     }
 }

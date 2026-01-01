@@ -7,11 +7,14 @@ public class FileServiceTestsBase : IClassFixture<IntegrationTestsWebFactory>, I
 {
     public const string TEST_FILE_NAME = "test-file.mp4";
     
+    private readonly Func<Task> _resetDatabase;
+    
     protected FileServiceTestsBase(IntegrationTestsWebFactory factory)
     {
         AppHttpClient = factory.CreateClient();
         HttpClient = new HttpClient();
         Services = factory.Services;
+        _resetDatabase = factory.ResetDatabeseAsync;
     }
 
     protected IServiceProvider Services { get; init; }
@@ -22,7 +25,10 @@ public class FileServiceTestsBase : IClassFixture<IntegrationTestsWebFactory>, I
 
     public Task InitializeAsync() => Task.CompletedTask;
 
-    public Task DisposeAsync() => Task.CompletedTask;
+    public async Task DisposeAsync()
+    {
+        await _resetDatabase();
+    }
 
     protected async Task ExecuteInDb(Func<FileServiceDbContext, Task> action)
     {
