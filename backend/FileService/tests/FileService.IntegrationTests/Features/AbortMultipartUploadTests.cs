@@ -86,47 +86,4 @@ public class AbortMultipartUploadTests : FileServiceTestsBase
         
         return startMultipartResult.Value;
     }
-    
-    private async Task<IReadOnlyList<PartETagDto>> UploadChunks(FileInfo fileInfo, StartMultipartUploadResponse startMultipartUploadResponse, CancellationToken cancellationToken)
-    {
-        await using FileStream stream = fileInfo.OpenRead();
-
-        var parts = new List<PartETagDto>();
-
-        foreach (ChunkUploadUrl chunkUploadUrl in startMultipartUploadResponse.ChunkUploadUrls.OrderBy(c => c.PartNumber))
-        {
-            byte[] chunk = new byte[startMultipartUploadResponse.ChunkSize];
-            
-            int bytesRead = await stream.ReadAsync(chunk.AsMemory(0, startMultipartUploadResponse.ChunkSize), cancellationToken);
-            if (bytesRead == 0)
-                break;
-
-            var content = new ByteArrayContent(chunk);
-            
-            HttpResponseMessage response = await HttpClient.PutAsync(chunkUploadUrl.UploadUrl, content, cancellationToken);
-            
-            string? etag = response.Headers.ETag?.Tag.Trim('"');
-            
-            parts.Add(new PartETagDto(chunkUploadUrl.PartNumber, etag!));
-        }
-        
-        return parts;
-    }
-    
-    private async Task<UnitResult<Errors>> CompleteMultipartUpload(
-        StartMultipartUploadResponse startMultipartUploadResponse,
-        IReadOnlyList<PartETagDto> partETags,
-        CancellationToken cancellationToken)
-    {
-        var completeRequest = new CompleteMultipartUploadRequest(
-            startMultipartUploadResponse.MediaAssetId,
-            startMultipartUploadResponse.UploadId,
-            partETags.ToList());
-        
-        HttpResponseMessage completeResponse = await AppHttpClient.PostAsJsonAsync("api/files/multipart/complete", completeRequest, cancellationToken);
-
-        UnitResult<Errors> completeMultipart = await completeResponse.HandleResponseAsync(cancellationToken);
-        
-        return completeMultipart;
-    }
 }
