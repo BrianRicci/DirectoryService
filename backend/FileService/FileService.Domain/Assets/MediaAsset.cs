@@ -19,7 +19,9 @@ public abstract class MediaAsset
     
     public StorageKey FinalKey { get; protected set; } = null!;
 
-    public MediaOwner Owner { get; protected set; } = null!;
+    // TODO
+    // НЕ ЗАБЫТЬ РАСКОММЕНТИТЬ ПОТОМ
+    // public MediaOwner Owner { get; protected set; } = null!;
     
     public MediaStatus Status { get; protected set; }
 
@@ -56,7 +58,7 @@ public abstract class MediaAsset
     
     public UnitResult<Error> MarkReady(StorageKey finalyKey, DateTime timestamp)
     {
-        if (Status != MediaStatus.UPLOADING)
+        if (Status != MediaStatus.UPLOADED || Status != MediaStatus.UPLOADING)
             return GeneralErrors.ValueIsInvalid(nameof(Status));
         
         Status = MediaStatus.READY;
@@ -68,7 +70,7 @@ public abstract class MediaAsset
 
     public UnitResult<Error> MarkFailed(DateTime timestamp)
     {
-        if (Status != MediaStatus.UPLOADED)
+        if (Status == MediaStatus.UPLOADED)
             return GeneralErrors.ValueIsInvalid(nameof(Status));
         
         Status = MediaStatus.FAILED;

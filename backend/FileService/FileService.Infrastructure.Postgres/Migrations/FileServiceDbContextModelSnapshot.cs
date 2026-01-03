@@ -31,8 +31,7 @@ namespace FileService.Infrastructure.Postgres.Migrations
 
                     b.Property<string>("AssetType")
                         .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("asset_type");
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
@@ -66,11 +65,7 @@ namespace FileService.Infrastructure.Postgres.Migrations
 
                     b.HasIndex("Status", "CreatedAt");
 
-                    b.ToTable("media_assets", null, t =>
-                        {
-                            t.Property("asset_type")
-                                .HasColumnName("asset_type1");
-                        });
+                    b.ToTable("media_assets", (string)null);
 
                     b.HasDiscriminator<string>("asset_type").HasValue("MediaAsset");
 
@@ -81,24 +76,12 @@ namespace FileService.Infrastructure.Postgres.Migrations
                 {
                     b.HasBaseType("FileService.Domain.Assets.MediaAsset");
 
-                    b.ToTable("media_assets", t =>
-                        {
-                            t.Property("asset_type")
-                                .HasColumnName("asset_type1");
-                        });
-
                     b.HasDiscriminator().HasValue("preview");
                 });
 
             modelBuilder.Entity("FileService.Domain.Assets.VideoAsset", b =>
                 {
                     b.HasBaseType("FileService.Domain.Assets.MediaAsset");
-
-                    b.ToTable("media_assets", t =>
-                        {
-                            t.Property("asset_type")
-                                .HasColumnName("asset_type1");
-                        });
 
                     b.HasDiscriminator().HasValue("video");
                 });
@@ -114,7 +97,7 @@ namespace FileService.Infrastructure.Postgres.Migrations
                                 .HasColumnType("integer")
                                 .HasColumnName("expected_chunks_count");
 
-                            b1.Property<long>("Size")
+                            b1.Property<long>("FileSize")
                                 .HasColumnType("bigint")
                                 .HasColumnName("size");
 
@@ -187,32 +170,7 @@ namespace FileService.Infrastructure.Postgres.Migrations
                                 .IsRequired();
                         });
 
-                    b.OwnsOne("FileService.Domain.MediaOwner", "Owner", b1 =>
-                        {
-                            b1.Property<Guid>("MediaAssetId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<string>("Context")
-                                .IsRequired()
-                                .HasColumnType("text")
-                                .HasColumnName("context");
-
-                            b1.Property<Guid>("EntityId")
-                                .HasColumnType("uuid")
-                                .HasColumnName("entity_id");
-
-                            b1.HasKey("MediaAssetId");
-
-                            b1.ToTable("media_assets");
-
-                            b1.WithOwner()
-                                .HasForeignKey("MediaAssetId");
-                        });
-
                     b.Navigation("MediaData")
-                        .IsRequired();
-
-                    b.Navigation("Owner")
                         .IsRequired();
                 });
 #pragma warning restore 612, 618

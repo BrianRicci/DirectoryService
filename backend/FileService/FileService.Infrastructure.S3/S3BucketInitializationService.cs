@@ -76,6 +76,7 @@ public class S3BucketInitializationService : BackgroundService
 
             string policy = $$"""
                               {
+                                  "Version": "2012-10-17",
                                   "Statement": [
                                       {
                                           "Effect": "Allow",

@@ -96,6 +96,6 @@ public sealed class StartMultipartUploadHandler
             mediaAssetResult.Value.Id,
             startUploadResult.Value,
             chunkUploadUrlsResult.Value,
-            chunkCalculationResult.Value.TotalChunks);
+            chunkCalculationResult.Value.ChunkSize);
     }
 }

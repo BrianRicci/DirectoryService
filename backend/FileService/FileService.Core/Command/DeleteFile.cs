@@ -14,7 +14,7 @@ public sealed class DeleteFile: IEndpoint
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapDelete("/files/{mediaAssetId}", async Task<EndpointResult<DeleteFileResponse>> (
-            [FromQuery] Guid mediaAssetId,
+            [FromRoute] Guid mediaAssetId,
             [FromServices] DeleteFileHandler handler,
             CancellationToken token) => await handler.Handle(mediaAssetId, token));
     }

@@ -195,7 +195,8 @@ public class S3Provider : IS3Provider
 
     public async Task<Result<ChunkUploadUrl, Error>> GenerateChunkUploadUrlAsync(
         StorageKey key,
-        ChunkUploadUrl chunkUploadUrl,
+        string uploadId,
+        int partNumber,
         CancellationToken cancellationToken)
     {
         var request = new GetPreSignedUrlRequest
@@ -203,8 +204,8 @@ public class S3Provider : IS3Provider
             BucketName = key.Bucket,
             Key = key.Key,
             Verb = HttpVerb.PUT,
-            UploadId = chunkUploadUrl.UploadUrl,
-            PartNumber = chunkUploadUrl.PartNumber,
+            UploadId = uploadId,
+            PartNumber = partNumber,
             Expires = DateTime.UtcNow.AddHours(_s3Options.UploadUrlExpirationHours),
             Protocol = _s3Options.WithSsl ? Protocol.HTTPS : Protocol.HTTP,
         };
@@ -213,7 +214,7 @@ public class S3Provider : IS3Provider
         {
             string? url = await _s3Client.GetPreSignedURLAsync(request);
 
-            return new ChunkUploadUrl(1, url);
+            return new ChunkUploadUrl(partNumber, url);
         }
         catch (Exception ex)
         {
