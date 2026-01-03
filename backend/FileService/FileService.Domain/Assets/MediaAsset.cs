@@ -58,7 +58,7 @@ public abstract class MediaAsset
     
     public UnitResult<Error> MarkReady(StorageKey finalyKey, DateTime timestamp)
     {
-        if (Status != MediaStatus.UPLOADING) // TODO: УСЛОВИЕ ВОЗМОЖНО НЕВЕРНОЕ, ПОТОМ ПОДУМАТЬ ЕЩЕ РАЗ
+        if (Status != MediaStatus.UPLOADED || Status != MediaStatus.UPLOADING)
             return GeneralErrors.ValueIsInvalid(nameof(Status));
         
         Status = MediaStatus.READY;
