@@ -50,11 +50,20 @@ public class AbortMultipartUploadTests : FileServiceTestsBase
         {
             MediaAsset? mediaAsset = await db.MediaAssets
                 .FirstOrDefaultAsync(ma => ma.Id == startMultipartUploadResponse.MediaAssetId, cancellationToken);
-            
+
             Assert.Equal(MediaStatus.FAILED, mediaAsset?.Status);
             Assert.NotNull(mediaAsset);
-            
-            // можно ли как то проверить тут есть ли в S3 хранилище этот файл
+
+            IAmazonS3 amazonS3Client = _factory.Services.GetRequiredService<IAmazonS3>();
+
+            ListObjectsV2Request listObjectsV2Request = new ListObjectsV2Request
+            {
+                BucketName = mediaAsset.RawKey.Bucket, Prefix = mediaAsset.RawKey.Value, MaxKeys = 1,
+            };
+
+            ListObjectsV2Response listObjectsV2Response = await amazonS3Client.ListObjectsV2Async(listObjectsV2Request, cancellationToken);
+
+            Assert.Null(listObjectsV2Response.S3Objects);
         });
     }
 

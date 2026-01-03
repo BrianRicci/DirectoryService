@@ -1,4 +1,6 @@
 ﻿using System.Net.Http.Json;
+using Amazon.S3;
+using Amazon.S3.Model;
 using CSharpFunctionalExtensions;
 using FileService.Contracts;
 using FileService.Contracts.DeleteFile;
@@ -6,6 +8,7 @@ using FileService.Contracts.StartMultipartUpload;
 using FileService.Domain.Assets;
 using FileService.IntegrationTests.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Shared.SharedKernel;
 using CompleteMultipartUploadRequest = FileService.Contracts.CompleteMultipartUpload.CompleteMultipartUploadRequest;
 
@@ -57,7 +60,16 @@ public class DeleteFileTests : FileServiceTestsBase
             Assert.Equal(MediaStatus.DELETED, mediaAsset?.Status);
             Assert.NotNull(mediaAsset);
 
-            // можно ли как то проверить тут есть ли в S3 хранилище этот файл
+            IAmazonS3 amazonS3Client = _factory.Services.GetRequiredService<IAmazonS3>();
+
+            ListObjectsV2Request listObjectsV2Request = new ListObjectsV2Request
+            {
+                BucketName = mediaAsset.RawKey.Bucket, Prefix = mediaAsset.RawKey.Value, MaxKeys = 1,
+            };
+
+            ListObjectsV2Response listObjectsV2Response = await amazonS3Client.ListObjectsV2Async(listObjectsV2Request, cancellationToken);
+
+            Assert.Null(listObjectsV2Response.S3Objects);
         });
     }
 
