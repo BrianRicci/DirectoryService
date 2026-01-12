@@ -1,3 +1,3 @@
-﻿namespace FileService.Contracts.GetChunkUpload;
+﻿namespace FileService.Contracts.Dtos.GetChunkUpload;
 
 public record GetChunkUploadResponse(ChunkUploadUrl ChunkUploadUrl);

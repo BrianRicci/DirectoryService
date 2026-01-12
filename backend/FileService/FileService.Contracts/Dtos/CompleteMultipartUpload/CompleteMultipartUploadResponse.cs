@@ -1,3 +1,3 @@
-﻿namespace FileService.Contracts.CompleteMultipartUpload;
+﻿namespace FileService.Contracts.Dtos.CompleteMultipartUpload;
 
 public record CompleteMultipartUploadResponse(Guid MediaAssetId);

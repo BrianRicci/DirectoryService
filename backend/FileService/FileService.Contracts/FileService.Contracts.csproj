@@ -1,9 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net9.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
+      <PackageId>Ricci.FileService.Contracts</PackageId>
+      <Version>0.0.1</Version>
+      <Authors>Ricci</Authors>
+      <Company>Ricci</Company>
+      <PackageDescription>FileService.Contracts</PackageDescription>
+      <RepositoryUrl>https://github.com/BrianRicci/DirectoryService</RepositoryUrl>
     </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="CSharpFunctionalExtensions" />
+      <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" />
+      <PackageReference Include="Microsoft.Extensions.Http" />
+      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+      <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" />
+      <PackageReference Include="Ricci.SharedKernel" />
+    </ItemGroup>
 
 </Project>
