@@ -41,7 +41,7 @@ public class MediaAssetConfiguration : IEntityTypeConfiguration<MediaAsset>
         
         builder.Property(x => x.Id).HasColumnName("id");
         
-        builder.Property(x => x.AssetType).HasConversion<string>().HasColumnName("asset_type");
+        builder.Property(x => x.AssetType).HasConversion<string>();
         
         builder.Property(x => x.Status).HasConversion<string>().HasColumnName("status");
         
@@ -62,11 +62,13 @@ public class MediaAssetConfiguration : IEntityTypeConfiguration<MediaAsset>
             .HasColumnName("final_key")
             .HasColumnType("jsonb");
         
-        builder.OwnsOne(x => x.Owner, ob =>
-        {
-            ob.Property(x => x.Context).HasColumnName("context");
-            ob.Property(x => x.EntityId).HasColumnName("entity_id");
-        });
+        // TODO
+        // НЕ ЗАБЫТЬ РАСКОММЕНТИТЬ когда начнется работа с Owner, мешает работе
+        // builder.OwnsOne(x => x.Owner, ob =>
+        // {
+        //     ob.Property(x => x.Context).HasColumnName("context");
+        //     ob.Property(x => x.EntityId).HasColumnName("entity_id");
+        // });
 
         builder.HasIndex(x => new { x.Status, x.CreatedAt, });
     }

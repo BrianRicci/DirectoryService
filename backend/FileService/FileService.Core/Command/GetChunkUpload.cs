@@ -54,7 +54,8 @@ public sealed class GetChunkUploadHandler
 
         var chunkUploadUrlsResult = await _s3Provider.GenerateChunkUploadUrlAsync(
             mediaAssetResult.Value.RawKey,
-            request.ChunkUploadUrl,
+            request.UploadId,
+            request.ChunkUploadUrl.PartNumber,
             cancellationToken);
         if (chunkUploadUrlsResult.IsFailure)
             return chunkUploadUrlsResult.Error;
