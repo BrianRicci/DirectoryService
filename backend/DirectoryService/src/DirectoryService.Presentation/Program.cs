@@ -1,6 +1,7 @@
 using System.Globalization;
 using DirectoryService.Presentation;
 using DirectoryService.Presentation.Configuration;
+using FileService.Contracts.HttpCommunication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Serilog;
@@ -23,6 +24,8 @@ try
     builder.Configuration.AddJsonFile($"appsettings.{environment}.json", optional: true, reloadOnChange: true);
 
     builder.Services.AddProgramDependencies(builder.Configuration);
+
+    builder.Services.AddFileHttpCommunication(builder.Configuration);
 
     var app = builder.Build();
 
