@@ -21,13 +21,6 @@ export type LocationsResult = {
   totalCount: number;
 };
 
-// export type Envelope<T = unknown> = {
-//   result: T | null;
-//   error: ApiError | null;
-//   isError: boolean;
-//   timeGenerated: string;
-// };
-
 export const locationsApi = {
   getLocations: async (
     request: GetLocationsRequest

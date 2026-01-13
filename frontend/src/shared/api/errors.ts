@@ -1,0 +1,18 @@
+export type ApiError = {
+  messages: ErrorMessage[];
+  type: ErrorType;
+};
+
+export type ErrorMessage = {
+  code: string;
+  message: string;
+  invalidField?: string | null;
+};
+
+export type ErrorType =
+  | "validation"
+  | "not_found"
+  | "conflict"
+  | "failure"
+  | "authentication"
+  | "authorization";
