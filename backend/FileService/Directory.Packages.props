@@ -8,6 +8,8 @@
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.11" />
     <PackageVersion Include="Microsoft.Extensions.Configuration" Version="9.0.11" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.11" />
+    <PackageVersion Include="Microsoft.Extensions.Http" Version="9.0.11" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.11" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Console" Version="9.0.11" />
     <PackageVersion Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.11" />
     <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
@@ -16,6 +18,7 @@
     <PackageVersion Include="ricci.framework" Version="0.0.2" />
     <PackageVersion Include="Ricci.Framework" Version="0.0.2" />
     <PackageVersion Include="ricci.sharedkernel" Version="0.0.1" />
+    <PackageVersion Include="Ricci.SharedKernel" Version="0.0.1" />
     <PackageVersion Include="StyleCop.Analyzers" Version="1.2.0-beta.556" />
     <PackageVersion Include="coverlet.collector" Version="6.0.2" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />

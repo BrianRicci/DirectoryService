@@ -1,5 +1,5 @@
 using CSharpFunctionalExtensions;
-using FileService.Contracts.GetMediaAssetInfo;
+using FileService.Contracts.Dtos.GetMediaAssetInfo;
 using FileService.Domain.Assets;
 using Framework.EndpointResults;
 using Framework.Endpoints;
@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Shared.SharedKernel;
-using FileInfo = FileService.Contracts.GetMediaAssetInfo.FileInfo;
+using FileInfo = FileService.Contracts.Dtos.GetMediaAssetInfo.FileInfo;
 
 namespace FileService.Core.Queries;
 

@@ -1,4 +1,4 @@
-namespace FileService.Contracts.GetMediaAssetsInfo;
+namespace FileService.Contracts.Dtos.GetMediaAssetsInfo;
 
 public record GetMediaAssetsInfoResponse(IEnumerable<GetMediaAssetInfoForBatch> MediaAssets);
 

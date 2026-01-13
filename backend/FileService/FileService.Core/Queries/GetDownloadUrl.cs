@@ -1,6 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
-using FileService.Contracts.GetDownloadUrl;
-using FileService.Contracts.GetMediaAssetInfo;
+using FileService.Contracts.Dtos.GetDownloadUrl;
 using FileService.Domain.Assets;
 using Framework.EndpointResults;
 using Framework.Endpoints;

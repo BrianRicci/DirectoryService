@@ -1,5 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
-using FileService.Contracts.AbortMultipartUpload;
+using FileService.Contracts.Dtos.AbortMultipartUpload;
 using FileService.Domain.Assets;
 using Framework.EndpointResults;
 using Framework.Endpoints;

@@ -1,5 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
-using FileService.Contracts.StartMultipartUpload;
+using FileService.Contracts.Dtos.StartMultipartUpload;
 using FileService.Domain;
 using Framework.EndpointResults;
 using Framework.Endpoints;

@@ -1,5 +1,5 @@
 using CSharpFunctionalExtensions;
-using FileService.Contracts.GetMediaAssetsInfo;
+using FileService.Contracts.Dtos.GetMediaAssetsInfo;
 using FileService.Domain;
 using FileService.Domain.Assets;
 using Framework.EndpointResults;

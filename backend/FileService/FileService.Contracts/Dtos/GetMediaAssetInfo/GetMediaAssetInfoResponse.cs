@@ -1,4 +1,4 @@
-namespace FileService.Contracts.GetMediaAssetInfo;
+namespace FileService.Contracts.Dtos.GetMediaAssetInfo;
 
 public record GetMediaAssetInfoResponse(
     Guid Id,
