@@ -17,14 +17,19 @@ export default function LocationsList() {
     totalCount,
     isPending: getIsPending,
     error,
+    isError,
   } = useLocationsList({ page });
 
   if (getIsPending) {
     return <Spinner />;
   }
 
-  if (error) {
-    return <div className="text-red-500">Ошибка: {error.message}</div>;
+  if (isError) {
+    return (
+      <div className="text-red-500">
+        Ошибка: {error ? error.message : "Неизвестная ошибка"}
+      </div>
+    );
   }
 
   return (

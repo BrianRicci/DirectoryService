@@ -60,7 +60,7 @@ export function CreateLocationDialog({ open, setOpen: setOpenChange }: Props) {
     resolver: zodResolver(createLocationSchema),
   });
 
-  const { createLocation, isPending, error } = useCreateLocation();
+  const { createLocation, isPending, error, isError } = useCreateLocation();
 
   const onSubmit = (data: CreateLocationData) => {
     createLocation(data, {
@@ -69,6 +69,14 @@ export function CreateLocationDialog({ open, setOpen: setOpenChange }: Props) {
         setOpenChange(false);
       },
     });
+  };
+
+  const getErrorMessage = (): string => {
+    if (isError) {
+      return error ? error.message : "Неизвестная ошибка";
+    }
+
+    return "";
   };
 
   return (
@@ -182,7 +190,7 @@ export function CreateLocationDialog({ open, setOpen: setOpenChange }: Props) {
           <DialogFooter className="pt-1">
             {error && (
               <div className="text-sm text-red-500 mt-2 mr-auto">
-                {error.message}
+                {getErrorMessage()}
               </div>
             )}
             <Button disabled={isPending || !isValid} type="submit">
