@@ -27,32 +27,29 @@ public class LocationsController : ControllerBase
     }
     
     [HttpGet]
-    public async Task<ActionResult<GetLocationDto>> Get(
+    public async Task<EndpointResult<GetLocationsDto?>> Get(
         [FromQuery] GetLocationsRequest request,
         [FromServices] GetLocationsHandlerDapper handler,
         CancellationToken cancellationToken)
     {
-        var location = await handler.Handle(request, cancellationToken);
-        return Ok(location);
+        return await handler.Handle(request, cancellationToken);
     }
     
     [HttpGet("{locationId:guid}")]
-    public async Task<ActionResult<GetLocationDto>> GetById(
+    public async Task<EndpointResult<GetLocationDto>> GetById(
         [FromRoute] Guid locationId,
         [FromServices] GetLocationByIdHandler handler,
         CancellationToken cancellationToken)
     {
-        var location = await handler.Handle(new GetLocationByIdRequest(locationId), cancellationToken);
-        return Ok(location);
+        return await handler.Handle(new GetLocationByIdRequest(locationId), cancellationToken);
     }
     
     [HttpGet("{locationId:guid}/dapper")]
-    public async Task<ActionResult<GetLocationDto>> GetByIdDapper(
+    public async Task<EndpointResult<GetLocationDto>> GetByIdDapper(
         [FromRoute] Guid locationId,
         [FromServices] GetByIdHandlerDapper handler,
         CancellationToken cancellationToken)
     {
-        var location = await handler.Handle(new GetLocationByIdRequest(locationId), cancellationToken);
-        return Ok(location);
+        return await handler.Handle(new GetLocationByIdRequest(locationId), cancellationToken);
     }
 }

@@ -1,8 +1,10 @@
 ﻿using System.Data;
+using CSharpFunctionalExtensions;
 using Dapper;
 using DirectoryService.Application.Database;
 using DirectoryService.Contracts.Departments;
 using DirectoryService.Contracts.Locations;
+using Shared.SharedKernel;
 
 namespace DirectoryService.Application.Locations.Queries;
 
@@ -15,7 +17,7 @@ public class GetLocationsHandlerDapper
         _connectionFactory = connectionFactory;
     }
     
-    public async Task<GetLocationsDto?> Handle(GetLocationsRequest query, CancellationToken cancellationToken)
+    public async Task<Result<GetLocationsDto?, Errors>> Handle(GetLocationsRequest query, CancellationToken cancellationToken)
     {
         using var connection = await _connectionFactory.CreateConnectionAsync(cancellationToken);
         
@@ -74,8 +76,8 @@ public class GetLocationsHandlerDapper
                    d.updated_at,
                    COUNT(*) OVER () AS total_count
             FROM locations l
-                JOIN department_locations dl ON dl.location_id = l.location_id
-                JOIN departments d ON d.department_id = dl.department_id
+                LEFT JOIN department_locations dl ON dl.location_id = l.location_id
+                LEFT JOIN departments d ON d.department_id = dl.department_id
             {whereClause}
             ORDER BY l.name
             LIMIT @page_size OFFSET @offset
