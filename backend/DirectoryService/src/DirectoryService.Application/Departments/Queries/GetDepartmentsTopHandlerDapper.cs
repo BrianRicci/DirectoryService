@@ -1,8 +1,10 @@
-﻿using Dapper;
+﻿using CSharpFunctionalExtensions;
+using Dapper;
 using DirectoryService.Application.Database;
 using DirectoryService.Contracts.Departments;
 using DirectoryService.Domain.Shared;
 using Microsoft.Extensions.Caching.Hybrid;
+using Shared.SharedKernel;
 
 namespace DirectoryService.Application.Departments.Queries;
 
@@ -19,7 +21,7 @@ public class GetDepartmentsTopHandlerDapper
         _cache = cache;
     }
 
-    public async Task<GetDepartmentsTopDto?> Handle(CancellationToken cancellationToken)
+    public async Task<Result<GetDepartmentsTopDto?, Errors>> Handle(CancellationToken cancellationToken)
     {
         using var connection = await _connectionFactory.CreateConnectionAsync(cancellationToken);
         
