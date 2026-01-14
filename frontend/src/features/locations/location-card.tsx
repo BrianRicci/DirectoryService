@@ -18,7 +18,7 @@ export default function LocationCard({ location }: Props) {
   };
 
   return (
-    <Card key={location.id} className="bg-slate-900/40 border-slate-700 px-4">
+    <Card className="bg-slate-900/40 border-slate-700 px-4">
       <div className="flex justify-between items-start">
         <div>
           <h3 className="text-lg font-medium text-white">{location.name}</h3>

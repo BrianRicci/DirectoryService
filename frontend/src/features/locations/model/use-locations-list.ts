@@ -9,8 +9,8 @@ export function useLocationsList({ page }: { page: number }) {
   );
 
   return {
-    locations: data?.locations,
-    totalCount: data?.totalCount,
+    locations: data?.result?.locations,
+    totalCount: data?.result?.totalCount,
     isPending,
     error: error instanceof Error ? error : undefined,
     isError,
