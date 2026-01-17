@@ -56,7 +56,7 @@ public class DepartmentController : ControllerBase
     }
     
     [HttpGet("top-positions")]
-    public async Task<ActionResult<GetDepartmentsTopDto?>> GetTopPositions(
+    public async Task<EndpointResult<GetDepartmentsTopDto?>> GetTopPositions(
         [FromServices] GetDepartmentsTopHandlerDapper handler,
         CancellationToken cancellationToken)
     {
@@ -64,7 +64,7 @@ public class DepartmentController : ControllerBase
     }
     
     [HttpGet("roots")]
-    public async Task<ActionResult<GetDepartmentRootsDto?>> GetRoots(
+    public async Task<EndpointResult<GetDepartmentRootsDto?>> GetRoots(
         [FromQuery] GetDepartmentRootsRequest request,
         [FromServices] GetDepartmentRootsHandlerDapper handler,
         CancellationToken cancellationToken)
@@ -73,7 +73,7 @@ public class DepartmentController : ControllerBase
     }
     
     [HttpGet("{parentId:guid}/children")]
-    public async Task<ActionResult<GetDepartmentChildsDto>> GetChilds(
+    public async Task<EndpointResult<GetDepartmentChildsDto>> GetChilds(
         [FromRoute] Guid parentId,
         [FromQuery] PaginationRequest paginationRequest,
         [FromServices] GetDepartmentChildsHandlerDapper handler,

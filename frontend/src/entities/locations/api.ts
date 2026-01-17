@@ -1,6 +1,7 @@
 import { queryOptions } from "@tanstack/react-query";
-import { Address } from "./types";
+import { Address, Location } from "./types";
 import { apiClient } from "@/shared/api/axios-instance";
+import { Envelope } from "@/shared/api/envelope";
 
 export type CreateLocationRequest = {
   name: string;
@@ -21,32 +22,35 @@ export type LocationsResult = {
   totalCount: number;
 };
 
-// export type Envelope<T = unknown> = {
-//   result: T | null;
-//   error: ApiError | null;
-//   isError: boolean;
-//   timeGenerated: string;
-// };
-
 export const locationsApi = {
   getLocations: async (
     request: GetLocationsRequest
-  ): Promise<LocationsResult> => {
-    const response = await apiClient.get<LocationsResult>("/locations", {
-      params: request,
-    });
+  ): Promise<Envelope<LocationsResult>> => {
+    const response = await apiClient.get<Envelope<LocationsResult>>(
+      "/locations",
+      {
+        params: request,
+      }
+    );
 
     return response.data;
   },
 
-  createLocation: async (request: CreateLocationRequest): Promise<Location> => {
-    const response = await apiClient.post("/locations", request);
+  createLocation: async (
+    request: CreateLocationRequest
+  ): Promise<Envelope<Location>> => {
+    const response = await apiClient.post<Envelope<Location>>(
+      "/locations",
+      request
+    );
 
     return response.data;
   },
 
-  deleteLocation: async (locationId: string): Promise<Location> => {
-    const response = await apiClient.delete(`/locations/${locationId}`);
+  deleteLocation: async (locationId: string): Promise<Envelope<Location>> => {
+    const response = await apiClient.delete<Envelope<Location>>(
+      `/locations/${locationId}`
+    );
 
     return response.data;
   },

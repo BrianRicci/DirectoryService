@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using CSharpFunctionalExtensions;
 using Dapper;
 using DirectoryService.Application.Database;
 using DirectoryService.Contracts.Departments;
@@ -6,6 +7,7 @@ using DirectoryService.Contracts.Locations;
 using DirectoryService.Domain.Departments;
 using DirectoryService.Domain.Locations;
 using Microsoft.EntityFrameworkCore;
+using Shared.SharedKernel;
 
 namespace DirectoryService.Application.Locations.Queries;
 
@@ -18,14 +20,14 @@ public class GetLocationByIdHandler
         _readDbContext = readDbContext;
     }
     
-    public async Task<GetLocationDto?> Handle(GetLocationByIdRequest query, CancellationToken cancellationToken)
+    public async Task<Result<GetLocationDto, Errors>> Handle(GetLocationByIdRequest query, CancellationToken cancellationToken)
     {
         var location = await _readDbContext.LocationsRead
             .FirstOrDefaultAsync(l => l.Id == new LocationId(query.LocationId), cancellationToken);
 
         if (location is null)
         {
-            return null;
+            return GeneralErrors.NotFound(query.LocationId, "Location").ToErrors();
         }
 
         return new GetLocationDto()
@@ -55,7 +57,7 @@ public class GetByIdHandlerDapper
         _connectionFactory = connectionFactory;
     }
     
-    public async Task<GetLocationDto?> Handle(GetLocationByIdRequest query, CancellationToken cancellationToken)
+    public async Task<Result<GetLocationDto, Errors>> Handle(GetLocationByIdRequest query, CancellationToken cancellationToken)
     {
         using var connection = await _connectionFactory.CreateConnectionAsync(cancellationToken);
         
@@ -106,6 +108,11 @@ public class GetByIdHandlerDapper
 
                 return locationDto;
             });
+        
+        if (locationDto is null)
+        {
+            return GeneralErrors.NotFound(query.LocationId, "Location").ToErrors();
+        }
         
         return locationDto;
     }
