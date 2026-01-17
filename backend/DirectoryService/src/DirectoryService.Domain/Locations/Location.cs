@@ -86,4 +86,15 @@ public class Location : ISoftDeletable
         
         return Result.Success(this);
     }
+
+    public UnitResult<Error> Update(LocationName name, LocationAddress address, LocationTimezone timezone)
+    {
+        Name = name;
+        Address = address;
+        Timezone = timezone;
+        
+        UpdatedAt = DateTime.UtcNow;
+        
+        return UnitResult.Success<Error>();
+    }
 }

@@ -9,6 +9,7 @@ using DirectoryService.Application.Departments.Command.Update;
 using DirectoryService.Application.Departments.Queries;
 using DirectoryService.Application.Locations;
 using DirectoryService.Application.Locations.Command.Create;
+using DirectoryService.Application.Locations.Command.Update;
 using DirectoryService.Application.Locations.Queries;
 using DirectoryService.Application.Positions;
 using DirectoryService.Application.Positions.Create;
@@ -84,6 +85,7 @@ public static class DependencyInjection
         services.AddScoped<IValidator<UpdateDepartmentLocationsCommand>, UpdateDepartmentLocationsValidator>();
         services.AddScoped<IValidator<MoveDepartmentCommand>, MoveDepartmentValidator>();
         services.AddScoped<IValidator<DeleteDepartmentCommand>, DeleteDepartmentValidator>();
+        services.AddScoped<IValidator<UpdateLocationCommand>, UpdateLocationValidator>();
         
         services.AddScoped<CreateLocationHandler>();
         services.AddScoped<CreateDepartmentHandler>();
@@ -98,6 +100,7 @@ public static class DependencyInjection
         services.AddScoped<GetDepartmentChildsHandlerDapper>();
         services.AddScoped<DeleteDepartmentHandler>();
         services.AddScoped<DeleteInactiveHandler>();
+        services.AddScoped<UpdateLocationHandler>();
         
         services.AddHostedService<InactiveDepartmentsCleanerBackgroundService>();
 

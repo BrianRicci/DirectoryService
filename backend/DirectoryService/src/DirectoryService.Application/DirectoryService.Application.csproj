@@ -23,7 +23,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Locations\Command\" />
+      <Folder Include="Locations\Command\Delete\" />
     </ItemGroup>
 
 </Project>

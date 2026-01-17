@@ -9,6 +9,8 @@ namespace DirectoryService.Application.Locations;
 public interface ILocationsRepository
 {
     Task<Result<Guid, Error>> AddAsync(Location location, CancellationToken cancellationToken);
+    
+    Task<Result<Location, Error>> GetByIdAsync(LocationId locationId, CancellationToken cancellationToken);
 
     Task<UnitResult<Error>> SoftDeleteLocationsRelatedToDepartmentAsync(
         DepartmentId departmentId, CancellationToken cancellationToken);

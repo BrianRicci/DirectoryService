@@ -1,7 +1,9 @@
 ﻿using Core.Abstractions;
 using DirectoryService.Application.Locations.Command.Create;
+using DirectoryService.Application.Locations.Command.Update;
 using DirectoryService.Application.Locations.Queries;
 using DirectoryService.Contracts.Locations;
+using DirectoryService.Domain.Locations;
 using Framework.EndpointResults;
 using Microsoft.AspNetCore.Mvc;
 using Shared.SharedKernel;
@@ -23,6 +25,18 @@ public class LocationsController : ControllerBase
     {
         var command = new CreateLocationCommand(request);
 
+        return await handler.Handle(command, cancellationToken);
+    }
+    
+    [HttpPatch("{locationId}")]
+    public async Task<EndpointResult<Location>> Update(
+        [FromRoute] Guid locationId,
+        [FromServices] ICommandHandler<Location, UpdateLocationCommand> handler,
+        [FromBody] UpdateLocationRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = new UpdateLocationCommand(locationId, request);
+        
         return await handler.Handle(command, cancellationToken);
     }
     

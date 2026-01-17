@@ -39,6 +39,18 @@ public class LocationsRepository : ILocationsRepository
         }
     }
 
+    public async Task<Result<Location, Error>> GetByIdAsync(LocationId locationId, CancellationToken cancellationToken)
+    {
+        var location = await _dbContext.Locations
+            .FirstOrDefaultAsync(d => d.Id == locationId && d.IsActive, cancellationToken);
+
+        if (location is null)
+            return GeneralErrors.NotFound(locationId.Value);
+
+        return location;
+    }
+
+
     public async Task<UnitResult<Error>> SoftDeleteLocationsRelatedToDepartmentAsync(
         DepartmentId departmentId, CancellationToken cancellationToken)
     {
