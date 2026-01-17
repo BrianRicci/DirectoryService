@@ -22,8 +22,4 @@
       <PackageReference Include="Scrutor" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Locations\Command\Delete\" />
-    </ItemGroup>
-
 </Project>

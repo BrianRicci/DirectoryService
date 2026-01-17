@@ -11,6 +11,8 @@ public interface ILocationsRepository
     Task<Result<Guid, Error>> AddAsync(Location location, CancellationToken cancellationToken);
     
     Task<Result<Location, Error>> GetByIdAsync(LocationId locationId, CancellationToken cancellationToken);
+    
+    Task<Result<Location, Error>> GetByIdWithLock(LocationId locationId, CancellationToken cancellationToken);
 
     Task<UnitResult<Error>> SoftDeleteLocationsRelatedToDepartmentAsync(
         DepartmentId departmentId, CancellationToken cancellationToken);
@@ -20,4 +22,6 @@ public interface ILocationsRepository
     Task<bool> IsAddressExistsAsync(LocationAddress address, CancellationToken cancellationToken);
 
     Task<bool> IsAllExistsAsync(List<LocationId> locationIds, CancellationToken cancellationToken);
+    
+    Task<UnitResult<Error>> SaveChangesAsync(CancellationToken cancellationToken);
 }

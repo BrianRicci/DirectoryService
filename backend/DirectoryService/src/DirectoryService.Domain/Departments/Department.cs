@@ -103,7 +103,7 @@ public class Department : ISoftDeletable
             departmentLocations);
     }
     
-    public UnitResult<Error> Delete()
+    public UnitResult<Error> SoftDelete()
     {
         var newPath = Path.AddDeletedStatus();
         if (newPath.IsFailure)

@@ -1,5 +1,6 @@
 ﻿using Core.Abstractions;
 using DirectoryService.Application.Locations.Command.Create;
+using DirectoryService.Application.Locations.Command.Delete;
 using DirectoryService.Application.Locations.Command.Update;
 using DirectoryService.Application.Locations.Queries;
 using DirectoryService.Contracts.Locations;
@@ -65,5 +66,16 @@ public class LocationsController : ControllerBase
         CancellationToken cancellationToken)
     {
         return await handler.Handle(new GetLocationByIdRequest(locationId), cancellationToken);
+    }
+    
+    [HttpDelete("{locationId:guid}")]
+    public async Task<EndpointResult<Guid>> Delete(
+        [FromRoute] Guid locationId,
+        [FromServices] ICommandHandler<Guid, SoftDeleteLocationCommand> handler,
+        CancellationToken cancellationToken)
+    {
+        var command = new SoftDeleteLocationCommand(locationId);
+        
+        return await handler.Handle(command, cancellationToken);
     }
 }

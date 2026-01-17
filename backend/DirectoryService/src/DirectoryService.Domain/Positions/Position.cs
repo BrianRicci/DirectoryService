@@ -59,7 +59,7 @@ public class Position : ISoftDeletable
         return new Position(id, name, description, departmentPositions);
     }
 
-    public UnitResult<Error> Delete()
+    public UnitResult<Error> SoftDelete()
     {
         IsActive = false;
         UpdatedAt = DateTime.UtcNow;

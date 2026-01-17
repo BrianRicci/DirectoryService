@@ -61,7 +61,7 @@ public class Location : ISoftDeletable
         return new Location(id, name, address, timezone);
     }
     
-    public UnitResult<Error> Delete()
+    public UnitResult<Error> SoftDelete()
     {
         IsActive = false;
         UpdatedAt = DateTime.UtcNow;
