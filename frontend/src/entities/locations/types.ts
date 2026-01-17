@@ -1,5 +1,5 @@
 export type Location = {
-  id: string;
+  locationId: string;
   name: string;
   address: Address;
   timezone: string;

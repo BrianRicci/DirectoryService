@@ -14,7 +14,7 @@ export default function LocationCard({ location }: Props) {
     e.preventDefault();
     e.stopPropagation();
 
-    deleteLocation(location.id);
+    deleteLocation(location.locationId);
   };
 
   return (
