@@ -56,10 +56,27 @@ public class LocationsRepository : ILocationsRepository
 
     public async Task<Result<Location, Error>> GetByIdWithLock(LocationId locationId, CancellationToken cancellationToken)
     {
-        var location = await _dbContext.Locations
+        var location = (await _dbContext.Locations
             .FromSqlInterpolated(
-                $"SELECT * FROM locations WHERE location_id = {locationId.Value} AND is_active = true FOR UPDATE")
-            .FirstOrDefaultAsync(cancellationToken);
+                $"""
+                 SELECT location_id,
+                        created_at,
+                        deleted_at,
+                        is_active,
+                        name,
+                        timezone,
+                        updated_at,
+                        country AS "Address_Country",
+                        region AS "Address_Region",
+                        city AS "Address_City",
+                        street AS "Address_Street",
+                        house AS "Address_House"
+                 FROM locations 
+                 WHERE location_id = {locationId.Value} AND is_active = true 
+                 FOR UPDATE
+                """)
+            .ToListAsync(cancellationToken))
+            .FirstOrDefault();
 
         if (location is null)
             return GeneralErrors.NotFound(locationId.Value);
@@ -67,13 +84,14 @@ public class LocationsRepository : ILocationsRepository
         return location;
     }
     
-    public async Task<Result<List<Location>, Error>> GetRelatedDepartmentsAsync(LocationId locationId, CancellationToken cancellationToken)
+    public async Task<Result<int, Error>> GetRelatedDepartmentsAsync(
+        LocationId locationId, CancellationToken cancellationToken)
     {
-        var locations = await _dbContext.Locations
-            .FromSqlInterpolated($"SELECT * FROM department_locations dl WHERE dl.location_id = {locationId.Value}")
-            .ToListAsync(cancellationToken);
+        int relatedDepartmentsCount = await _dbContext.DepartmentLocations.FromSqlInterpolated(
+            $"SELECT * FROM department_locations dl WHERE dl.location_id = {locationId.Value}")
+            .CountAsync(cancellationToken);
         
-        return locations;
+        return relatedDepartmentsCount;
     }
 
     public async Task<UnitResult<Error>> SoftDeleteLocationsRelatedToDepartmentAsync(

@@ -62,22 +62,24 @@ public class SoftDeleteLocationHandler
             return locationResult.Error.ToErrors();
         }
 
-        var relatedDepartmentsResult =
-            await _locationsRepository.GetRelatedDepartmentsAsync(locationId, cancellationToken);
-        if (relatedDepartmentsResult.IsFailure)
-        {
-            _logger.LogInformation("Failed to get related departments.");
-            transactionScope.Rollback();
-            return relatedDepartmentsResult.Error.ToErrors();
-        }
-
-        if (relatedDepartmentsResult.Value.Count > 0)
-        {
-            _logger.LogInformation("Location has related departments.");
-            transactionScope.Rollback();
-            return GeneralErrors.NotFound(locationId.Value).ToErrors();
-        }
+        // Ограничение, для запрета удалять локацию, если у нее есть связь с департаментом
+        // решил пока без ограничения сделать, так как для него придется менять еще логику в хэндлерах департаментов
         
+        // var relatedDepartmentsCountResult =
+        //     await _locationsRepository.GetRelatedDepartmentsAsync(locationId, cancellationToken);
+        // if (relatedDepartmentsCountResult.IsFailure)
+        // {
+        //     _logger.LogInformation("Failed to get related departments.");
+        //     transactionScope.Rollback();
+        //     return relatedDepartmentsCountResult.Error.ToErrors();
+        // }
+        //
+        // if (relatedDepartmentsCountResult.Value > 0)
+        // {
+        //     _logger.LogInformation("Location has related departments.");
+        //     transactionScope.Rollback();
+        //     return GeneralErrors.NotFound(locationId.Value).ToErrors();
+        // }
         var location = locationResult.Value;
         
         location.SoftDelete();
