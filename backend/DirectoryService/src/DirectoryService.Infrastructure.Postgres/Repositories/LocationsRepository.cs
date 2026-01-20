@@ -57,7 +57,7 @@ public class LocationsRepository : ILocationsRepository
     public async Task<Result<Location, Error>> GetByIdWithLock(LocationId locationId, CancellationToken cancellationToken)
     {
         var location = await _dbContext.Locations
-            .FromSql(
+            .FromSqlInterpolated(
                 $"SELECT * FROM locations WHERE location_id = {locationId.Value} AND is_active = true FOR UPDATE")
             .FirstOrDefaultAsync(cancellationToken);
 
@@ -65,6 +65,15 @@ public class LocationsRepository : ILocationsRepository
             return GeneralErrors.NotFound(locationId.Value);
 
         return location;
+    }
+    
+    public async Task<Result<List<Location>, Error>> GetRelatedDepartmentsAsync(LocationId locationId, CancellationToken cancellationToken)
+    {
+        var locations = await _dbContext.Locations
+            .FromSqlInterpolated($"SELECT * FROM department_locations dl WHERE dl.location_id = {locationId.Value}")
+            .ToListAsync(cancellationToken);
+        
+        return locations;
     }
 
     public async Task<UnitResult<Error>> SoftDeleteLocationsRelatedToDepartmentAsync(

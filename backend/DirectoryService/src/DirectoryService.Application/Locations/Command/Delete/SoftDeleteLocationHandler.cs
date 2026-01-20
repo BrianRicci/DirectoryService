@@ -51,13 +51,31 @@ public class SoftDeleteLocationHandler
         
         using var transactionScope = transactionScopeResult.Value;
 
+        var locationId = new LocationId(command.LocationId);
+
         var locationResult =
-            await _locationsRepository.GetByIdWithLock(new LocationId(command.LocationId), cancellationToken);
+            await _locationsRepository.GetByIdWithLock(locationId, cancellationToken);
         if (locationResult.IsFailure)
         {
             _logger.LogInformation("Location was not found.");
             transactionScope.Rollback();
             return locationResult.Error.ToErrors();
+        }
+
+        var relatedDepartmentsResult =
+            await _locationsRepository.GetRelatedDepartmentsAsync(locationId, cancellationToken);
+        if (relatedDepartmentsResult.IsFailure)
+        {
+            _logger.LogInformation("Failed to get related departments.");
+            transactionScope.Rollback();
+            return relatedDepartmentsResult.Error.ToErrors();
+        }
+
+        if (relatedDepartmentsResult.Value.Count > 0)
+        {
+            _logger.LogInformation("Location has related departments.");
+            transactionScope.Rollback();
+            return GeneralErrors.NotFound(locationId.Value).ToErrors();
         }
         
         var location = locationResult.Value;

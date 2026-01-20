@@ -14,6 +14,9 @@ public interface ILocationsRepository
     
     Task<Result<Location, Error>> GetByIdWithLock(LocationId locationId, CancellationToken cancellationToken);
 
+    Task<Result<List<Location>, Error>> GetRelatedDepartmentsAsync(
+        LocationId locationId, CancellationToken cancellationToken);
+    
     Task<UnitResult<Error>> SoftDeleteLocationsRelatedToDepartmentAsync(
         DepartmentId departmentId, CancellationToken cancellationToken);
 
