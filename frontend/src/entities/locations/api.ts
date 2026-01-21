@@ -9,6 +9,13 @@ export type CreateLocationRequest = {
   timezone: string;
 };
 
+export type UpdateLocationRequest = {
+  locationId: string;
+  name: string;
+  locationAddress: Address;
+  timezone: string;
+};
+
 export type GetLocationsRequest = {
   search?: string;
   departmentIds?: string[];
@@ -24,32 +31,45 @@ export type LocationsResult = {
 
 export const locationsApi = {
   getLocations: async (
-    request: GetLocationsRequest
+    request: GetLocationsRequest,
   ): Promise<Envelope<LocationsResult>> => {
     const response = await apiClient.get<Envelope<LocationsResult>>(
       "/locations",
       {
         params: request,
-      }
+      },
     );
 
     return response.data;
   },
 
   createLocation: async (
-    request: CreateLocationRequest
+    request: CreateLocationRequest,
   ): Promise<Envelope<Location>> => {
     const response = await apiClient.post<Envelope<Location>>(
       "/locations",
-      request
+      request,
     );
 
     return response.data;
   },
 
+  updateLocation: async ({
+    locationId,
+    name,
+    locationAddress,
+    timezone,
+  }: UpdateLocationRequest): Promise<Envelope<Location>> => {
+    const response = await apiClient.patch<Envelope<Location>>(
+      `/locations/${locationId}`,
+      { name, locationAddress, timezone },
+    );
+    return response.data;
+  },
+
   deleteLocation: async (locationId: string): Promise<Envelope<Location>> => {
     const response = await apiClient.delete<Envelope<Location>>(
-      `/locations/${locationId}`
+      `/locations/${locationId}`,
     );
 
     return response.data;
