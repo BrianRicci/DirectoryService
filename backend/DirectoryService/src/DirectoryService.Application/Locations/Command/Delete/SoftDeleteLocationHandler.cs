@@ -1,4 +1,5 @@
-﻿using Core.Validation;
+﻿using Core.Abstractions;
+using Core.Validation;
 using CSharpFunctionalExtensions;
 using DirectoryService.Application.Database;
 using DirectoryService.Domain.Locations;
@@ -10,7 +11,7 @@ using Shared.SharedKernel;
 
 namespace DirectoryService.Application.Locations.Command.Delete;
 
-public class SoftDeleteLocationHandler
+public class SoftDeleteLocationHandler : ICommandHandler<Guid, SoftDeleteLocationCommand>
 {
     private readonly ILocationsRepository _locationsRepository;
     private readonly ITransactionManager _transactionManager;
