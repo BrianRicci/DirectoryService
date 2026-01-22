@@ -11,7 +11,6 @@ import { UpdateLocationDialog } from "./update-location-dialog";
 import { Location } from "@/entities/locations/types";
 
 export default function LocationsList() {
-  const [page, setPage] = useState(1);
   const [createOpen, setCreateOpen] = useState(false);
   const [updateOpen, setUpdateOpen] = useState(false);
 
@@ -21,13 +20,17 @@ export default function LocationsList() {
 
   const {
     locations,
+    totalPages,
     totalCount,
-    isPending: getIsPending,
+    isPending,
     error,
     isError,
-  } = useLocationsList({ page });
+    refetch,
+    isFetchingNextPage,
+    cursorRef,
+  } = useLocationsList();
 
-  if (getIsPending) {
+  if (isPending) {
     return <Spinner />;
   }
 
@@ -81,6 +84,10 @@ export default function LocationsList() {
           onOpenChange={setUpdateOpen}
         />
       )}
+
+      <div ref={cursorRef} className="flex justify-center py-4">
+        {isFetchingNextPage && <Spinner />}
+      </div>
     </div>
   );
 }

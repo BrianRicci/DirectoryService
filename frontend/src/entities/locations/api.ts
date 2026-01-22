@@ -1,7 +1,8 @@
-import { queryOptions } from "@tanstack/react-query";
+import { infiniteQueryOptions, queryOptions } from "@tanstack/react-query";
 import { Address, Location } from "./types";
 import { apiClient } from "@/shared/api/axios-instance";
 import { Envelope } from "@/shared/api/envelope";
+import { PaginationResponse } from "@/shared/api/types";
 
 export type CreateLocationRequest = {
   name: string;
@@ -24,21 +25,15 @@ export type GetLocationsRequest = {
   pageSize?: number;
 };
 
-export type LocationsResult = {
-  locations: Location[];
-  totalCount: number;
-};
-
 export const locationsApi = {
   getLocations: async (
     request: GetLocationsRequest,
-  ): Promise<Envelope<LocationsResult>> => {
-    const response = await apiClient.get<Envelope<LocationsResult>>(
-      "/locations",
-      {
-        params: request,
-      },
-    );
+  ): Promise<Envelope<PaginationResponse<Location>>> => {
+    const response = await apiClient.get<
+      Envelope<PaginationResponse<Location>>
+    >("/locations", {
+      params: request,
+    });
 
     return response.data;
   },
@@ -89,6 +84,38 @@ export const locationsQueryOptions = {
     return queryOptions({
       queryFn: () => locationsApi.getLocations({ page, pageSize: pageSize }),
       queryKey: [locationsQueryOptions.baseKey, { page, pageSize }],
+    });
+  },
+
+  getLocationsInfiniteOptions: ({ pageSize }: { pageSize: number }) => {
+    return infiniteQueryOptions({
+      queryKey: [locationsQueryOptions.baseKey],
+      queryFn: ({ pageParam }) => {
+        return locationsApi.getLocations({ page: pageParam, pageSize });
+      },
+      initialPageParam: 1,
+      getNextPageParam: (response) => {
+        const page = response?.result?.page;
+        const totalPages = response?.result?.totalPages;
+
+        if (
+          !response ||
+          page === undefined ||
+          totalPages === undefined ||
+          page >= totalPages
+        ) {
+          return undefined;
+        }
+
+        return page + 1;
+      },
+      select: (data): PaginationResponse<Location> => ({
+        items: data.pages.flatMap((page) => page?.result?.items ?? []),
+        totalCount: data?.pages[0]?.result?.totalCount ?? 0,
+        page: data?.pages[0]?.result?.page ?? 1,
+        pageSize: data?.pages[0]?.result?.pageSize ?? pageSize,
+        totalPages: data?.pages[0]?.result?.totalPages ?? 0,
+      }),
     });
   },
 };
