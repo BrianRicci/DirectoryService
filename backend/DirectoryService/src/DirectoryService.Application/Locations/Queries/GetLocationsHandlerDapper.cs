@@ -44,10 +44,8 @@ public class GetLocationsHandlerDapper
             parameters.Add("department_ids", query.DepartmentIds);
         }
 
-        var pagination = query.Pagination;
-
-        parameters.Add("offset", (pagination.Page - 1) * pagination.PageSize, DbType.Int32);
-        parameters.Add("page_size", pagination.PageSize, DbType.Int32);
+        parameters.Add("offset", (query.Page - 1) * query.PageSize, DbType.Int32);
+        parameters.Add("page_size", query.PageSize, DbType.Int32);
         
         string whereClause = conditions.Count > 0 ? "WHERE " + string.Join(" AND ", conditions) : string.Empty;
 
@@ -110,9 +108,9 @@ public class GetLocationsHandlerDapper
                 return location;
             });
 
-        long totalPages = (long)Math.Ceiling(locationsCount / (double)pagination.PageSize);
+        long totalPages = (long)Math.Ceiling(locationsCount / (double)query.PageSize);
         
         return new PaginationResponse<GetLocationDto>(
-            locations.ToList(), totalCount ?? 0, pagination.Page, pagination.PageSize, totalPages);
+            locations.ToList(), totalCount ?? 0, query.Page, query.PageSize, totalPages);
     }
 }

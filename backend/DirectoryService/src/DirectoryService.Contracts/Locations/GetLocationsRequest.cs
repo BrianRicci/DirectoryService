@@ -7,7 +7,5 @@ public record GetLocationsRequest(
     string? Search,
     List<Guid>? DepartmentIds,
     bool? IsActive,
-    PaginationRequest? Pagination)
-{
-    public PaginationRequest Pagination { get; } = Pagination ?? new PaginationRequest();
-}
+    int Page = 1,
+    int PageSize = 20);
