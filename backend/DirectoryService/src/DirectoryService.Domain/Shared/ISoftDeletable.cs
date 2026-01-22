@@ -5,7 +5,7 @@ namespace DirectoryService.Domain.Shared;
 
 public interface ISoftDeletable
 {
-    UnitResult<Error> Delete();
+    UnitResult<Error> SoftDelete();
 
     UnitResult<Error> Restore();
 }

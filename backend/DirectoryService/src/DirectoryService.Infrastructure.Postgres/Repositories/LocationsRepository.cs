@@ -7,6 +7,7 @@ using DirectoryService.Domain.DepartmentLocations;
 using DirectoryService.Domain.Departments;
 using DirectoryService.Domain.Locations;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Shared.SharedKernel;
 
 namespace DirectoryService.Infrastructure.Postgres.Repositories;
@@ -15,13 +16,16 @@ public class LocationsRepository : ILocationsRepository
 {
     private readonly DirectoryServiceDbContext _dbContext;
     private readonly IDbConnectionFactory _connectionFactory;
+    private readonly ILogger<LocationsRepository> _logger;
 
     public LocationsRepository(
         DirectoryServiceDbContext dbContext,
-        IDbConnectionFactory connectionFactory)
+        IDbConnectionFactory connectionFactory,
+        ILogger<LocationsRepository> logger)
     {
         _dbContext = dbContext;
         _connectionFactory = connectionFactory;
+        _logger = logger;
     }
 
     public async Task<Result<Guid, Error>> AddAsync(Location location, CancellationToken cancellationToken)
@@ -37,6 +41,57 @@ public class LocationsRepository : ILocationsRepository
         {
             return GeneralErrors.ValueIsInvalid();
         }
+    }
+
+    public async Task<Result<Location, Error>> GetByIdAsync(LocationId locationId, CancellationToken cancellationToken)
+    {
+        var location = await _dbContext.Locations
+            .FirstOrDefaultAsync(d => d.Id == locationId && d.IsActive, cancellationToken);
+
+        if (location is null)
+            return GeneralErrors.NotFound(locationId.Value);
+
+        return location;
+    }
+
+    public async Task<Result<Location, Error>> GetByIdWithLock(LocationId locationId, CancellationToken cancellationToken)
+    {
+        var location = (await _dbContext.Locations
+            .FromSqlInterpolated(
+                $"""
+                 SELECT location_id,
+                        created_at,
+                        deleted_at,
+                        is_active,
+                        name,
+                        timezone,
+                        updated_at,
+                        country AS "Address_Country",
+                        region AS "Address_Region",
+                        city AS "Address_City",
+                        street AS "Address_Street",
+                        house AS "Address_House"
+                 FROM locations 
+                 WHERE location_id = {locationId.Value} AND is_active = true 
+                 FOR UPDATE
+                """)
+            .ToListAsync(cancellationToken))
+            .FirstOrDefault();
+
+        if (location is null)
+            return GeneralErrors.NotFound(locationId.Value);
+
+        return location;
+    }
+    
+    public async Task<Result<int, Error>> GetRelatedDepartmentsAsync(
+        LocationId locationId, CancellationToken cancellationToken)
+    {
+        int relatedDepartmentsCount = await _dbContext.DepartmentLocations.FromSqlInterpolated(
+            $"SELECT * FROM department_locations dl WHERE dl.location_id = {locationId.Value}")
+            .CountAsync(cancellationToken);
+        
+        return relatedDepartmentsCount;
     }
 
     public async Task<UnitResult<Error>> SoftDeleteLocationsRelatedToDepartmentAsync(
@@ -107,5 +162,20 @@ public class LocationsRepository : ILocationsRepository
             .CountAsync(cancellationToken) == locationIds.Count;
 
         return isAllExists;
+    }
+    
+    public async Task<UnitResult<Error>> SaveChangesAsync(CancellationToken cancellationToken)
+    {
+        try
+        {
+            await _dbContext.SaveChangesAsync(cancellationToken);
+
+            return UnitResult.Success<Error>();
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Failed to save changes");
+            return GeneralErrors.Failure("Failed to save changes");
+        }
     }
 }

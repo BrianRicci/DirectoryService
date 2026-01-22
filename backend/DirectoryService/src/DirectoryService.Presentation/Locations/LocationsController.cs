@@ -1,7 +1,10 @@
 ﻿using Core.Abstractions;
 using DirectoryService.Application.Locations.Command.Create;
+using DirectoryService.Application.Locations.Command.Delete;
+using DirectoryService.Application.Locations.Command.Update;
 using DirectoryService.Application.Locations.Queries;
 using DirectoryService.Contracts.Locations;
+using DirectoryService.Domain.Locations;
 using Framework.EndpointResults;
 using Microsoft.AspNetCore.Mvc;
 using Shared.SharedKernel;
@@ -23,6 +26,18 @@ public class LocationsController : ControllerBase
     {
         var command = new CreateLocationCommand(request);
 
+        return await handler.Handle(command, cancellationToken);
+    }
+    
+    [HttpPatch("{locationId}")]
+    public async Task<EndpointResult<Location>> Update(
+        [FromRoute] Guid locationId,
+        [FromServices] ICommandHandler<Location, UpdateLocationCommand> handler,
+        [FromBody] UpdateLocationRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = new UpdateLocationCommand(locationId, request);
+        
         return await handler.Handle(command, cancellationToken);
     }
     
@@ -51,5 +66,16 @@ public class LocationsController : ControllerBase
         CancellationToken cancellationToken)
     {
         return await handler.Handle(new GetLocationByIdRequest(locationId), cancellationToken);
+    }
+    
+    [HttpDelete("{locationId:guid}")]
+    public async Task<EndpointResult<Guid>> Delete(
+        [FromRoute] Guid locationId,
+        [FromServices] ICommandHandler<Guid, SoftDeleteLocationCommand> handler,
+        CancellationToken cancellationToken)
+    {
+        var command = new SoftDeleteLocationCommand(locationId);
+        
+        return await handler.Handle(command, cancellationToken);
     }
 }

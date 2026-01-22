@@ -1,0 +1,23 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Launch Firefox",
+      "type": "firefox",
+      "request": "launch",
+      "reAttach": true,
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceFolder}",
+      "pathMappings": [
+        {
+          "url": "webpack:///src/",
+          "path": "${webRoot}/src/"
+        },
+        {
+          "url": "webpack:///./",
+          "path": "${webRoot}/"
+        }
+      ]
+    }
+  ]
+}

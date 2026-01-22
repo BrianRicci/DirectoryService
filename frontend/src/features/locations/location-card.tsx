@@ -5,16 +5,24 @@ import { Location } from "@/entities/locations/types";
 
 type Props = {
   location: Location;
+  onEdit: () => void;
 };
 
-export default function LocationCard({ location }: Props) {
+export default function LocationCard({ location, onEdit }: Props) {
   const { deleteLocation, isPending } = useDeleteLocation();
 
   const handleDelete = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
 
-    deleteLocation(location.id);
+    deleteLocation(location.locationId);
+  };
+
+  const handleEdit = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    onEdit();
   };
 
   return (
@@ -46,7 +54,9 @@ export default function LocationCard({ location }: Props) {
       </div>
 
       <div className="mt-4 flex gap-2">
-        <Button variant="ghost">Редактировать</Button>
+        <Button variant="ghost" onClick={handleEdit}>
+          Редактировать
+        </Button>
         <Button
           variant="destructive"
           onClick={handleDelete}

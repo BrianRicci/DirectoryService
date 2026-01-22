@@ -90,7 +90,7 @@ public class DeleteDepartmentHandler : ICommandHandler<Guid, DeleteDepartmentCom
             return softDeletePositionsResult.Error.ToErrors();
         }
         
-        department.Delete();
+        department.SoftDelete();
         
         var saveChanges = await _departmentsRepository.SaveChangesAsync(cancellationToken);
         if (saveChanges.IsFailure)
