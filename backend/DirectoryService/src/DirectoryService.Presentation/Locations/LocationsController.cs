@@ -3,6 +3,7 @@ using DirectoryService.Application.Locations.Command.Create;
 using DirectoryService.Application.Locations.Command.Delete;
 using DirectoryService.Application.Locations.Command.Update;
 using DirectoryService.Application.Locations.Queries;
+using DirectoryService.Contracts;
 using DirectoryService.Contracts.Locations;
 using DirectoryService.Domain.Locations;
 using Framework.EndpointResults;
@@ -42,7 +43,7 @@ public class LocationsController : ControllerBase
     }
     
     [HttpGet]
-    public async Task<EndpointResult<GetLocationsDto?>> Get(
+    public async Task<EndpointResult<PaginationResponse<GetLocationDto>?>> Get(
         [FromQuery] GetLocationsRequest request,
         [FromServices] GetLocationsHandlerDapper handler,
         CancellationToken cancellationToken)
