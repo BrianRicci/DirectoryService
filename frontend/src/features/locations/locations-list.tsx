@@ -9,9 +9,11 @@ import { useLocationsList } from "./model/use-locations-list";
 import LocationCard from "./location-card";
 import { UpdateLocationDialog } from "./update-location-dialog";
 import { Location } from "@/entities/locations/types";
+import { useDebounce } from "use-debounce";
 
 export default function LocationsList() {
   const [search, setSearch] = useState("");
+  const [debouncedSearch] = useDebounce(search, 300);
 
   const [createOpen, setCreateOpen] = useState(false);
   const [updateOpen, setUpdateOpen] = useState(false);
@@ -30,7 +32,7 @@ export default function LocationsList() {
     refetch,
     isFetchingNextPage,
     cursorRef,
-  } = useLocationsList({ search });
+  } = useLocationsList({ search: debouncedSearch });
 
   if (isError) {
     return (
