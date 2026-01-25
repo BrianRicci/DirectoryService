@@ -5,15 +5,18 @@ import { Input } from "@/shared/components/ui/input";
 import { Spinner } from "@/shared/components/ui/spinner";
 import { useState } from "react";
 import { CreateLocationDialog } from "./create-location-dialog";
-import { useLocationsList } from "./model/use-locations-list";
+import { PAGE_SIZE, useLocationsList } from "./model/use-locations-list";
 import LocationCard from "./location-card";
 import { UpdateLocationDialog } from "./update-location-dialog";
 import { Location } from "@/entities/locations/types";
 import { useDebounce } from "use-debounce";
+import { Select } from "@/shared/components/ui/select";
+import { LocationsFilter } from "./locations-filters";
 
 export default function LocationsList() {
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebounce(search, 300);
+  const [isActive, setIsActive] = useState<boolean | undefined>(undefined);
 
   const [createOpen, setCreateOpen] = useState(false);
   const [updateOpen, setUpdateOpen] = useState(false);
@@ -32,7 +35,11 @@ export default function LocationsList() {
     refetch,
     isFetchingNextPage,
     cursorRef,
-  } = useLocationsList({ search: debouncedSearch });
+  } = useLocationsList({
+    search: debouncedSearch,
+    isActive,
+    pageSize: PAGE_SIZE,
+  });
 
   if (isError) {
     return (
@@ -52,13 +59,7 @@ export default function LocationsList() {
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
-          <Input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Поиск по названию"
-            className="min-w-[260px] bg-slate-800/50"
-          />
+        <LocationsFilter />
           <Button onClick={() => setCreateOpen(true)}>Добавить локацию</Button>
         </div>
       </div>

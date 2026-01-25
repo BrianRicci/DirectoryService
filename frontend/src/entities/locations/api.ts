@@ -3,6 +3,7 @@ import { Address, Location } from "./types";
 import { apiClient } from "@/shared/api/axios-instance";
 import { Envelope } from "@/shared/api/envelope";
 import { PaginationResponse } from "@/shared/api/types";
+import { LocationsFilterState } from "@/features/locations/model/location-filter-store";
 
 export type CreateLocationRequest = {
   name: string;
@@ -87,17 +88,11 @@ export const locationsQueryOptions = {
     });
   },
 
-  getLocationsInfiniteOptions: ({
-    search,
-    pageSize,
-  }: {
-    search?: string;
-    pageSize: number;
-  }) => {
+  getLocationsInfiniteOptions: (filter: LocationsFilterState) => {
     return infiniteQueryOptions({
-      queryKey: [locationsQueryOptions.baseKey, { search }],
+      queryKey: [locationsQueryOptions.baseKey, filter],
       queryFn: ({ pageParam }) => {
-        return locationsApi.getLocations({ search, page: pageParam, pageSize });
+        return locationsApi.getLocations({ ...filter, page: pageParam });
       },
       initialPageParam: 1,
       getNextPageParam: (response) => {
@@ -119,7 +114,7 @@ export const locationsQueryOptions = {
         items: data.pages.flatMap((page) => page?.result?.items ?? []),
         totalCount: data?.pages[0]?.result?.totalCount ?? 0,
         page: data?.pages[0]?.result?.page ?? 1,
-        pageSize: data?.pages[0]?.result?.pageSize ?? pageSize,
+        pageSize: data?.pages[0]?.result?.pageSize ?? filter.pageSize,
         totalPages: data?.pages[0]?.result?.totalPages ?? 0,
       }),
     });
