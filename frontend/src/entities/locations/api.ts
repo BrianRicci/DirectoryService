@@ -87,11 +87,17 @@ export const locationsQueryOptions = {
     });
   },
 
-  getLocationsInfiniteOptions: ({ pageSize }: { pageSize: number }) => {
+  getLocationsInfiniteOptions: ({
+    search,
+    pageSize,
+  }: {
+    search?: string;
+    pageSize: number;
+  }) => {
     return infiniteQueryOptions({
-      queryKey: [locationsQueryOptions.baseKey],
+      queryKey: [locationsQueryOptions.baseKey, { search }],
       queryFn: ({ pageParam }) => {
-        return locationsApi.getLocations({ page: pageParam, pageSize });
+        return locationsApi.getLocations({ search, page: pageParam, pageSize });
       },
       initialPageParam: 1,
       getNextPageParam: (response) => {

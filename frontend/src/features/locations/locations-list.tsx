@@ -11,6 +11,8 @@ import { UpdateLocationDialog } from "./update-location-dialog";
 import { Location } from "@/entities/locations/types";
 
 export default function LocationsList() {
+  const [search, setSearch] = useState("");
+
   const [createOpen, setCreateOpen] = useState(false);
   const [updateOpen, setUpdateOpen] = useState(false);
 
@@ -28,11 +30,7 @@ export default function LocationsList() {
     refetch,
     isFetchingNextPage,
     cursorRef,
-  } = useLocationsList();
-
-  if (isPending) {
-    return <Spinner />;
-  }
+  } = useLocationsList({ search });
 
   if (isError) {
     return (
@@ -54,7 +52,9 @@ export default function LocationsList() {
 
         <div className="flex items-center gap-3">
           <Input
-            placeholder="Поиск по названию или адресу"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Поиск по названию"
             className="min-w-[260px] bg-slate-800/50"
           />
           <Button onClick={() => setCreateOpen(true)}>Добавить локацию</Button>
@@ -62,16 +62,20 @@ export default function LocationsList() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {locations?.map((location) => (
-          <LocationCard
-            key={location.locationId}
-            location={location}
-            onEdit={() => {
-              setSelectedLocation(location);
-              setUpdateOpen(true);
-            }}
-          />
-        ))}
+        {isPending ? (
+          <Spinner />
+        ) : (
+          locations?.map((location) => (
+            <LocationCard
+              key={location.locationId}
+              location={location}
+              onEdit={() => {
+                setSelectedLocation(location);
+                setUpdateOpen(true);
+              }}
+            />
+          ))
+        )}
       </div>
 
       <CreateLocationDialog open={createOpen} setOpen={setCreateOpen} />
