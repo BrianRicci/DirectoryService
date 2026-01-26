@@ -9,7 +9,7 @@ export function useLocationsList({
   search,
   pageSize,
   isActive,
-}: LocationsFilterState) {
+}: LocationsFilterState & { pageSize: number }) {
   const {
     data,
     isPending,
