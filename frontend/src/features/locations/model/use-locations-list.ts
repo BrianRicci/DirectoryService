@@ -9,6 +9,8 @@ export function useLocationsList({
   search,
   pageSize,
   isActive,
+  sortBy,
+  sortOrder,
 }: LocationsFilterState & { pageSize: number }) {
   const {
     data,
@@ -24,6 +26,8 @@ export function useLocationsList({
       search,
       isActive,
       pageSize: pageSize,
+      sortBy,
+      sortOrder,
     }),
   });
 

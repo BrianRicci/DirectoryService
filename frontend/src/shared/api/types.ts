@@ -5,3 +5,8 @@ export type PaginationResponse<T> = {
   pageSize: number;
   totalPages: number;
 };
+
+export type SortOptions = {
+  sortBy?: "createdAt";
+  sortOrder?: "asc" | "desc";
+};

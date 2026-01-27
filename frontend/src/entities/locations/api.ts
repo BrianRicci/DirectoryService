@@ -24,6 +24,8 @@ export type GetLocationsRequest = {
   isActive?: boolean;
   page?: number;
   pageSize?: number;
+  sortBy?: string;
+  sortOrder?: "asc" | "desc";
 };
 
 export const locationsApi = {

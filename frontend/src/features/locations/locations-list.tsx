@@ -8,11 +8,14 @@ import { useLocationsList } from "./model/use-locations-list";
 import LocationCard from "./location-card";
 import { UpdateLocationDialog } from "./update-location-dialog";
 import { Location } from "@/entities/locations/types";
-import { LocationsFilter } from "./locations-filters";
 import { useGetLocationFilter } from "./model/location-filter-store";
+import { LocationsFilterSearch } from "./locations-filters-search";
+import { LocationsFilterIsActive } from "./locations-filters-is-active";
+import { LocationsFilterSort } from "./locations-filters-sort";
 
 export default function LocationsList() {
-  const { search, isActive, pageSize } = useGetLocationFilter();
+  const { search, isActive, pageSize, sortBy, sortOrder } =
+    useGetLocationFilter();
 
   const [createOpen, setCreateOpen] = useState(false);
   const [updateOpen, setUpdateOpen] = useState(false);
@@ -23,18 +26,17 @@ export default function LocationsList() {
 
   const {
     locations,
-    totalPages,
-    totalCount,
     isPending,
     error,
     isError,
-    refetch,
     isFetchingNextPage,
     cursorRef,
   } = useLocationsList({
     search,
     isActive,
     pageSize,
+    sortBy,
+    sortOrder,
   });
 
   if (isError) {
@@ -47,7 +49,7 @@ export default function LocationsList() {
 
   return (
     <div className="max-w-6xl mx-auto p-6">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+      <div className="flex flex-col gap-4 mb-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-semibold text-white">Локации</h1>
           <p className="text-sm text-slate-400 mt-1">
@@ -55,9 +57,16 @@ export default function LocationsList() {
           </p>
         </div>
 
-        <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4">
-          <LocationsFilter />
+        <div className="flex flex-col sm:items-center sm:gap-4">
           <Button onClick={() => setCreateOpen(true)}>Добавить локацию</Button>
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-4 md:flex-row mb-6">
+        <LocationsFilterSearch search={search} />
+        <div className="flex flex-row gap-4">
+          <LocationsFilterSort sortBy={sortBy} sortOrder={sortOrder} />
+          <LocationsFilterIsActive isActive={isActive} />
         </div>
       </div>
 
