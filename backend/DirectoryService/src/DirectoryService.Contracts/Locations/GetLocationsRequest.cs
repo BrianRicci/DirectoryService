@@ -7,5 +7,7 @@ public record GetLocationsRequest(
     string? Search,
     List<Guid>? DepartmentIds,
     bool? IsActive,
+    string? sortBy,
+    string? sortOrder,
     int Page = 1,
     int PageSize = 20);

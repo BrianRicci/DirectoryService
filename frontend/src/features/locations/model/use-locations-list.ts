@@ -1,10 +1,17 @@
 import { locationsQueryOptions } from "@/entities/locations/api";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { RefCallback, useCallback } from "react";
+import { LocationsFilterState } from "./location-filter-store";
 
-const PAGE_SIZE = 6;
+export const PAGE_SIZE = 6;
 
-export function useLocationsList() {
+export function useLocationsList({
+  search,
+  pageSize,
+  isActive,
+  sortBy,
+  sortOrder,
+}: LocationsFilterState & { pageSize: number }) {
   const {
     data,
     isPending,
@@ -16,7 +23,11 @@ export function useLocationsList() {
     hasNextPage,
   } = useInfiniteQuery({
     ...locationsQueryOptions.getLocationsInfiniteOptions({
-      pageSize: PAGE_SIZE,
+      search,
+      isActive,
+      pageSize: pageSize,
+      sortBy,
+      sortOrder,
     }),
   });
 
