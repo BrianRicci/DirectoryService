@@ -1,5 +1,5 @@
-import Positions from "@/features/positions/positions";
+import PositionsList from "@/features/positions/positions-list";
 
-export default function Home() {
-  return <Positions />;
+export default function PositionsPage() {
+  return <PositionsList />;
 }
