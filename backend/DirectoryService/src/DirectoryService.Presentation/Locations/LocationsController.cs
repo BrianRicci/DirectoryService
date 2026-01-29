@@ -51,19 +51,10 @@ public class LocationsController : ControllerBase
         return await handler.Handle(request, cancellationToken);
     }
     
-    [HttpGet("{locationId:guid}")]
-    public async Task<EndpointResult<GetLocationDto>> GetById(
-        [FromRoute] Guid locationId,
-        [FromServices] GetLocationByIdHandler handler,
-        CancellationToken cancellationToken)
-    {
-        return await handler.Handle(new GetLocationByIdRequest(locationId), cancellationToken);
-    }
-    
     [HttpGet("{locationId:guid}/dapper")]
     public async Task<EndpointResult<GetLocationDto>> GetByIdDapper(
         [FromRoute] Guid locationId,
-        [FromServices] GetByIdHandlerDapper handler,
+        [FromServices] GetLocationByIdHandlerDapper handler,
         CancellationToken cancellationToken)
     {
         return await handler.Handle(new GetLocationByIdRequest(locationId), cancellationToken);

@@ -11,48 +11,11 @@ using Shared.SharedKernel;
 
 namespace DirectoryService.Application.Locations.Queries;
 
-public class GetLocationByIdHandler
-{
-    private readonly IReadDbContext _readDbContext;
-
-    public GetLocationByIdHandler(IReadDbContext readDbContext)
-    {
-        _readDbContext = readDbContext;
-    }
-    
-    public async Task<Result<GetLocationDto, Errors>> Handle(GetLocationByIdRequest query, CancellationToken cancellationToken)
-    {
-        var location = await _readDbContext.LocationsRead
-            .FirstOrDefaultAsync(l => l.Id == new LocationId(query.LocationId), cancellationToken);
-
-        if (location is null)
-        {
-            return GeneralErrors.NotFound(query.LocationId, "Location").ToErrors();
-        }
-
-        return new GetLocationDto()
-        {
-            LocationId = location.Id.Value,
-            Name = location.Name.Value,
-            Address = new LocationAddressDto(
-                location.Address.Country,
-                location.Address.Region, 
-                location.Address.City,
-                location.Address.Street,
-                location.Address.House),
-            Timezone = location.Timezone.Value,
-            IsActive = location.IsActive,
-            CreatedAt = location.CreatedAt,
-            UpdatedAt = location.UpdatedAt,
-        };
-    }
-}
-
-public class GetByIdHandlerDapper
+public class GetLocationByIdHandlerDapper
 {
     private readonly IDbConnectionFactory _connectionFactory;
 
-    public GetByIdHandlerDapper(IDbConnectionFactory connectionFactory)
+    public GetLocationByIdHandlerDapper(IDbConnectionFactory connectionFactory)
     {
         _connectionFactory = connectionFactory;
     }

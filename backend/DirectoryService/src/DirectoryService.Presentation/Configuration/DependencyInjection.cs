@@ -95,8 +95,7 @@ public static class DependencyInjection
         services.AddScoped<CreatePositionHandler>();
         services.AddScoped<UpdateDepartmentLocationsHandler>();
         services.AddScoped<MoveDepartmentHandler>();
-        services.AddScoped<GetLocationByIdHandler>();
-        services.AddScoped<GetByIdHandlerDapper>();
+        services.AddScoped<GetLocationByIdHandlerDapper>();
         services.AddScoped<GetLocationsHandlerDapper>();
         services.AddScoped<GetDepartmentsTopHandlerDapper>();
         services.AddScoped<GetDepartmentRootsHandlerDapper>();

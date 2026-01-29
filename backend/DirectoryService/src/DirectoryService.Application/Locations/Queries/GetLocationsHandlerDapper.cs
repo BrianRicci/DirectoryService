@@ -63,8 +63,10 @@ public class GetLocationsHandlerDapper
         long? totalCount = 0;
 
         long locationsCount = 0;
+        
+        var locationDict = new Dictionary<Guid, GetLocationDto>();
 
-        var locations = await connection
+        await connection
             .QueryAsync<GetLocationDto, LocationAddressDto, DepartmentDto, long, long, GetLocationDto>(
                 $"""
                  WITH locations_stats AS (
@@ -106,20 +108,32 @@ public class GetLocationsHandlerDapper
                 splitOn: "country, department_id, total_count, locations_count",
                 map: (location, address, department, inRequestCount, allLocationsCount) =>
                 {
-                    // address mapping
-                    location.Address = address;
+                    // location mapping
+                    if (!locationDict.TryGetValue(location.LocationId, out var existingLocation))
+                    {
+                        existingLocation = location;
+                        
+                        // address mapping
+                        existingLocation.Address = address;
+                        
+                        locationDict.Add(existingLocation.LocationId, existingLocation);
+                    }
 
-                    // department mapping
-                    location.Departments.Add(department);
-
-                    // total_count mapping
+                    if (department is not null && department.DepartmentId != Guid.Empty)
+                    {
+                        if (existingLocation.Departments.All(d => d.DepartmentId != department.DepartmentId))
+                            existingLocation.Departments.Add(department);
+                    }
+                    
                     totalCount = inRequestCount;
 
                     locationsCount = allLocationsCount;
 
-                    return location;
+                    return existingLocation;
                 });
 
+        var locations = locationDict.Values.ToList();
+        
         long totalPages = (long)Math.Ceiling(locationsCount / (double)query.PageSize);
 
         return new PaginationResponse<GetLocationDto>(

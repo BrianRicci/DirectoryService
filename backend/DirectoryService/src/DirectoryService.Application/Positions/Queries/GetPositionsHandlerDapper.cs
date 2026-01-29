@@ -64,7 +64,9 @@ public sealed class GetPositionsHandlerDapper
 
         long positionsCount = 0;
 
-        var positions = await connection
+        var positionsDict = new Dictionary<Guid, GetPositionDto>();
+        
+        await connection
             .QueryAsync<GetPositionDto, DepartmentDto, long, long, GetPositionDto>(
                 $"""
                  WITH positions_stats AS (
@@ -101,17 +103,30 @@ public sealed class GetPositionsHandlerDapper
                 splitOn: "department_id, total_count, positions_count",
                 map: (position, department, inRequestCount, allPositionsCount) =>
                 {
-                    // department mapping
-                    position.Departments.Add(department);
+                    // position mapping
+                    if (!positionsDict.TryGetValue(position.PositionId, out var existingPosition))
+                    {
+                        existingPosition = position;
+                        
+                        positionsDict.Add(existingPosition.PositionId, existingPosition);
+                    }
+
+                    if (department is not null && department.DepartmentId != Guid.Empty)
+                    {
+                        if (existingPosition.Departments.All(d => d.DepartmentId != department.DepartmentId))
+                            existingPosition.Departments.Add(department);
+                    }
 
                     // total_count mapping
                     totalCount = inRequestCount;
 
                     positionsCount = allPositionsCount;
 
-                    return position;
+                    return existingPosition;
                 });
 
+        var positions = positionsDict.Values.ToList();
+        
         long totalPages = (long)Math.Ceiling(positionsCount / (double)query.PageSize);
 
         return new PaginationResponse<GetPositionDto>(
