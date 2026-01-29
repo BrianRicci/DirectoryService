@@ -9,40 +9,38 @@ import { PositionsFilterSearch } from "./positions-filters-search";
 import { PositionsFilterIsActive } from "./positions-filters-is-active";
 import { PositionsFilterDepartments } from "./positions-filters-departments";
 import { CreatePositionDialog } from "./create-position-dialog";
+import { useGetPositionFilter } from "./model/position-filter-store";
+import { usePositionsList } from "./model/use-positions-list";
 
 export default function PositionsList() {
+  const { search, isActive, pageSize, sortBy, sortOrder } =
+    useGetPositionFilter();
+
   const [createOpen, setCreateOpen] = useState(false);
-  const [updateOpen, setUpdateOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 9;
 
-  // Mock data for demonstration
-  const mockPositions = [
-    {
-      positionId: "1",
-      name: "Разработчик",
-      description: "Senior C# разработчик",
-      isActive: true,
-      departmentsCount: 2,
-    },
-    {
-      positionId: "2",
-      name: "Менеджер",
-      description: "Проект-менеджер",
-      isActive: true,
-      departmentsCount: 1,
-    },
-    {
-      positionId: "3",
-      name: "Дизайнер",
-      description: "UX/UI дизайнер",
-      isActive: false,
-      departmentsCount: 0,
-    },
-  ];
+  const {
+    positions,
+    isPending,
+    error,
+    isError,
+    isFetchingNextPage,
+    cursorRef,
+  } = usePositionsList({
+    search,
+    isActive,
+    pageSize,
+    sortBy,
+    sortOrder,
+  });
 
-  const positions = mockPositions;
-  const isPending = false;
+  if (isError) {
+    return (
+      <div className="text-red-500">
+        Ошибка: {error ? error.message : "Неизвестная ошибка"}
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-6xl mx-auto p-6">
@@ -76,31 +74,17 @@ export default function PositionsList() {
               key={position.positionId}
               href={`/positions/${position.positionId}`}
             >
-              <PositionCard position={position} />
+              <PositionCard key={position.positionId} position={position} />
             </Link>
           ))
         )}
       </div>
 
-      {/* Pagination */}
-      <div className="flex justify-center items-center gap-2 mt-8">
-        <Button
-          variant="outline"
-          disabled={currentPage === 1}
-          onClick={() => setCurrentPage(currentPage - 1)}
-        >
-          Назад
-        </Button>
-        <span className="text-white">Страница {currentPage}</span>
-        <Button
-          variant="outline"
-          onClick={() => setCurrentPage(currentPage + 1)}
-        >
-          Вперёд
-        </Button>
-      </div>
-
       <CreatePositionDialog open={createOpen} setOpen={setCreateOpen} />
+
+      <div ref={cursorRef} className="flex justify-center py-4">
+        {isFetchingNextPage && <Spinner />}
+      </div>
     </div>
   );
 }

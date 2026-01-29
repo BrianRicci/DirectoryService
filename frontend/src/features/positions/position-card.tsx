@@ -1,12 +1,5 @@
+import { Position } from "@/entities/positions/types";
 import { Card } from "@/shared/components/ui/card";
-
-type Position = {
-  positionId: string;
-  name: string;
-  description: string;
-  isActive: boolean;
-  departmentsCount: number;
-};
 
 type Props = {
   position: Position;
@@ -38,7 +31,9 @@ export default function PositionCard({ position }: Props) {
 
       <div className="text-sm text-slate-400 pb-3">
         Подразделений:{" "}
-        <span className="font-semibold">{position.departmentsCount}</span>
+        <span className="font-semibold">
+          {position.departments.length.toString()}
+        </span>
       </div>
     </Card>
   );
