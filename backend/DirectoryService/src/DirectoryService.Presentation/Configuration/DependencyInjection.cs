@@ -13,7 +13,8 @@ using DirectoryService.Application.Locations.Command.Delete;
 using DirectoryService.Application.Locations.Command.Update;
 using DirectoryService.Application.Locations.Queries;
 using DirectoryService.Application.Positions;
-using DirectoryService.Application.Positions.Create;
+using DirectoryService.Application.Positions.Command.Create;
+using DirectoryService.Application.Positions.Queries;
 using DirectoryService.Infrastructure.Postgres;
 using DirectoryService.Infrastructure.Postgres.BackgroundServices;
 using DirectoryService.Infrastructure.Postgres.Database;
@@ -104,6 +105,8 @@ public static class DependencyInjection
         services.AddScoped<DeleteInactiveHandler>();
         services.AddScoped<UpdateLocationHandler>();
         services.AddScoped<SoftDeleteLocationHandler>();
+        services.AddScoped<GetPositionsHandlerDapper>();
+        services.AddScoped<GetPositionByIdHandlerDapper>();
         
         services.AddHostedService<InactiveDepartmentsCleanerBackgroundService>();
 
