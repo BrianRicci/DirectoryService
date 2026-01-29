@@ -3,8 +3,6 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { RefCallback, useCallback } from "react";
 import { LocationsFilterState } from "./location-filter-store";
 
-export const PAGE_SIZE = 6;
-
 export function useLocationsList({
   search,
   pageSize,

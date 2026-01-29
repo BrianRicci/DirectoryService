@@ -1,7 +1,7 @@
 import { create } from "zustand";
-import { PAGE_SIZE } from "./use-locations-list";
 import { useShallow } from "zustand/react/shallow";
 import { SortOptions } from "@/shared/api/types";
+import { PAGE_SIZE } from "@/shared/api/constants";
 
 export type LocationsFilterState = {
   search?: string;
