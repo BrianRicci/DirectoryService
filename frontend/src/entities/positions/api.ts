@@ -3,7 +3,7 @@ import { Position } from "./types";
 import { apiClient } from "@/shared/api/axios-instance";
 import { Envelope } from "@/shared/api/envelope";
 import { PaginationResponse } from "@/shared/api/types";
-import { LocationsFilterState as PositionsFilterState } from "@/features/locations/model/location-filter-store";
+import { PositionsFilterState } from "@/features/positions/model/position-filter-store";
 
 export type CreatePositionRequest = {
   name: string;
@@ -37,6 +37,14 @@ export const positionsApi = {
     >("/positions", {
       params: request,
     });
+
+    return response.data;
+  },
+
+  getPositionById: async (positionId: string): Promise<Envelope<Position>> => {
+    const response = await apiClient.get<Envelope<Position>>(
+      `/positions/${positionId}`,
+    );
 
     return response.data;
   },
@@ -87,6 +95,13 @@ export const positionsQueryOptions = {
     return queryOptions({
       queryFn: () => positionsApi.getPositions({ page, pageSize: pageSize }),
       queryKey: [positionsQueryOptions.baseKey, { page, pageSize }],
+    });
+  },
+
+  getPositionOptions: (positionId: string) => {
+    return queryOptions({
+      queryFn: () => positionsApi.getPositionById(positionId),
+      queryKey: [positionsQueryOptions.baseKey, positionId],
     });
   },
 

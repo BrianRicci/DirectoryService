@@ -17,7 +17,6 @@ export default function PositionsList() {
     useGetPositionFilter();
 
   const [createOpen, setCreateOpen] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
 
   const {
     positions,
@@ -58,9 +57,9 @@ export default function PositionsList() {
       </div>
 
       <div className="flex flex-col gap-4 md:flex-row mb-6">
-        <PositionsFilterSearch />
+        <PositionsFilterSearch search={search} />
         <div className="flex flex-row gap-4">
-          <PositionsFilterIsActive />
+          <PositionsFilterIsActive isActive={isActive} />
           <PositionsFilterDepartments />
         </div>
       </div>
@@ -74,7 +73,7 @@ export default function PositionsList() {
               key={position.positionId}
               href={`/positions/${position.positionId}`}
             >
-              <PositionCard key={position.positionId} position={position} />
+              <PositionCard position={position} />
             </Link>
           ))
         )}

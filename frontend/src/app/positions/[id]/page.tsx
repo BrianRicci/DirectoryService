@@ -1,9 +1,10 @@
 import PositionDetail from "@/features/positions/position-detail";
 
-export default function PositionDetailPage({
+export default async function PositionDetailPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  return <PositionDetail positionId={params.id} />;
+  const { id } = await params;
+  return <PositionDetail positionId={id} />;
 }

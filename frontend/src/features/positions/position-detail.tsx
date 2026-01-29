@@ -1,17 +1,13 @@
 "use client";
 
-import { useState } from "react";
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
 import { Card } from "@/shared/components/ui/card";
 import Link from "next/link";
-
-type Position = {
-  positionId: string;
-  name: string;
-  description: string;
-  isActive: boolean;
-};
+import { useRouter } from "next/navigation";
+import { usePositionDetails } from "./model/use-position-details";
+import { Spinner } from "@/shared/components/ui/spinner";
+import { useState } from "react";
 
 type Department = {
   departmentId: string;
@@ -23,14 +19,6 @@ type Props = {
 };
 
 export default function PositionDetail({ positionId }: Props) {
-  // Mock data
-  const [position, setPosition] = useState<Position>({
-    positionId,
-    name: "Разработчик",
-    description: "Senior C# разработчик",
-    isActive: true,
-  });
-
   const [linkedDepartments, setLinkedDepartments] = useState<Department[]>([
     { departmentId: "1", name: "IT отдел" },
     { departmentId: "2", name: "Разработка" },
@@ -46,20 +34,17 @@ export default function PositionDetail({ positionId }: Props) {
   const [selectedDepartmentToAdd, setSelectedDepartmentToAdd] = useState("");
   const [isEditing, setIsEditing] = useState(false);
 
-  const handleAddDepartment = () => {
-    if (!selectedDepartmentToAdd) return;
+  const dept = availableDepartments.find(
+    (d) => d.departmentId === selectedDepartmentToAdd,
+  );
 
-    const dept = availableDepartments.find(
-      (d) => d.departmentId === selectedDepartmentToAdd,
-    );
-    if (
-      dept &&
-      !linkedDepartments.find((d) => d.departmentId === dept.departmentId)
-    ) {
-      setLinkedDepartments([...linkedDepartments, dept]);
-      setSelectedDepartmentToAdd("");
-    }
-  };
+  if (
+    dept &&
+    !linkedDepartments.find((d) => d.departmentId === dept.departmentId)
+  ) {
+    setLinkedDepartments([...linkedDepartments, dept]);
+    setSelectedDepartmentToAdd("");
+  }
 
   const handleRemoveDepartment = (departmentId: string) => {
     setLinkedDepartments(
@@ -72,17 +57,46 @@ export default function PositionDetail({ positionId }: Props) {
       !linkedDepartments.find((ld) => ld.departmentId === dept.departmentId),
   );
 
+  const router = useRouter();
+
+  const { position, isPending, error, isError } =
+    usePositionDetails(positionId);
+
+  if (isPending) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <Spinner />
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="text-red-500">
+        Ошибка: {error ? error.message : "Неизвестная ошибка"}
+      </div>
+    );
+  }
+
+  if (position === undefined) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        Позиция не найдена.
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-4xl mx-auto p-6">
       {/* Header */}
       <div className="mb-6">
-        <Link
-          href="/positions"
-          className="text-blue-400 hover:text-blue-300 mb-4 inline-block"
+        <button
+          onClick={() => router.back()}
+          className="text-blue-400 hover:text-blue-300 mb-4 inline-block bg-none border-none p-0 cursor-pointer"
         >
           ← Вернуться к списку
-        </Link>
-        <h1 className="text-3xl font-bold text-white">{position.name}</h1>
+        </button>
+        <h1 className="text-3xl font-bold text-white">{position?.name}</h1>
       </div>
 
       {/* Main Info Section */}
@@ -103,10 +117,10 @@ export default function PositionDetail({ positionId }: Props) {
                 Название
               </label>
               <Input
-                value={position.name}
-                onChange={(e) =>
-                  setPosition({ ...position, name: e.target.value })
-                }
+                value={position?.name}
+                // onChange={(e) =>
+                //   setPosition({ ...position, name: e.target.value })
+                // }
                 className="bg-slate-800/50"
               />
             </div>
@@ -115,10 +129,10 @@ export default function PositionDetail({ positionId }: Props) {
                 Описание
               </label>
               <Input
-                value={position.description}
-                onChange={(e) =>
-                  setPosition({ ...position, description: e.target.value })
-                }
+                value={position?.description}
+                // onChange={(e) =>
+                //   setPosition({ ...position, description: e.target.value })
+                // }
                 className="bg-slate-800/50"
               />
             </div>
@@ -135,23 +149,23 @@ export default function PositionDetail({ positionId }: Props) {
           <div className="space-y-3">
             <div>
               <p className="text-sm text-slate-400">Название</p>
-              <p className="text-white font-medium">{position.name}</p>
+              <p className="text-white font-medium">{position?.name}</p>
             </div>
             <div>
               <p className="text-sm text-slate-400">Описание</p>
-              <p className="text-white font-medium">{position.description}</p>
+              <p className="text-white font-medium">{position?.description}</p>
             </div>
             <div>
               <p className="text-sm text-slate-400">Статус</p>
               <span
                 className={
                   "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium " +
-                  (position.isActive
+                  (position?.isActive
                     ? "bg-emerald-100 text-emerald-800"
                     : "bg-amber-100 text-amber-800")
                 }
               >
-                {position.isActive ? "Активна" : "Неактивна"}
+                {position?.isActive ? "Активна" : "Неактивна"}
               </span>
             </div>
           </div>
@@ -183,7 +197,7 @@ export default function PositionDetail({ positionId }: Props) {
               ))}
             </select>
             <Button
-              onClick={handleAddDepartment}
+              // onClick={handleAddDepartment}
               disabled={!selectedDepartmentToAdd}
             >
               Добавить

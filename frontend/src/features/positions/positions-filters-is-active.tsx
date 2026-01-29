@@ -7,19 +7,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/shared/components/ui/select";
-import { useState } from "react";
+import { setFilterIsActive } from "./model/position-filter-store";
 
-export function PositionsFilterIsActive() {
-  const [isActive, setIsActive] = useState<boolean | undefined>(undefined);
-
+export function PositionsFilterIsActive({ isActive }: { isActive?: boolean }) {
   return (
     <div className="w-1/2 md:w-[180px]">
       <Select
         value={isActive === undefined ? "all" : isActive ? "active" : "deleted"}
         onValueChange={(value) => {
-          if (value === "all") setIsActive(undefined);
-          else if (value === "deleted") setIsActive(false);
-          else setIsActive(true);
+          if (value === "all") setFilterIsActive(undefined);
+          else if (value === "deleted") setFilterIsActive(false);
+          else setFilterIsActive(true);
         }}
       >
         <SelectTrigger className="w-full md:w-[180px]">
