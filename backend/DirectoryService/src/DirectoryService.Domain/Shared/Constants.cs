@@ -14,4 +14,5 @@ public readonly struct Constants
     public const char SEPARATOR = '.';
     public const string DEPARTMENT_CACHE_PREFIX = "department";
     public const string LOCATION_CACHE_PREFIX = "location";
+    public const string POSITION_CACHE_PREFIX = "position";
 }

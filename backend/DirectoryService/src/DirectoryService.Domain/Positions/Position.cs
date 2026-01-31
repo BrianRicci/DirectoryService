@@ -84,4 +84,28 @@ public class Position : ISoftDeletable
         
         return Result.Success(this);
     }
+    
+    public UnitResult<Error> Update(PositionName name, PositionDescription description)
+    {
+        Name = name;
+        Description = description;
+        
+        UpdatedAt = DateTime.UtcNow;
+        
+        return UnitResult.Success<Error>();
+    }
+    
+    public UnitResult<Error> UpdateDepartments(List<DepartmentPosition> departments)
+    {
+        if (departments.Count is 0)
+        {
+            return GeneralErrors.ValueIsRequired("Departments list cannot be empty");
+        }
+        
+        _departments.Clear();
+        _departments.AddRange(departments);
+        UpdatedAt = DateTime.UtcNow;
+        
+        return UnitResult.Success<Error>();
+    }
 }

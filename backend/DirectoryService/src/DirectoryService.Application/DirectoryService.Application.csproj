@@ -22,8 +22,4 @@
       <PackageReference Include="Scrutor" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Positions\Command\" />
-    </ItemGroup>
-
 </Project>
