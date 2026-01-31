@@ -1,5 +1,6 @@
 ﻿using Core.Abstractions;
 using DirectoryService.Application.Positions.Command.Create;
+using DirectoryService.Application.Positions.Command.SoftDelete;
 using DirectoryService.Application.Positions.Command.Update;
 using DirectoryService.Application.Positions.Command.UpdateDepartments;
 using DirectoryService.Application.Positions.Queries;
@@ -71,5 +72,16 @@ public class PositionController : ControllerBase
         CancellationToken cancellationToken)
     {
         return await handler.Handle(new GetPositionByIdRequest(positionId), cancellationToken);
+    }
+    
+    [HttpDelete("{positionId:guid}")]
+    public async Task<EndpointResult<Guid>> Delete(
+        [FromRoute] Guid positionId,
+        [FromServices] ICommandHandler<Guid, SoftDeletePositionCommand> handler,
+        CancellationToken cancellationToken)
+    {
+        var command = new SoftDeletePositionCommand(positionId);
+        
+        return await handler.Handle(command, cancellationToken);
     }
 }

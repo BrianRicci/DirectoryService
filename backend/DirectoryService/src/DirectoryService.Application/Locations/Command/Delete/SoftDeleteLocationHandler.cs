@@ -62,7 +62,8 @@ public class SoftDeleteLocationHandler : ICommandHandler<Guid, SoftDeleteLocatio
             transactionScope.Rollback();
             return locationResult.Error.ToErrors();
         }
-
+        
+        // TODO
         // Ограничение, для запрета удалять локацию, если у нее есть связь с департаментом
         // решил пока без ограничения сделать, так как для него придется менять еще логику в хэндлерах департаментов
         

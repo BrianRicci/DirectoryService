@@ -14,6 +14,7 @@ using DirectoryService.Application.Locations.Command.Update;
 using DirectoryService.Application.Locations.Queries;
 using DirectoryService.Application.Positions;
 using DirectoryService.Application.Positions.Command.Create;
+using DirectoryService.Application.Positions.Command.SoftDelete;
 using DirectoryService.Application.Positions.Command.Update;
 using DirectoryService.Application.Positions.Command.UpdateDepartments;
 using DirectoryService.Application.Positions.Queries;
@@ -98,6 +99,7 @@ public static class DependencyInjection
         services.AddScoped<IValidator<CreatePositionCommand>, CreatePositionValidator>();
         services.AddScoped<IValidator<UpdatePositionCommand>, UpdatePositionValidator>();
         services.AddScoped<IValidator<UpdatePositionDepartmentsCommand>, UpdatePositionDepartmentsValidator>();
+        services.AddScoped<IValidator<SoftDeletePositionCommand>, SoftDeletePositionValidator>();
         
         // departments
         services.AddScoped<CreateDepartmentHandler>();
@@ -122,6 +124,7 @@ public static class DependencyInjection
         services.AddScoped<UpdatePositionDepartmentsHandler>();
         services.AddScoped<GetPositionByIdHandlerDapper>();
         services.AddScoped<GetPositionsHandlerDapper>();
+        services.AddScoped<SoftDeletePositionHandler>();
         
         services.AddHostedService<InactiveDepartmentsCleanerBackgroundService>();
 

@@ -6,6 +6,7 @@ using DirectoryService.Contracts.Positions;
 using DirectoryService.Domain.Departments;
 using DirectoryService.Domain.Positions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Shared.SharedKernel;
 
 namespace DirectoryService.Infrastructure.Postgres.Repositories;
@@ -13,11 +14,14 @@ namespace DirectoryService.Infrastructure.Postgres.Repositories;
 public class PositionsRepository : IPositionsRepository
 {
     private readonly DirectoryServiceDbContext _dbContext;
+    private readonly ILogger<PositionsRepository> _logger;
 
     public PositionsRepository(
-        DirectoryServiceDbContext dbContext)
+        DirectoryServiceDbContext dbContext,
+        ILogger<PositionsRepository> logger)
     {
         _dbContext = dbContext;
+        _logger = logger;
     }
 
     public async Task<Result<Guid, Error>> AddAsync(Position position, CancellationToken cancellationToken)
@@ -40,6 +44,31 @@ public class PositionsRepository : IPositionsRepository
         var position = await _dbContext.Positions
             .Include(p => p.DepartmentPositions)
             .FirstOrDefaultAsync(p => p.Id == positionId && p.IsActive, cancellationToken);
+
+        if (position is null)
+            return GeneralErrors.NotFound(positionId.Value);
+
+        return position;
+    }
+    
+    public async Task<Result<Position, Error>> GetByIdWithLock(PositionId positionId, CancellationToken cancellationToken)
+    {
+        var position = (await _dbContext.Positions
+                .FromSqlInterpolated(
+                    $"""
+                      SELECT position_id,
+                             name,
+                             description,
+                             created_at,
+                             updated_at,
+                             deleted_at,
+                             is_active
+                      FROM positions 
+                      WHERE position_id = {positionId.Value} AND is_active = true 
+                      FOR UPDATE
+                     """)
+                .ToListAsync(cancellationToken))
+            .FirstOrDefault();
 
         if (position is null)
             return GeneralErrors.NotFound(positionId.Value);
@@ -107,5 +136,20 @@ public class PositionsRepository : IPositionsRepository
             .AnyAsync(p => p.Name == name && p.IsActive, cancellationToken);
 
         return isNameExists;
+    }
+    
+    public async Task<UnitResult<Error>> SaveChangesAsync(CancellationToken cancellationToken)
+    {
+        try
+        {
+            await _dbContext.SaveChangesAsync(cancellationToken);
+
+            return UnitResult.Success<Error>();
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Failed to save changes");
+            return GeneralErrors.Failure("Failed to save changes");
+        }
     }
 }

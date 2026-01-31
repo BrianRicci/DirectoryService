@@ -12,10 +12,14 @@ public interface IPositionsRepository
     
     Task<Result<Position, Error>> GetByIdAsync(PositionId positionId, CancellationToken cancellationToken);
 
+    Task<Result<Position, Error>> GetByIdWithLock(PositionId positionId, CancellationToken cancellationToken);
+    
     Task<UnitResult<Error>> SoftDeletePositionsRelatedToDepartmentAsync(
         DepartmentId departmentId, CancellationToken cancellationToken);
     
     Task<UnitResult<Error>> DeleteInactiveAsync(CancellationToken cancellationToken);
 
     Task<bool> IsNameExistsAsync(PositionName name, CancellationToken cancellationToken);
+    
+    Task<UnitResult<Error>> SaveChangesAsync(CancellationToken cancellationToken);
 }
