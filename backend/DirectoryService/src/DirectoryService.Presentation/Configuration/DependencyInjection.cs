@@ -14,6 +14,8 @@ using DirectoryService.Application.Locations.Command.Update;
 using DirectoryService.Application.Locations.Queries;
 using DirectoryService.Application.Positions;
 using DirectoryService.Application.Positions.Command.Create;
+using DirectoryService.Application.Positions.Command.Update;
+using DirectoryService.Application.Positions.Command.UpdateDepartments;
 using DirectoryService.Application.Positions.Queries;
 using DirectoryService.Infrastructure.Postgres;
 using DirectoryService.Infrastructure.Postgres.BackgroundServices;
@@ -81,31 +83,45 @@ public static class DependencyInjection
         services.AddScoped<IDepartmentsRepository, DepartmentsRepository>();
         services.AddScoped<IPositionsRepository, PositionsRepository>();
 
-        services.AddScoped<IValidator<CreateLocationCommand>, CreateLocationValidator>();
+        // department validators
         services.AddScoped<IValidator<CreateDepartmentCommand>, CreateDepartmentValidator>();
-        services.AddScoped<IValidator<CreatePositionCommand>, CreatePositionValidator>();
         services.AddScoped<IValidator<UpdateDepartmentLocationsCommand>, UpdateDepartmentLocationsValidator>();
         services.AddScoped<IValidator<MoveDepartmentCommand>, MoveDepartmentValidator>();
         services.AddScoped<IValidator<DeleteDepartmentCommand>, DeleteDepartmentValidator>();
+        
+        // location validators
+        services.AddScoped<IValidator<CreateLocationCommand>, CreateLocationValidator>();
         services.AddScoped<IValidator<UpdateLocationCommand>, UpdateLocationValidator>();
         services.AddScoped<IValidator<SoftDeleteLocationCommand>, SoftDeleteLocationValidator>();
         
-        services.AddScoped<CreateLocationHandler>();
+        // position validators
+        services.AddScoped<IValidator<CreatePositionCommand>, CreatePositionValidator>();
+        services.AddScoped<IValidator<UpdatePositionCommand>, UpdatePositionValidator>();
+        services.AddScoped<IValidator<UpdatePositionDepartmentsCommand>, UpdatePositionDepartmentsValidator>();
+        
+        // departments
         services.AddScoped<CreateDepartmentHandler>();
-        services.AddScoped<CreatePositionHandler>();
         services.AddScoped<UpdateDepartmentLocationsHandler>();
         services.AddScoped<MoveDepartmentHandler>();
-        services.AddScoped<GetLocationByIdHandlerDapper>();
-        services.AddScoped<GetLocationsHandlerDapper>();
         services.AddScoped<GetDepartmentsTopHandlerDapper>();
         services.AddScoped<GetDepartmentRootsHandlerDapper>();
         services.AddScoped<GetDepartmentChildsHandlerDapper>();
         services.AddScoped<DeleteDepartmentHandler>();
         services.AddScoped<DeleteInactiveHandler>();
+        
+        // locations
+        services.AddScoped<CreateLocationHandler>();
         services.AddScoped<UpdateLocationHandler>();
+        services.AddScoped<GetLocationByIdHandlerDapper>();
+        services.AddScoped<GetLocationsHandlerDapper>();
         services.AddScoped<SoftDeleteLocationHandler>();
-        services.AddScoped<GetPositionsHandlerDapper>();
+        
+        // positions
+        services.AddScoped<CreatePositionHandler>();
+        services.AddScoped<UpdatePositionHandler>();
+        services.AddScoped<UpdatePositionDepartmentsHandler>();
         services.AddScoped<GetPositionByIdHandlerDapper>();
+        services.AddScoped<GetPositionsHandlerDapper>();
         
         services.AddHostedService<InactiveDepartmentsCleanerBackgroundService>();
 

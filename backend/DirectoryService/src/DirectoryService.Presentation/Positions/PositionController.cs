@@ -1,8 +1,12 @@
 ﻿using Core.Abstractions;
 using DirectoryService.Application.Positions.Command.Create;
+using DirectoryService.Application.Positions.Command.Update;
+using DirectoryService.Application.Positions.Command.UpdateDepartments;
 using DirectoryService.Application.Positions.Queries;
 using DirectoryService.Contracts;
 using DirectoryService.Contracts.Positions;
+using DirectoryService.Domain.DepartmentPositions;
+using DirectoryService.Domain.Positions;
 using Framework.EndpointResults;
 using Microsoft.AspNetCore.Mvc;
 using Shared.SharedKernel;
@@ -23,6 +27,30 @@ public class PositionController : ControllerBase
         CancellationToken cancellationToken)
     {
         var command = new CreatePositionCommand(request);
+
+        return await handler.Handle(command, cancellationToken);
+    }
+    
+    [HttpPatch("{positionId}")]
+    public async Task<EndpointResult<Position>> Update(
+        [FromRoute] Guid positionId,
+        [FromServices] ICommandHandler<Position, UpdatePositionCommand> handler,
+        [FromBody] UpdatePositionRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = new UpdatePositionCommand(positionId, request);
+        
+        return await handler.Handle(command, cancellationToken);
+    }
+    
+    [HttpPatch("{positionId}/departments")]
+    public async Task<EndpointResult<List<DepartmentPosition>>> UpdateDepartments(
+        [FromRoute] Guid positionId,
+        [FromServices] ICommandHandler<List<DepartmentPosition>, UpdatePositionDepartmentsCommand> handler,
+        [FromBody] UpdatePositionDepartmentsRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = new UpdatePositionDepartmentsCommand(positionId, request);
 
         return await handler.Handle(command, cancellationToken);
     }
