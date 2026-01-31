@@ -39,7 +39,7 @@ public class PositionsRepository : IPositionsRepository
     {
         var position = await _dbContext.Positions
             .Include(p => p.DepartmentPositions)
-            .FirstOrDefaultAsync(p => p.Id == positionId, cancellationToken);
+            .FirstOrDefaultAsync(p => p.Id == positionId && p.IsActive, cancellationToken);
 
         if (position is null)
             return GeneralErrors.NotFound(positionId.Value);
