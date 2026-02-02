@@ -83,6 +83,15 @@ public class DepartmentController : ControllerBase
         return await handler.Handle(request, cancellationToken);
     }
     
+    [HttpGet("names")]
+    public async Task<EndpointResult<GetDepartmentNamesDto>> GetNames(
+        [FromQuery] GetDepartmentNamesRequest request,
+        [FromServices] GetDepartmentNamesForFilterDapper handler,
+        CancellationToken cancellationToken)
+    {
+        return await handler.Handle(request, cancellationToken);
+    }
+    
     [HttpDelete("{departmentId:guid}")]
     public async Task<EndpointResult<Guid>> Delete(
         [FromRoute] Guid departmentId,

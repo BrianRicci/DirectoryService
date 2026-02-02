@@ -108,6 +108,7 @@ public static class DependencyInjection
         services.AddScoped<GetDepartmentsTopHandlerDapper>();
         services.AddScoped<GetDepartmentRootsHandlerDapper>();
         services.AddScoped<GetDepartmentChildsHandlerDapper>();
+        services.AddScoped<GetDepartmentNamesForFilterDapper>();
         services.AddScoped<DeleteDepartmentHandler>();
         services.AddScoped<DeleteInactiveHandler>();
         
