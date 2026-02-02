@@ -94,7 +94,7 @@ public sealed class GetPositionsHandlerDapper
                  FROM positions p
                      CROSS JOIN positions_stats ls
                      LEFT JOIN department_positions dp ON dp.position_id = p.position_id
-                     LEFT JOIN departments d ON d.department_id = dp.department_id
+                     LEFT JOIN departments d ON d.department_id = dp.department_id AND d.is_active = true
                  {whereClause}
                  {orderByString}
                  LIMIT @page_size OFFSET @offset
