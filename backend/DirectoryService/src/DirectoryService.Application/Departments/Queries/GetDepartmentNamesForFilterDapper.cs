@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using Dapper;
 using DirectoryService.Application.Database;
+using DirectoryService.Contracts;
 using DirectoryService.Contracts.Departments;
 using DirectoryService.Domain.Shared;
 using Microsoft.Extensions.Caching.Hybrid;
@@ -17,7 +18,7 @@ public class GetDepartmentNamesForFilterDapper
         _connectionFactory = connectionFactory;
     }
 
-    public async Task<Result<GetDepartmentNamesDto, Errors>> Handle(
+    public async Task<Result<PaginationResponse<DepartmentNamesDto>, Errors>> Handle(
         GetDepartmentNamesRequest query, CancellationToken cancellationToken)
     {
         using var connection = await _connectionFactory.CreateConnectionAsync(cancellationToken);
@@ -36,14 +37,38 @@ public class GetDepartmentNamesForFilterDapper
         
         string whereClause = conditions.Count > 0 ? "WHERE " + string.Join(" AND ", conditions) : string.Empty;
 
-        var departmentNames = await connection.QueryAsync<DepartmentNamesDto>(
+        long? totalCount = 0;
+        
+        long departmentNamesCount = 0;
+        
+        var departmentNames = await connection.QueryAsync<DepartmentNamesDto, long, long, DepartmentNamesDto>(
                 $"""
-                 SELECT department_id, name 
-                 FROM departments
+                 WITH departments_stats AS (
+                     SELECT COUNT(*) as count
+                     FROM departments
+                 )
+                 
+                 SELECT d.department_id,
+                        d.name,
+                        COUNT(*) OVER () AS total_count,
+                        ds.count as departments_stats 
+                 FROM departments d
+                        CROSS JOIN departments_stats ds
                  {whereClause}
                  """,
-                param: parameters);
+                param: parameters,
+                splitOn: "total_count, departments_stats",
+                map: (departmentName, isRequestCount, allDepartmentsCount) =>
+                {
+                    totalCount = isRequestCount;
+                    
+                    departmentNamesCount = allDepartmentsCount;
+                    
+                    return new DepartmentNamesDto(departmentName.DepartmentId, departmentName.Name);
+                });
+        
+        long totalPages = (long)Math.Ceiling(departmentNamesCount / (double)query.PageSize);
 
-        return new GetDepartmentNamesDto(departmentNames.ToList());
+        return new PaginationResponse<DepartmentNamesDto>(departmentNames.ToList(), totalCount ?? 0, query.Page, query.PageSize, totalPages);
     }
 }

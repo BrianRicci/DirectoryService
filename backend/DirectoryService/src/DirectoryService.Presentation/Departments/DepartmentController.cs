@@ -84,7 +84,7 @@ public class DepartmentController : ControllerBase
     }
     
     [HttpGet("names")]
-    public async Task<EndpointResult<GetDepartmentNamesDto>> GetNames(
+    public async Task<EndpointResult<PaginationResponse<DepartmentNamesDto>>> GetNames(
         [FromQuery] GetDepartmentNamesRequest request,
         [FromServices] GetDepartmentNamesForFilterDapper handler,
         CancellationToken cancellationToken)
